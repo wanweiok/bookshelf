@@ -1,0 +1,1867 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第七章：技能扩展 | Building Your Own AI Agent</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">🤖</span>
+        <div class="logo-text">
+          <span class="zh-text">构建你自己的 AI Agent</span>
+          <span class="en-text">Building Your Own AI Agent</span>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="zh-text"><a class="nav-item " href="preface.html?lang=zh">序章：这本书能给你什么</a>
+<a class="nav-item " href="panorama.html?lang=zh">第一章：OpenClaw 全景</a>
+<a class="nav-item " href="agent-runtime.html?lang=zh">第二章：Agent 运行时</a>
+<a class="nav-item " href="memory-state.html?lang=zh">第三章：记忆与状态</a>
+<a class="nav-item " href="channels.html?lang=zh">第四章：通信渠道</a>
+<a class="nav-item " href="security.html?lang=zh">第五章：安全与隔离</a>
+<a class="nav-item " href="scheduling.html?lang=zh">第六章：调度与自主性</a>
+<a class="nav-item active" href="skills.html?lang=zh">第七章：技能扩展</a>
+<a class="nav-item " href="assembly.html?lang=zh">第八章：终章组装</a></div>
+      <div class="en-text"><a class="nav-item " href="preface.html?lang=en">Preface: What This Book Gives You</a>
+<a class="nav-item " href="panorama.html?lang=en">Ch1: OpenClaw Panorama</a>
+<a class="nav-item " href="agent-runtime.html?lang=en">Ch2: Agent Runtime</a>
+<a class="nav-item " href="memory-state.html?lang=en">Ch3: Memory & State</a>
+<a class="nav-item " href="channels.html?lang=en">Ch4: Channels</a>
+<a class="nav-item " href="security.html?lang=en">Ch5: Security</a>
+<a class="nav-item " href="scheduling.html?lang=en">Ch6: Scheduling</a>
+<a class="nav-item active" href="skills.html?lang=en">Ch7: Skills Extension</a>
+<a class="nav-item " href="assembly.html?lang=en">Ch8: Assembly</a></div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="lang-toggle" onclick="toggleLang()">
+        <span class="zh-text">English</span>
+        <span class="en-text">中文</span>
+      </button>
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">◐</button>
+    </div>
+  </aside>
+  <main class="content">
+    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+    <article class="chapter">
+      <div class="zh-text"><h1 id="agent">第七章：技能扩展 — 让 Agent 学会新能力</h1>
+<blockquote>
+<p>序章提出了个人助理的第六个需求：<strong>能按需获得新技能，而不是能力写死</strong>。本章深入这个"扩展"能力的核心模块——技能层。</p>
+<p><strong>本章目录</strong></p>
+<ul>
+<li><a href="#71-技能模块为什么需要它">7.1 技能模块：为什么需要它？</a></li>
+<li><a href="#72-模块规格输入输出接口评价标准">7.2 模块规格：输入、输出、接口、评价标准</a></li>
+<li><a href="#73-核心算法hardcoded-tools">7.3 核心算法：hardcoded-tools</a></li>
+<li><a href="#74-生产级实现从-3-个工具到-40-技能">7.4 生产级实现：从 3 个工具到 40+ 技能</a></li>
+<li><a href="#c1-工具发现怎么让-llm-知道有哪些工具可用">C1 工具发现：怎么让 LLM 知道有哪些工具可用？</a></li>
+<li><a href="#c2-错误容错工具执行失败了怎么办">C2 错误容错：工具执行失败了怎么办？</a></li>
+<li><a href="#c3-权限控制怎么限制工具的权限">C3 权限控制：怎么限制工具的权限？</a></li>
+<li><a href="#c4-第三方接入第三方工具怎么接入mcp">C4 第三方接入：第三方工具怎么接入？（MCP）</a></li>
+<li><a href="#c5-生命周期管理工具的注册更新卸载">C5 生命周期管理：工具的注册、更新、卸载？</a></li>
+<li><a href="#跨项目对比三种扩展哲学">跨项目对比：三种扩展哲学</a></li>
+<li><a href="#75-技能层代码全景">7.5 技能层代码全景</a></li>
+<li><a href="#76-lab构建你自己的技能模块">7.6 Lab：构建你自己的技能模块</a></li>
+<li><a href="#77-本章总结">7.7 本章总结</a></li>
+</ul>
+</blockquote>
+<hr />
+<h2 id="71">7.1 技能模块：为什么需要它？</h2>
+<p>你的 Agent 很聪明，能聊天、能记忆、能按时行事。你让它"帮我查一下明天北京的天气"——它回答："抱歉，我没有查天气的能力。"</p>
+<p>你不得不去代码里加一个天气 API 调用，重新编译部署。三天后你又想让它查邮件、查日历、查股价……每次都要改核心代码。</p>
+<p>这就是没有技能模块的 Agent——<strong>每新增一个能力都要改源码</strong>。</p>
+<p>技能模块解决的核心问题：</p>
+<blockquote>
+<p><strong>让 Agent 按需获得新能力（工具），通过注册机制而非源码修改，同时管理工具的发现、权限、错误处理和生命周期。</strong></p>
+</blockquote>
+<p>三个项目给出了三种截然不同的方案：</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>项目</th>
+<th>核心思路</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>编译型插件</strong></td>
+<td>OpenClaw</td>
+<td>SDK + 注册表 + 15 种生命周期钩子</td>
+</tr>
+<tr>
+<td><strong>运行时工具</strong></td>
+<td>Letta</td>
+<td>Python 函数即工具，API 动态注册</td>
+</tr>
+<tr>
+<td><strong>Shell 命令</strong></td>
+<td>NanoClaw</td>
+<td>Bash + MCP 是全部工具集</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="72">7.2 模块规格：输入、输出、接口、评价标准</h2>
+<h3 id="_1">技能模块在六层架构中的位置</h3>
+<div class="mermaid">flowchart LR
+    SK["技能层<br/>本章"] <-->|"工具声明 / 调用请求"| RT["运行时层<br/>Ch02"]
+    SEC["安全层<br/>Ch05"] <-->|"权限检查 / 工具注册"| SK
+
+    style SK fill:#fff3e0,stroke:#e65100,stroke-width:3px
+</div>
+<p>技能模块是<strong>能力的供给侧</strong>——它决定 Agent 能做什么。运行时层是消费者（调用工具），安全层是审查者（检查权限）。</p>
+<h3 id="_2">评价标准</h3>
+<table>
+<thead>
+<tr>
+<th>标准</th>
+<th>问题</th>
+<th>理想状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C1 工具发现</strong></td>
+<td>LLM 怎么知道有哪些工具？</td>
+<td>自动发现 + 条件注入 + 动态增删</td>
+</tr>
+<tr>
+<td><strong>C2 错误容错</strong></td>
+<td>工具执行失败怎么办？</td>
+<td>结构化错误 + LLM 友好消息 + 可重试</td>
+</tr>
+<tr>
+<td><strong>C3 权限控制</strong></td>
+<td>怎么限制工具权限？</td>
+<td>工具白名单 + 审批机制 + 沙箱隔离</td>
+</tr>
+<tr>
+<td><strong>C4 第三方接入</strong></td>
+<td>第三方工具怎么接入？</td>
+<td>MCP 协议 + 标准化 schema + 通配符授权</td>
+</tr>
+<tr>
+<td><strong>C5 生命周期管理</strong></td>
+<td>工具怎么注册、更新、卸载？</td>
+<td>注册表 + 动态加载 + 冲突检测</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="73-hardcoded-tools">7.3 核心算法：hardcoded-tools</h2>
+<p>技能模块的最简实现只需 3 行：</p>
+<pre><code class="language-python">tools = {
+    &quot;get_weather&quot;: lambda city: f&quot;{city}: 25°C&quot;,
+    &quot;calculator&quot;:  lambda expr: str(eval(expr)),
+}
+</code></pre>
+<p>对照评价标准打分：</p>
+<table>
+<thead>
+<tr>
+<th>标准</th>
+<th>最简实现</th>
+<th>得分</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C1 工具发现</strong></td>
+<td>硬编码列表</td>
+<td>❌ 新工具需改源码</td>
+</tr>
+<tr>
+<td><strong>C2 错误容错</strong></td>
+<td>无错误处理</td>
+<td>❌ eval 可执行任意代码</td>
+</tr>
+<tr>
+<td><strong>C3 权限控制</strong></td>
+<td>无权限</td>
+<td>❌ 所有工具都可调</td>
+</tr>
+<tr>
+<td><strong>C4 第三方接入</strong></td>
+<td>不支持</td>
+<td>❌ 无法连接外部服务</td>
+</tr>
+<tr>
+<td><strong>C5 生命周期管理</strong></td>
+<td>无注册机制</td>
+<td>❌ 无法增删工具</td>
+</tr>
+</tbody>
+</table>
+<p>全部不及格。接下来看生产项目如何逐条补齐。</p>
+<hr />
+<h2 id="74-3-40">7.4 生产级实现：从 3 个工具到 40+ 技能</h2>
+<h3 id="c1-llm">C1 工具发现：怎么让 LLM 知道有哪些工具可用？</h3>
+<p>LLM 不会自己发现工具——它只能使用你在请求中告诉它的那些。</p>
+<p><strong>OpenClaw：分层发现 + 条件注入。</strong> <code>discoverOpenClawPlugins()</code>（<code>loader.ts:200-210</code>）按 config &gt; workspace &gt; global &gt; bundled 四层优先级扫描。<code>shouldIncludeSkill</code> 对每个 SKILL.md 做能力检测——OS 兼容性、二进制依赖、环境变量——只有全部满足的技能才注入系统提示。</p>
+<p><strong>Letta：数据库驱动 + 类型分派。</strong> 每个 Agent 关联一组 <code>Tool</code> 记录，11 种 <code>tool_type</code> 枚举决定工具性质。构建 LLM 请求时从数据库取出工具的 <code>json_schema</code>。运行时可通过 API 动态增删。</p>
+<p><strong>NanoClaw：硬编码列表 + MCP 通配符。</strong> 在 <code>query()</code> 中显式列出 <code>allowedTools</code>——文件操作（Bash、Read、Write、Edit、Glob、Grep）、网络访问（WebSearch、WebFetch）、子代理协作（Task、TeamCreate、SendMessage）、辅助工具（TodoWrite、ToolSearch、Skill、NotebookEdit）等 18 种工具 + <code>mcp__nanoclaw__*</code>（MCP 通配符）。Bash 本身就是"元工具"——通过它可以调用任何命令行程序。</p>
+<pre><code class="language-python"># OpenClaw 风格 —— 四层优先级发现
+def discover_plugins(search_paths):
+    seen = set()
+    for path in [config_dir, workspace_dir, global_dir, bundled_dir]:
+        for plugin in scan_dir(path):
+            if plugin.id not in seen:
+                seen.add(plugin.id)
+                yield plugin            # 先到先得
+
+# Letta 风格 —— 数据库查询
+def get_tools_for_agent(agent_id):
+    return db.query(&quot;SELECT json_schema FROM tools_agents WHERE agent_id=?&quot;,
+                    agent_id)
+
+# NanoClaw 风格 —— 硬编码
+allowed_tools = [&quot;Bash&quot;, &quot;Read&quot;, &quot;Write&quot;, &quot;Edit&quot;, &quot;mcp__nanoclaw__*&quot;]
+</code></pre>
+<hr />
+<h3 id="c2">C2 错误容错：工具执行失败了怎么办？</h3>
+<p>工具调用不可避免地会失败。关键在于<strong>失败信息如何传回 LLM，让它能自我修正</strong>。</p>
+<p><strong>OpenClaw：钩子拦截 + 错误边界。</strong> <code>before_tool_call</code> 钩子允许插件在执行前拦截——可以修改参数，甚至返回 <code>{ block: true }</code> 阻止执行。<code>after_tool_call</code> 可以检查结果并触发重试。</p>
+<p><strong>Letta：结构化结果 + 友好错误消息。</strong> <code>ToolExecutionResult</code> 用 <code>status: "success" | "error"</code> 标记。<code>get_friendly_error_msg()</code> 生成对 LLM 友好的错误描述——包含函数名和异常类型，但不含 traceback（traceback 放在 <code>stderr</code> 供调试）。</p>
+<pre><code class="language-python"># Letta 风格 —— 结构化错误 + 友好消息
+@dataclass
+class ToolExecutionResult:
+    status: str        # &quot;success&quot; | &quot;error&quot;
+    func_return: str   # 返回值 or 错误描述（给 LLM 看）
+    stderr: str        # traceback（给开发者看）
+
+def get_friendly_error_msg(func_name, exception):
+    return f&quot;Error in {func_name}: {type(exception).__name__}: {exception}&quot;
+    # 不含 traceback → 节省 LLM 上下文窗口
+</code></pre>
+<p><strong>NanoClaw：stderr 即反馈。</strong> Bash 的非零退出码 + stderr 直接返回给 Claude。AI 自己决定是否重试。</p>
+<blockquote>
+<p><strong>设计模式就地展开——Observer / Hook System（观察者）</strong></p>
+<p><strong>解决的问题</strong>：工具执行前后需要插入检查、日志、重试等逻辑，但这些逻辑不应该和工具本身耦合。</p>
+<p><strong>解决的方法</strong>：组件通过钩子订阅事件，解耦发布者与订阅者。OpenClaw 的 <code>before_tool_call</code> / <code>after_tool_call</code> 等 15 种生命周期钩子，分为 <code>void</code>（纯通知）和 <code>modifying</code>（可修改数据）两种模式。NanoClaw 的 <code>startIpcWatcher()</code> 是基于文件系统的观察者——容器写入文件"发布"请求，宿主轮询"订阅"并处理。</p>
+</blockquote>
+<hr />
+<h3 id="c3">C3 权限控制：怎么限制工具的权限？</h3>
+<p>一个能发邮件的工具如果不受限制，可能给所有联系人群发广告。</p>
+<p><strong>OpenClaw：ACL + 工具白名单。</strong> <code>resolvePluginTools()</code> 支持 <code>toolAllowlist</code> 参数：标记为 <code>optional</code> 的工具只有在白名单内才传给 LLM，非 <code>optional</code> 工具始终包含。内置冲突检测——多个插件注册同名工具时自动报告。结合 <code>before_tool_call</code> 钩子，可根据用户身份动态阻止工具调用。</p>
+<p><strong>Letta：审批机制 + 沙箱 + ToolRule。</strong> <code>default_requires_approval</code> 字段控制是否需要人工确认。自定义工具在 <code>SandboxToolExecutor</code> 中执行。<code>ToolRule</code> 系统支持工具调用链约束（工具 A 执行后必须执行工具 B）。</p>
+<p><strong>NanoClaw：Docker 容器即沙箱。</strong> 整个 Agent 运行在容器内，容器就是安全边界。<code>allowedTools</code> 列表就是全部权限声明。</p>
+<hr />
+<h3 id="c4-mcp">C4 第三方接入：第三方工具怎么接入？（MCP）</h3>
+<p><strong>MCP（Model Context Protocol）</strong> 是行业对"AI 的 USB 接口"的标准化尝试——任何工具只要实现 MCP 协议（基于 JSON-RPC 2.0），就能被任何支持 MCP 的 Agent 使用。</p>
+<p><strong>NanoClaw 的 MCP 集成最深。</strong> 核心功能（<code>send_message</code>、<code>schedule_task</code> 等 7 个工具）就通过 MCP Server 暴露。添加第三方服务只需在 <code>mcpServers</code> 字典中加一项。</p>
+<p><strong>Letta</strong> 把 MCP 工具视为 <code>ToolType.EXTERNAL_MCP</code>，<code>ToolCreate.from_mcp()</code> 生成 Python 包装函数。</p>
+<p><strong>OpenClaw</strong> 的 MCP 支持通过插件系统实现，可按需加载。</p>
+<div class="mermaid">flowchart TB
+    subgraph spectrum["扩展性光谱"]
+        direction LR
+        OC["OpenClaw<br/>Plugin SDK + 15 种钩子"]
+        LT["Letta<br/>Tool API + AST Schema"]
+        NC["NanoClaw<br/>Bash + MCP + allowedTools"]
+    end
+
+    OC ---|"框架控制力"| LT
+    LT ---|"AI 自治度"| NC
+
+    MCP["MCP 协议<br/>JSON-RPC 桥接"]
+    OC -.->|Client| MCP
+    LT -.->|Executor| MCP
+    NC -.->|Server| MCP
+
+    style MCP fill:#96ceb4,color:#fff
+</div>
+<p>⚠️ <strong>MCP 的现实检验</strong>：MCP 目前仍处于早期。协议只覆盖 Tool 调用，Resource 和 Prompt 两个能力在三个项目中都未被使用。最关键的限制：MCP 没有定义认证标准——每个 Server 自行处理 API Key 和 OAuth。</p>
+<blockquote>
+<p><strong>设计模式就地展开——Registry（注册表）</strong></p>
+<p><code>mermaid
+flowchart TB
+    P1["插件 A&lt;br/&gt;registerTool()"] --&gt;|registerTool| REG["Plugin Registry&lt;br/&gt;tools / hooks / channels"]
+    P2["插件 B&lt;br/&gt;registerHook()"] --&gt;|registerHook| REG
+    P3["MCP Server&lt;br/&gt;JSON-RPC 桥接"] --&gt;|registerTool| REG
+    REG --&gt; RESOLVE["resolvePluginTools()&lt;br/&gt;白名单 + 冲突检测"]
+    RESOLVE --&gt; LLM["注入 LLM&lt;br/&gt;tools[] → prompt"]</code></p>
+<p><strong>解决的问题</strong>：多个来源（内置、插件、MCP）的工具如何统一管理？如何检测命名冲突？如何按白名单过滤？</p>
+<p><strong>解决的方法</strong>：一个中央注册表动态管理所有扩展——注册、查找、解析冲突。OpenClaw 的 <code>createPluginRegistry()</code> 存储 13 种注册类别。注册表是插件系统的"真相之源"。</p>
+</blockquote>
+<hr />
+<h3 id="c5">C5 生命周期管理：工具的注册、更新、卸载？</h3>
+<p><strong>OpenClaw：启动时加载 + 文件系统管理。</strong> <code>loadOpenClawPlugins()</code> 在启动时通过 jiti 即时编译加载 TypeScript 模块。插件的"安装/卸载"就是文件系统操作——拷贝/删除 <code>extensions/</code> 目录中的文件夹。更新需要重启。</p>
+<p><strong>Letta：API 动态管理 + 数据库持久化。</strong> <code>ToolManager.create_tool()</code> 通过 REST API 创建工具，源码存入数据库的 <code>source_code</code> 字段。随时可更新可删除，无需重启。</p>
+<p><strong>NanoClaw："Don't add features. Add skills."</strong> NanoClaw 的扩展哲学最激进——不是通过代码添加功能，而是通过 <code>.claude/skills/</code> 目录中的 Markdown 文件教 AI 如何使用 <code>Bash</code> 和 <code>MCP</code> 完成新任务。</p>
+<blockquote>
+<p><strong>设计模式就地展开——Dynamic Loading（动态加载）</strong></p>
+<p><strong>解决的问题</strong>：如何在不重新编译的情况下加载新模块？</p>
+<p><strong>解决的方法</strong>：运行时加载模块代码。OpenClaw 用 jiti 在运行时直接加载 TypeScript，无需预编译。Letta 用 <code>importlib</code> 动态导入 Python 函数，<code>derive_openai_json_schema()</code> 通过 AST 解析自动生成 Schema。</p>
+</blockquote>
+<hr />
+<h3 id="_3">跨项目对比：三种扩展哲学</h3>
+<table>
+<thead>
+<tr>
+<th>评价标准</th>
+<th>OpenClaw</th>
+<th>Letta</th>
+<th>NanoClaw</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C1 工具发现</strong></td>
+<td>四层文件系统扫描 + 能力检测</td>
+<td>数据库查询 + 类型分派</td>
+<td>硬编码 + MCP 通配符</td>
+</tr>
+<tr>
+<td><strong>C2 错误容错</strong></td>
+<td>15 种生命周期钩子拦截</td>
+<td>结构化 ToolExecutionResult</td>
+<td>stderr + AI 自主修正</td>
+</tr>
+<tr>
+<td><strong>C3 权限控制</strong></td>
+<td>工具白名单 + 钩子阻断</td>
+<td>审批机制 + 沙箱 + ToolRule</td>
+<td>Docker 容器隔离</td>
+</tr>
+<tr>
+<td><strong>C4 第三方接入</strong></td>
+<td>插件式 MCP 集成</td>
+<td>EXTERNAL_MCP + DB 包装</td>
+<td>MCP 原生 Stdio/HTTP</td>
+</tr>
+<tr>
+<td><strong>C5 生命周期</strong></td>
+<td>文件系统 + jiti 编译加载</td>
+<td>API + DB 持久化</td>
+<td>Markdown Skills + Bash</td>
+</tr>
+<tr>
+<td><strong>核心设计模式</strong></td>
+<td>Registry + Dynamic Loading + Observer</td>
+<td>Registry + Dynamic Loading</td>
+<td>IPC Observer + MCP</td>
+</tr>
+<tr>
+<td><strong>扩展哲学</strong></td>
+<td>框架级可控性</td>
+<td>平台级可编程性</td>
+<td>极简 + AI 自治</td>
+</tr>
+</tbody>
+</table>
+<p>💡 <strong>核心洞察</strong>：每种扩展方案的优势都建立在它所放弃的东西之上。OpenClaw 的框架级控制力来自放弃运行时动态性；Letta 的 API 动态性来自将一切持久化到数据库；NanoClaw 的极简来自将 Bash 作为"万能工具"+ Docker 作为安全边界。</p>
+<hr />
+<h2 id="75">7.5 技能层代码全景</h2>
+<h3 id="openclaw">OpenClaw 技能模块</h3>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>~行数</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>plugins/registry.ts</code></td>
+<td>514</td>
+<td>中央注册表：13 种注册类别</td>
+</tr>
+<tr>
+<td><code>plugins/loader.ts</code></td>
+<td>456</td>
+<td>四层发现 + jiti 编译加载</td>
+</tr>
+<tr>
+<td><code>plugins/tools.ts</code></td>
+<td>138</td>
+<td>工具解析 + 白名单 + 冲突检测</td>
+</tr>
+<tr>
+<td><code>plugins/hooks.ts</code></td>
+<td>—</td>
+<td>钩子执行器：void + modifying 双模式</td>
+</tr>
+<tr>
+<td><code>plugins/types.ts</code></td>
+<td>—</td>
+<td>插件接口 + 15 种生命周期钩子</td>
+</tr>
+<tr>
+<td><code>plugin-sdk/index.ts</code></td>
+<td>400</td>
+<td>公共 Plugin SDK API</td>
+</tr>
+<tr>
+<td><code>skills/config.ts</code></td>
+<td>—</td>
+<td><code>shouldIncludeSkill</code> 能力检测</td>
+</tr>
+</tbody>
+</table>
+<h3 id="letta">Letta 技能模块</h3>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>~行数</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>functions/functions.py</code></td>
+<td>350</td>
+<td><code>derive_openai_json_schema()</code> + 动态加载</td>
+</tr>
+<tr>
+<td><code>functions/function_sets/base.py</code></td>
+<td>259</td>
+<td>内置核心函数（记忆操作）</td>
+</tr>
+<tr>
+<td><code>schemas/tool.py</code></td>
+<td>169</td>
+<td><code>Tool</code> 模型 + <code>ToolCreate.from_mcp()</code></td>
+</tr>
+<tr>
+<td><code>schemas/tool_rule.py</code></td>
+<td>44</td>
+<td>工具调用链约束</td>
+</tr>
+<tr>
+<td><code>services/tool_executor/</code></td>
+<td>~200</td>
+<td>工具执行管理 + 类型分派</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nanoclaw">NanoClaw 技能模块</h3>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>~行数</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>agent-runner/src/index.ts</code></td>
+<td>~20</td>
+<td><code>allowedTools</code> + <code>mcpServers</code> 配置</td>
+</tr>
+<tr>
+<td><code>ipc.ts</code></td>
+<td>381</td>
+<td>IPC 文件观察者 + 任务级处理</td>
+</tr>
+<tr>
+<td><code>ipc-mcp-stdio.ts</code></td>
+<td>—</td>
+<td>MCP Server：7 个工具</td>
+</tr>
+<tr>
+<td><code>.claude/skills/</code></td>
+<td>—</td>
+<td>Markdown 技能文件</td>
+</tr>
+</tbody>
+</table>
+<div class="mermaid">flowchart LR
+    subgraph OpenClaw ["OpenClaw 技能模块"]
+        direction TB
+        OL["loader.ts<br/>四层发现 + jiti"]
+        OR["registry.ts<br/>中央注册表"]
+        OT["tools.ts<br/>工具解析 + 冲突检测"]
+        OH["hooks.ts<br/>钩子执行器"]
+        OL --> OR --> OT
+        OH --> OR
+    end
+
+    subgraph Letta ["Letta 技能模块"]
+        direction TB
+        LF["functions.py<br/>AST + 动态加载"]
+        LB["base.py<br/>内置函数"]
+        LT2["tool.py<br/>Tool 模型"]
+        LE["tool_executor/<br/>类型分派"]
+        LF --> LT2
+        LB --> LE
+    end
+
+    subgraph NanoClaw ["NanoClaw 技能模块"]
+        direction TB
+        NA["allowedTools<br/>硬编码列表"]
+        NI["ipc.ts<br/>文件 IPC"]
+        NM["ipc-mcp-stdio.ts<br/>MCP Server"]
+        NA --> NM
+        NI --> NM
+    end
+</div>
+<hr />
+<h2 id="76-lab">7.6 Lab：构建你自己的技能模块</h2>
+<p>本 Lab 构建 <code>mini_agent/skills.py</code>——技能注册 + 动态加载系统，与前面的模块可组合。</p>
+<h3 id="_4">环境准备</h3>
+<table>
+<thead>
+<tr>
+<th>提供商</th>
+<th>环境变量</th>
+<th>费用参考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OpenAI</td>
+<td><code>OPENAI_API_KEY</code></td>
+<td>~$0.01/次</td>
+</tr>
+<tr>
+<td>DeepSeek</td>
+<td><code>DEEPSEEK_API_KEY</code></td>
+<td>~¥0.01/次</td>
+</tr>
+<tr>
+<td>Ollama (本地)</td>
+<td>无需 key</td>
+<td>免费</td>
+</tr>
+<tr>
+<td>无 key</td>
+<td>自动 MockLLM</td>
+<td>免费（功能受限）</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash"># 无额外依赖（仅 Python 标准库）
+</code></pre>
+<h3 id="prompt-1">Prompt 1 — 构建技能注册系统</h3>
+<blockquote>
+<p>在 <code>mini_agent/skills.py</code> 中实现技能扩展系统：</p>
+<ol>
+<li><code>Skill</code> 数据类 — 一组相关工具的集合（name + description + tools）</li>
+<li><code>SkillRegistry</code> — 注册、查找、展平所有工具，导出为 <code>ToolRegistry</code></li>
+<li><code>SkillLoader</code> — 从目录加载技能（manifest.json + handlers.py）</li>
+<li><code>create_builtin_skills()</code> — 内置系统工具（get_time、calculator）+ 可选记忆工具</li>
+<li>复用 <code>mini_agent.runtime.Tool</code> 和 <code>ToolRegistry</code></li>
+<li><code>if __name__</code> 独立运行演示</li>
+</ol>
+</blockquote>
+<p><strong>验证清单：</strong>
+- [ ] <code>Skill</code> 数据类含 name、description、tools，可 <code>tool_names()</code> 列出
+- [ ] <code>SkillRegistry.to_registry()</code> 导出为 <code>ToolRegistry</code>
+- [ ] <code>SkillLoader.load_from_dir()</code> 解析 manifest.json + 加载 handlers.py
+- [ ] <code>create_builtin_skills()</code> 提供至少 get_time、calculator
+- [ ] <code>python -m mini_agent.skills</code> 可独立运行</p>
+<p><strong>预期输出：</strong></p>
+<pre><code>=== 已注册技能 ===
+[system] 系统工具集
+  - get_time: 获取当前时间
+  - calculator: 数学计算
+
+=== ToolRegistry: ['get_time', 'calculator'] ===
+
+get_time → 2026-02-18 00:00:00
+calculator('2+3*4') → 14
+
+共 1 个技能, 2 个工具
+</code></pre>
+<h3 id="prompt-2-c5">Prompt 2 — 从目录加载技能（亲手体验 C5）</h3>
+<blockquote>
+<p>新建一个技能目录（含 <code>manifest.json</code> 和 <code>handlers.py</code>），实现自定义工具。验证 <code>SkillLoader.discover()</code> 能正确扫描并加载该技能。</p>
+</blockquote>
+<h3 id="prompt-3-reactruntime-security-c1c3">Prompt 3 — 集成 ReactRuntime + Security（亲手体验 C1+C3）</h3>
+<blockquote>
+<p>将 SkillRegistry 与 ReactRuntime + Sandbox 集成：</p>
+<ul>
+<li>SkillRegistry → ToolRegistry → ReactRuntime</li>
+<li>Sandbox.check() 在执行前过滤未授权工具</li>
+<li>尝试调用已注册和未注册的工具，观察安全拦截效果</li>
+</ul>
+</blockquote>
+<h3 id="_5">参考实现</h3>
+<blockquote>
+<p>完整参考实现见 <code>mini_agent/skills.py</code>。</p>
+</blockquote>
+<details>
+<summary>参考实现：mini_agent/skills.py（约 200 行）</summary>
+
+
+<pre><code class="language-python">&quot;&quot;&quot;mini_agent/skills.py — 技能扩展系统
+
+第七章 Lab · 工具注册表 + 动态加载 + 技能目录
+
+单独运行: python -m mini_agent.skills
+依赖: 仅 Python 标准库
+&quot;&quot;&quot;
+from __future__ import annotations
+
+import json, os, time, importlib.util
+from dataclasses import dataclass, field
+from typing import Callable
+
+from mini_agent.runtime import Tool, ToolRegistry
+
+
+@dataclass
+class Skill:
+    &quot;&quot;&quot;一组相关工具的集合&quot;&quot;&quot;
+    name: str
+    description: str
+    version: str = &quot;1.0.0&quot;
+    tools: list[Tool] = field(default_factory=list)
+
+    def tool_names(self) -&gt; list[str]:
+        return [t.name for t in self.tools]
+
+
+class SkillRegistry:
+    def __init__(self):
+        self._skills: dict[str, Skill] = {}
+
+    def register(self, skill: Skill) -&gt; None:
+        self._skills[skill.name] = skill
+
+    def get(self, name: str) -&gt; Skill | None:
+        return self._skills.get(name)
+
+    def list_skills(self) -&gt; list[Skill]:
+        return list(self._skills.values())
+
+    def all_tools(self) -&gt; list[Tool]:
+        tools = []
+        for s in self._skills.values():
+            tools.extend(s.tools)
+        return tools
+
+    def to_registry(self) -&gt; ToolRegistry:
+        reg = ToolRegistry()
+        for tool in self.all_tools():
+            reg.register(tool)
+        return reg
+
+    def summary(self) -&gt; str:
+        lines = []
+        for s in self._skills.values():
+            lines.append(f&quot;[{s.name}] {s.description}&quot;)
+            for t in s.tools:
+                lines.append(f&quot;  - {t.name}: {t.description}&quot;)
+        return &quot;\n&quot;.join(lines)
+
+
+class SkillLoader:
+    @staticmethod
+    def load_from_dir(skill_dir: str) -&gt; Skill | None:
+        manifest_path = os.path.join(skill_dir, &quot;manifest.json&quot;)
+        if not os.path.exists(manifest_path):
+            return None
+
+        manifest = json.loads(
+            open(manifest_path, encoding=&quot;utf-8&quot;).read())
+        skill = Skill(
+            name=manifest[&quot;name&quot;],
+            description=manifest.get(&quot;description&quot;, &quot;&quot;),
+            version=manifest.get(&quot;version&quot;, &quot;1.0.0&quot;))
+
+        handlers_module = None
+        handlers_path = os.path.join(skill_dir, &quot;handlers.py&quot;)
+        if os.path.exists(handlers_path):
+            spec = importlib.util.spec_from_file_location(
+                &quot;handlers&quot;, handlers_path)
+            if spec and spec.loader:
+                handlers_module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(handlers_module)
+
+        for tool_def in manifest.get(&quot;tools&quot;, []):
+            handler = None
+            if handlers_module:
+                handler = getattr(
+                    handlers_module, tool_def[&quot;handler&quot;], None)
+            if not handler:
+                _name = tool_def[&quot;name&quot;]
+                def _stub(_n=_name, **kw):
+                    return f&quot;[stub] {_n}({kw})&quot;
+                handler = _stub
+
+            skill.tools.append(Tool(
+                name=tool_def[&quot;name&quot;],
+                description=tool_def.get(&quot;description&quot;, &quot;&quot;),
+                parameters=tool_def.get(&quot;parameters&quot;, {}),
+                handler=handler))
+
+        return skill
+
+    @staticmethod
+    def discover(skills_dir: str) -&gt; list[Skill]:
+        skills = []
+        if not os.path.isdir(skills_dir):
+            return skills
+        for name in sorted(os.listdir(skills_dir)):
+            path = os.path.join(skills_dir, name)
+            if os.path.isdir(path):
+                skill = SkillLoader.load_from_dir(path)
+                if skill:
+                    skills.append(skill)
+        return skills
+
+
+def create_builtin_skills(memory=None) -&gt; list[Skill]:
+    def _safe_calc(expression: str = &quot;&quot;) -&gt; str:
+        if all(c in &quot;0123456789+-*/.() &quot; for c in expression):
+            try:
+                return str(eval(expression))
+            except Exception as e:
+                return f&quot;Error: {e}&quot;
+        return &quot;Error: 非法字符&quot;
+
+    sys_skill = Skill(&quot;system&quot;, &quot;系统工具集&quot;, tools=[
+        Tool(&quot;get_time&quot;, &quot;获取当前时间&quot;, {},
+             lambda: time.strftime(&quot;%Y-%m-%d %H:%M:%S&quot;)),
+        Tool(&quot;calculator&quot;, &quot;数学计算&quot;,
+             {&quot;expression&quot;: {&quot;type&quot;: &quot;string&quot;,
+                             &quot;description&quot;: &quot;数学表达式&quot;}},
+             _safe_calc),
+    ])
+
+    skills: list[Skill] = [sys_skill]
+
+    if memory:
+        mem_skill = Skill(&quot;memory&quot;, &quot;记忆管理工具&quot;, tools=[
+            Tool(&quot;search_memory&quot;, &quot;搜索历史记忆&quot;,
+                 {&quot;query&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;搜索词&quot;}},
+                 lambda query=&quot;&quot;: &quot;\n&quot;.join(
+                     r[&quot;text&quot;] for r in memory.recall(query, 3)
+                 ) or &quot;无结果&quot;),
+            Tool(&quot;remember&quot;, &quot;记住重要信息&quot;,
+                 {&quot;label&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;类别&quot;},
+                  &quot;content&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;内容&quot;}},
+                 lambda label=&quot;human&quot;, content=&quot;&quot;: (
+                     memory.remember(label, content) or
+                     f&quot;已记住: {content}&quot;)),
+        ])
+        skills.append(mem_skill)
+
+    return skills
+
+
+if __name__ == &quot;__main__&quot;:
+    registry = SkillRegistry()
+    for skill in create_builtin_skills():
+        registry.register(skill)
+
+    print(&quot;=== 已注册技能 ===&quot;)
+    print(registry.summary())
+
+    tools = registry.to_registry()
+    print(f&quot;\n=== ToolRegistry: {tools.names()} ===&quot;)
+
+    t = tools.get(&quot;get_time&quot;)
+    print(f&quot;\nget_time → {t.handler() if t else 'N/A'}&quot;)
+    t = tools.get(&quot;calculator&quot;)
+    print(f&quot;calculator('2+3*4') → &quot;
+          f&quot;{t.handler(expression='2+3*4') if t else 'N/A'}&quot;)
+
+    print(f&quot;\n共 {len(registry.list_skills())} 个技能, &quot;
+          f&quot;{len(registry.all_tools())} 个工具&quot;)
+</code></pre>
+
+
+</details>
+
+<h3 id="_6">评价标准对照</h3>
+<table>
+<thead>
+<tr>
+<th>C 标准</th>
+<th>Lab 实现</th>
+<th>生产级还需</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C1 工具发现</strong></td>
+<td>SkillLoader + manifest.json</td>
+<td>四层优先级、条件注入、能力检测</td>
+</tr>
+<tr>
+<td><strong>C2 错误容错</strong></td>
+<td>桩函数兜底</td>
+<td>结构化 ToolExecutionResult、友好错误</td>
+</tr>
+<tr>
+<td><strong>C3 权限控制</strong></td>
+<td>无（需与 Sandbox 集成）</td>
+<td>工具白名单、审批、ToolRule</td>
+</tr>
+<tr>
+<td><strong>C4 第三方接入</strong></td>
+<td>无</td>
+<td>MCP 客户端、JSON-RPC 桥接</td>
+</tr>
+<tr>
+<td><strong>C5 生命周期</strong></td>
+<td>注册 + 动态加载</td>
+<td>冲突检测、热重载、版本管理</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="77">7.7 本章总结</h2>
+<table>
+<thead>
+<tr>
+<th>评价标准</th>
+<th>核心洞察</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C1 工具发现</strong></td>
+<td>四层优先级扫描（OpenClaw）让 36 个扩展和 40+ 技能精准筛选；数据库驱动（Letta）让工具可运行时增删；硬编码+Bash（NanoClaw）用元工具替代工具发现。</td>
+</tr>
+<tr>
+<td><strong>C2 错误容错</strong></td>
+<td>对 LLM 友好的错误消息是关键——原始 traceback 浪费上下文窗口。Letta 的 <code>func_return</code>（给 LLM）+ <code>stderr</code>（给开发者）分离是好实践。</td>
+</tr>
+<tr>
+<td><strong>C3 权限控制</strong></td>
+<td>工具白名单（OpenClaw）、审批+沙箱（Letta）、容器隔离（NanoClaw）——三种粒度，匹配三种产品定位。</td>
+</tr>
+<tr>
+<td><strong>C4 第三方接入</strong></td>
+<td>MCP 适合做"外围接口"（连接第三方），不适合做"内核接口"（框架内部调用）。三个项目都保留了原生工具机制。</td>
+</tr>
+<tr>
+<td><strong>C5 生命周期</strong></td>
+<td>"声明 vs 实现"的分界线揭示框架价值观：分离越远（OpenClaw）框架越重，合并越紧（NanoClaw）框架越轻但对 AI 依赖越深。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>下一章预告</strong>：六个模块全部就位。第八章把 Runtime + Memory + Channels + Security + Scheduler + Skills 组装成一个完整的 mini Agent。</p>
+</blockquote>
+<hr />
+<h2 id="_7">源码参考索引</h2>
+<table>
+<thead>
+<tr>
+<th>文件路径</th>
+<th>行号</th>
+<th>内容描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>openclaw/src/plugins/registry.ts</code></td>
+<td>143-514</td>
+<td><code>createPluginRegistry()</code> 中央注册表</td>
+</tr>
+<tr>
+<td><code>openclaw/src/plugins/loader.ts</code></td>
+<td>170-456</td>
+<td><code>loadOpenClawPlugins()</code> 完整加载流程</td>
+</tr>
+<tr>
+<td><code>openclaw/src/plugins/loader.ts</code></td>
+<td>200-210</td>
+<td>四层级插件发现</td>
+</tr>
+<tr>
+<td><code>openclaw/src/plugins/loader.ts</code></td>
+<td>297-313</td>
+<td>jiti 编译加载</td>
+</tr>
+<tr>
+<td><code>openclaw/src/plugins/tools.ts</code></td>
+<td>44-138</td>
+<td>工具解析 + 白名单 + 冲突检测</td>
+</tr>
+<tr>
+<td><code>openclaw/src/plugin-sdk/index.ts</code></td>
+<td>1-400</td>
+<td>Plugin SDK API</td>
+</tr>
+<tr>
+<td><code>openclaw/src/plugins/types.ts</code></td>
+<td>—</td>
+<td>15 种生命周期钩子</td>
+</tr>
+<tr>
+<td><code>openclaw/src/agents/skills/config.ts</code></td>
+<td>122</td>
+<td><code>shouldIncludeSkill</code> 能力检测</td>
+</tr>
+<tr>
+<td><code>letta/functions/functions.py</code></td>
+<td>287-317</td>
+<td><code>derive_openai_json_schema()</code></td>
+</tr>
+<tr>
+<td><code>letta/functions/functions.py</code></td>
+<td>327-350</td>
+<td><code>get_function_from_module()</code></td>
+</tr>
+<tr>
+<td><code>letta/functions/function_sets/base.py</code></td>
+<td>86-259</td>
+<td>内置核心函数</td>
+</tr>
+<tr>
+<td><code>letta/schemas/tool.py</code></td>
+<td>110-169</td>
+<td>Tool 模型 + from_mcp()</td>
+</tr>
+<tr>
+<td><code>letta/schemas/tool_rule.py</code></td>
+<td>13-44</td>
+<td>工具调用链约束</td>
+</tr>
+<tr>
+<td><code>letta/schemas/enums.py</code></td>
+<td>200-212</td>
+<td>ToolType 枚举</td>
+</tr>
+<tr>
+<td><code>letta/services/tool_executor/</code></td>
+<td>—</td>
+<td>工具执行管理 + 类型分派</td>
+</tr>
+<tr>
+<td><code>nanoclaw/container/agent-runner/src/index.ts</code></td>
+<td>383-406</td>
+<td>allowedTools + mcpServers</td>
+</tr>
+<tr>
+<td><code>nanoclaw/src/ipc.ts</code></td>
+<td>34-381</td>
+<td>IPC 文件观察者</td>
+</tr>
+<tr>
+<td><code>nanoclaw/container/agent-runner/src/ipc-mcp-stdio.ts</code></td>
+<td>—</td>
+<td>MCP Server 实现</td>
+</tr>
+</tbody>
+</table></div>
+      <div class="en-text"><h1 id="chapter-7-skill-extension-teaching-an-agent-new-abilities">Chapter 7: Skill Extension — Teaching an Agent New Abilities</h1>
+<blockquote>
+<p>The Prologue raised the sixth requirement for a personal assistant: <strong>the ability to acquire new skills on demand, rather than having capabilities hardcoded</strong>. This chapter dives into the core module behind this "extensibility" — the Skill Layer.</p>
+<p><strong>Table of Contents</strong></p>
+<ul>
+<li><a href="#71-the-skill-module-why-do-we-need-it">7.1 The Skill Module: Why Do We Need It?</a></li>
+<li><a href="#72-module-specification-inputs-outputs-interfaces-evaluation-criteria">7.2 Module Specification: Inputs, Outputs, Interfaces, Evaluation Criteria</a></li>
+<li><a href="#73-core-algorithm-hardcoded-tools">7.3 Core Algorithm: hardcoded-tools</a></li>
+<li><a href="#74-production-implementation-from-3-tools-to-40-skills">7.4 Production Implementation: From 3 Tools to 40+ Skills</a></li>
+<li><a href="#c1-tool-discovery-how-does-the-llm-know-which-tools-are-available">C1 Tool Discovery: How Does the LLM Know Which Tools Are Available?</a></li>
+<li><a href="#c2-error-tolerance-what-happens-when-a-tool-fails">C2 Error Tolerance: What Happens When a Tool Fails?</a></li>
+<li><a href="#c3-permission-control-how-do-we-restrict-tool-permissions">C3 Permission Control: How Do We Restrict Tool Permissions?</a></li>
+<li><a href="#c4-third-party-integration-how-do-external-tools-connect-mcp">C4 Third-Party Integration: How Do External Tools Connect? (MCP)</a></li>
+<li><a href="#c5-lifecycle-management-tool-registration-updates-and-uninstallation">C5 Lifecycle Management: Tool Registration, Updates, and Uninstallation?</a></li>
+<li><a href="#cross-project-comparison-three-extension-philosophies">Cross-Project Comparison: Three Extension Philosophies</a></li>
+<li><a href="#75-skill-layer-code-panorama">7.5 Skill Layer Code Panorama</a></li>
+<li><a href="#76-lab-build-your-own-skill-module">7.6 Lab: Build Your Own Skill Module</a></li>
+<li><a href="#77-chapter-summary">7.7 Chapter Summary</a></li>
+</ul>
+</blockquote>
+<hr />
+<h2 id="71-the-skill-module-why-do-we-need-it">7.1 The Skill Module: Why Do We Need It?</h2>
+<p>Your Agent is smart — it can chat, remember things, and act on schedule. You ask it to "check tomorrow's weather in Beijing" — and it replies: "Sorry, I don't have the ability to check the weather."</p>
+<p>You have no choice but to add a weather API call in the code, recompile, and redeploy. Three days later, you want it to check emails, calendars, stock prices… and every time, you have to modify the core code.</p>
+<p>This is an Agent without a skill module — <strong>every new capability requires source code changes</strong>.</p>
+<p>The core problem the skill module solves:</p>
+<blockquote>
+<p><strong>Allow the Agent to acquire new capabilities (tools) on demand through a registration mechanism rather than source code modification, while managing tool discovery, permissions, error handling, and lifecycle.</strong></p>
+</blockquote>
+<p>Three projects offer three fundamentally different approaches:</p>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Project</th>
+<th>Core Idea</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Compiled plugins</strong></td>
+<td>OpenClaw</td>
+<td>SDK + Registry + 15 lifecycle hooks</td>
+</tr>
+<tr>
+<td><strong>Runtime tools</strong></td>
+<td>Letta</td>
+<td>Python functions as tools, API-driven dynamic registration</td>
+</tr>
+<tr>
+<td><strong>Shell commands</strong></td>
+<td>NanoClaw</td>
+<td>Bash + MCP is the entire toolset</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="72-module-specification-inputs-outputs-interfaces-evaluation-criteria">7.2 Module Specification: Inputs, Outputs, Interfaces, Evaluation Criteria</h2>
+<h3 id="the-skill-modules-position-in-the-six-layer-architecture">The Skill Module's Position in the Six-Layer Architecture</h3>
+<div class="mermaid">flowchart LR
+    SK["Skills<br/>This chapter"] <-->|"Tool declaration / call request"| RT["Runtime<br/>Ch02"]
+    SEC["Security<br/>Ch05"] <-->|"Permission check / tool registration"| SK
+
+    style SK fill:#fff3e0,stroke:#e65100,stroke-width:3px
+</div>
+<p>The Skill Module is the <strong>supply side of capabilities</strong> — it determines what the Agent can do. The Runtime Layer is the consumer (invoking tools), and the Security Layer is the auditor (checking permissions).</p>
+<h3 id="evaluation-criteria">Evaluation Criteria</h3>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Question</th>
+<th>Ideal State</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C1 Tool Discovery</strong></td>
+<td>How does the LLM know which tools exist?</td>
+<td>Auto-discovery + conditional injection + dynamic add/remove</td>
+</tr>
+<tr>
+<td><strong>C2 Error Tolerance</strong></td>
+<td>What happens when a tool fails?</td>
+<td>Structured errors + LLM-friendly messages + retryable</td>
+</tr>
+<tr>
+<td><strong>C3 Permission Control</strong></td>
+<td>How do we restrict tool permissions?</td>
+<td>Tool allowlist + approval mechanism + sandbox isolation</td>
+</tr>
+<tr>
+<td><strong>C4 Third-Party Integration</strong></td>
+<td>How do external tools connect?</td>
+<td>MCP protocol + standardized schema + wildcard authorization</td>
+</tr>
+<tr>
+<td><strong>C5 Lifecycle Management</strong></td>
+<td>How are tools registered, updated, uninstalled?</td>
+<td>Registry + dynamic loading + conflict detection</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="73-core-algorithm-hardcoded-tools">7.3 Core Algorithm: hardcoded-tools</h2>
+<p>The simplest implementation of a skill module requires only 3 lines:</p>
+<pre><code class="language-python">tools = {
+    &quot;get_weather&quot;: lambda city: f&quot;{city}: 25°C&quot;,
+    &quot;calculator&quot;:  lambda expr: str(eval(expr)),
+}
+</code></pre>
+<p>Scoring against the evaluation criteria:</p>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Simplest Implementation</th>
+<th>Score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C1 Tool Discovery</strong></td>
+<td>Hardcoded list</td>
+<td>❌ New tools require source changes</td>
+</tr>
+<tr>
+<td><strong>C2 Error Tolerance</strong></td>
+<td>No error handling</td>
+<td>❌ eval can execute arbitrary code</td>
+</tr>
+<tr>
+<td><strong>C3 Permission Control</strong></td>
+<td>No permissions</td>
+<td>❌ All tools callable without restriction</td>
+</tr>
+<tr>
+<td><strong>C4 Third-Party Integration</strong></td>
+<td>Not supported</td>
+<td>❌ Cannot connect to external services</td>
+</tr>
+<tr>
+<td><strong>C5 Lifecycle Management</strong></td>
+<td>No registration mechanism</td>
+<td>❌ Cannot add or remove tools</td>
+</tr>
+</tbody>
+</table>
+<p>All failing. Let's see how production projects address each criterion.</p>
+<hr />
+<h2 id="74-production-implementation-from-3-tools-to-40-skills">7.4 Production Implementation: From 3 Tools to 40+ Skills</h2>
+<h3 id="c1-tool-discovery-how-does-the-llm-know-which-tools-are-available">C1 Tool Discovery: How Does the LLM Know Which Tools Are Available?</h3>
+<p>The LLM doesn't discover tools on its own — it can only use the ones you tell it about in the request.</p>
+<p><strong>OpenClaw: Layered discovery + conditional injection.</strong> <code>discoverOpenClawPlugins()</code> (<code>loader.ts:200-210</code>) scans across four priority layers: config &gt; workspace &gt; global &gt; bundled. <code>shouldIncludeSkill</code> performs capability detection on each SKILL.md — OS compatibility, binary dependencies, environment variables — only skills that pass all checks are injected into the system prompt.</p>
+<p><strong>Letta: Database-driven + type dispatch.</strong> Each Agent is associated with a set of <code>Tool</code> records; 11 <code>tool_type</code> enum values determine the tool's nature. When building the LLM request, tool <code>json_schema</code> is fetched from the database. Tools can be dynamically added or removed at runtime via API.</p>
+<p><strong>NanoClaw: Hardcoded list + MCP wildcard.</strong> Tools are explicitly listed as <code>allowedTools</code> in <code>query()</code> — file operations (Bash, Read, Write, Edit, Glob, Grep), web access (WebSearch, WebFetch), sub-agent collaboration (Task, TeamCreate, SendMessage), utilities (TodoWrite, ToolSearch, Skill, NotebookEdit), totaling 18+ tools + <code>mcp__nanoclaw__*</code> (MCP wildcard). Bash itself is the "meta-tool" — through it, any command-line program can be invoked.</p>
+<pre><code class="language-python"># OpenClaw style — four-layer priority discovery
+def discover_plugins(search_paths):
+    seen = set()
+    for path in [config_dir, workspace_dir, global_dir, bundled_dir]:
+        for plugin in scan_dir(path):
+            if plugin.id not in seen:
+                seen.add(plugin.id)
+                yield plugin            # 先到先得
+
+# Letta style — database query
+def get_tools_for_agent(agent_id):
+    return db.query(&quot;SELECT json_schema FROM tools_agents WHERE agent_id=?&quot;,
+                    agent_id)
+
+# NanoClaw style — hardcoded
+allowed_tools = [&quot;Bash&quot;, &quot;Read&quot;, &quot;Write&quot;, &quot;Edit&quot;, &quot;mcp__nanoclaw__*&quot;]
+</code></pre>
+<hr />
+<h3 id="c2-error-tolerance-what-happens-when-a-tool-fails">C2 Error Tolerance: What Happens When a Tool Fails?</h3>
+<p>Tool calls will inevitably fail. The key is <strong>how failure information is passed back to the LLM so it can self-correct</strong>.</p>
+<p><strong>OpenClaw: Hook interception + error boundaries.</strong> The <code>before_tool_call</code> hook allows plugins to intercept before execution — modifying arguments or even returning <code>{ block: true }</code> to prevent execution. <code>after_tool_call</code> can inspect results and trigger retries.</p>
+<p><strong>Letta: Structured results + friendly error messages.</strong> <code>ToolExecutionResult</code> marks outcomes with <code>status: "success" | "error"</code>. <code>get_friendly_error_msg()</code> generates LLM-friendly error descriptions — including the function name and exception type, but excluding the traceback (traceback goes to <code>stderr</code> for debugging).</p>
+<pre><code class="language-python"># Letta style — structured errors + friendly messages
+@dataclass
+class ToolExecutionResult:
+    status: str        # &quot;success&quot; | &quot;error&quot;
+    func_return: str   # 返回值 or 错误描述（给 LLM 看）
+    stderr: str        # traceback（给开发者看）
+
+def get_friendly_error_msg(func_name, exception):
+    return f&quot;Error in {func_name}: {type(exception).__name__}: {exception}&quot;
+    # 不含 traceback → 节省 LLM 上下文窗口
+</code></pre>
+<p><strong>NanoClaw: stderr as feedback.</strong> Bash's non-zero exit code + stderr are returned directly to Claude. The AI decides on its own whether to retry.</p>
+<blockquote>
+<p><strong>Design Pattern In-Place — Observer / Hook System</strong></p>
+<p><strong>Problem solved</strong>: Logic such as checks, logging, and retries needs to be inserted before and after tool execution, but this logic should not be coupled with the tool itself.</p>
+<p><strong>Solution</strong>: Components subscribe to events via hooks, decoupling publishers from subscribers. OpenClaw's <code>before_tool_call</code> / <code>after_tool_call</code> and 13 other lifecycle hooks are divided into two modes: <code>void</code> (pure notification) and <code>modifying</code> (can alter data). NanoClaw's <code>startIpcWatcher()</code> is a filesystem-based observer — the container writes a file to "publish" a request, and the host polls to "subscribe" and process it.</p>
+</blockquote>
+<hr />
+<h3 id="c3-permission-control-how-do-we-restrict-tool-permissions">C3 Permission Control: How Do We Restrict Tool Permissions?</h3>
+<p>A tool that can send emails, if unrestricted, could spam every contact with advertisements.</p>
+<p><strong>OpenClaw: ACL + tool allowlist.</strong> <code>resolvePluginTools()</code> supports a <code>toolAllowlist</code> parameter: tools marked as <code>optional</code> are only passed to the LLM if they appear on the allowlist; non-optional tools are always included. Built-in conflict detection automatically reports when multiple plugins register tools with the same name. Combined with the <code>before_tool_call</code> hook, tool calls can be dynamically blocked based on user identity.</p>
+<p><strong>Letta: Approval mechanism + sandbox + ToolRule.</strong> The <code>default_requires_approval</code> field controls whether human confirmation is needed. Custom tools execute within <code>SandboxToolExecutor</code>. The <code>ToolRule</code> system supports tool call chain constraints (tool A must be followed by tool B).</p>
+<p><strong>NanoClaw: Docker container as sandbox.</strong> The entire Agent runs inside a container, and the container is the security boundary. The <code>allowedTools</code> list is the entire permission declaration.</p>
+<hr />
+<h3 id="c4-third-party-integration-how-do-external-tools-connect-mcp">C4 Third-Party Integration: How Do External Tools Connect? (MCP)</h3>
+<p><strong>MCP (Model Context Protocol)</strong> is the industry's attempt at standardizing "the USB port for AI" — any tool that implements the MCP protocol (based on JSON-RPC 2.0) can be used by any Agent that supports MCP.</p>
+<p><strong>NanoClaw has the deepest MCP integration.</strong> Core functionality (<code>send_message</code>, <code>schedule_task</code>, and 5 other tools) is exposed through an MCP Server. Adding a third-party service only requires adding an entry to the <code>mcpServers</code> dictionary.</p>
+<p><strong>Letta</strong> treats MCP tools as <code>ToolType.EXTERNAL_MCP</code>; <code>ToolCreate.from_mcp()</code> generates Python wrapper functions.</p>
+<p><strong>OpenClaw</strong>'s MCP support is implemented through the plugin system and can be loaded on demand.</p>
+<div class="mermaid">flowchart TB
+    subgraph spectrum["Extensibility Spectrum"]
+        direction LR
+        OC["OpenClaw<br/>Plugin SDK + 15 hooks"]
+        LT["Letta<br/>Tool API + AST Schema"]
+        NC["NanoClaw<br/>Bash + MCP + allowedTools"]
+    end
+
+    OC ---|"框架控制力"| LT
+    LT ---|"AI 自治度"| NC
+
+    MCP["MCP 协议<br/>JSON-RPC 桥接"]
+    OC -.->|Client| MCP
+    LT -.->|Executor| MCP
+    NC -.->|Server| MCP
+
+    style MCP fill:#96ceb4,color:#fff
+</div>
+<p>⚠️ <strong>MCP Reality Check</strong>: MCP is still in its early stages. The protocol only covers Tool invocation; the Resource and Prompt capabilities are unused across all three projects. The most critical limitation: MCP does not define an authentication standard — each Server handles API keys and OAuth on its own.</p>
+<blockquote>
+<p><strong>Design Pattern In-Place — Registry</strong></p>
+<p><code>mermaid
+flowchart TB
+    P1["Plugin A&lt;br/&gt;registerTool()"] --&gt;|registerTool| REG["Plugin Registry&lt;br/&gt;tools / hooks / channels"]
+    P2["Plugin B&lt;br/&gt;registerHook()"] --&gt;|registerHook| REG
+    P3["MCP Server&lt;br/&gt;JSON-RPC bridge"] --&gt;|registerTool| REG
+    REG --&gt; RESOLVE["resolvePluginTools()&lt;br/&gt;whitelist + conflict check"]
+    RESOLVE --&gt; LLM["Inject to LLM&lt;br/&gt;tools[] → prompt"]</code></p>
+<p><strong>Problem solved</strong>: How are tools from multiple sources (built-in, plugins, MCP) managed uniformly? How are naming conflicts detected? How is allowlist filtering applied?</p>
+<p><strong>Solution</strong>: A central registry dynamically manages all extensions — registration, lookup, and conflict resolution. OpenClaw's <code>createPluginRegistry()</code> stores 13 registration categories. The registry is the "source of truth" for the plugin system.</p>
+</blockquote>
+<hr />
+<h3 id="c5-lifecycle-management-tool-registration-updates-and-uninstallation">C5 Lifecycle Management: Tool Registration, Updates, and Uninstallation?</h3>
+<p><strong>OpenClaw: Load at startup + filesystem management.</strong> <code>loadOpenClawPlugins()</code> uses jiti to JIT-compile and load TypeScript modules at startup. Plugin "installation/uninstallation" is a filesystem operation — copying/deleting folders in the <code>extensions/</code> directory. Updates require a restart.</p>
+<p><strong>Letta: API-driven dynamic management + database persistence.</strong> <code>ToolManager.create_tool()</code> creates tools via REST API, with source code stored in the database's <code>source_code</code> field. Tools can be updated or deleted at any time without a restart.</p>
+<p><strong>NanoClaw: "Don't add features. Add skills."</strong> NanoClaw's extension philosophy is the most radical — instead of adding functionality through code, it teaches the AI how to accomplish new tasks using Markdown files in the <code>.claude/skills/</code> directory, leveraging <code>Bash</code> and <code>MCP</code>.</p>
+<blockquote>
+<p><strong>Design Pattern In-Place — Dynamic Loading</strong></p>
+<p><strong>Problem solved</strong>: How do you load new modules without recompiling?</p>
+<p><strong>Solution</strong>: Load module code at runtime. OpenClaw uses jiti to directly load TypeScript at runtime without pre-compilation. Letta uses <code>importlib</code> to dynamically import Python functions, with <code>derive_openai_json_schema()</code> automatically generating schemas via AST parsing.</p>
+</blockquote>
+<hr />
+<h3 id="cross-project-comparison-three-extension-philosophies">Cross-Project Comparison: Three Extension Philosophies</h3>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>OpenClaw</th>
+<th>Letta</th>
+<th>NanoClaw</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C1 Tool Discovery</strong></td>
+<td>Four-layer filesystem scan + capability detection</td>
+<td>Database query + type dispatch</td>
+<td>Hardcoded + MCP wildcard</td>
+</tr>
+<tr>
+<td><strong>C2 Error Tolerance</strong></td>
+<td>15 lifecycle hooks for interception</td>
+<td>Structured ToolExecutionResult</td>
+<td>stderr + AI self-correction</td>
+</tr>
+<tr>
+<td><strong>C3 Permission Control</strong></td>
+<td>Tool allowlist + hook blocking</td>
+<td>Approval mechanism + sandbox + ToolRule</td>
+<td>Docker container isolation</td>
+</tr>
+<tr>
+<td><strong>C4 Third-Party Integration</strong></td>
+<td>Plugin-based MCP integration</td>
+<td>EXTERNAL_MCP + DB wrapper</td>
+<td>MCP native Stdio/HTTP</td>
+</tr>
+<tr>
+<td><strong>C5 Lifecycle</strong></td>
+<td>Filesystem + jiti compiled loading</td>
+<td>API + DB persistence</td>
+<td>Markdown Skills + Bash</td>
+</tr>
+<tr>
+<td><strong>Core Design Patterns</strong></td>
+<td>Registry + Dynamic Loading + Observer</td>
+<td>Registry + Dynamic Loading</td>
+<td>IPC Observer + MCP</td>
+</tr>
+<tr>
+<td><strong>Extension Philosophy</strong></td>
+<td>Framework-level controllability</td>
+<td>Platform-level programmability</td>
+<td>Minimalism + AI autonomy</td>
+</tr>
+</tbody>
+</table>
+<p>💡 <strong>Key Insight</strong>: Each extension approach's strength is built on what it sacrifices. OpenClaw's framework-level control comes from giving up runtime dynamism; Letta's API dynamism comes from persisting everything to the database; NanoClaw's minimalism comes from using Bash as the "universal tool" + Docker as the security boundary.</p>
+<hr />
+<h2 id="75-skill-layer-code-panorama">7.5 Skill Layer Code Panorama</h2>
+<h3 id="openclaw-skill-module">OpenClaw Skill Module</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>~Lines</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>plugins/registry.ts</code></td>
+<td>514</td>
+<td>Central registry: 13 registration categories</td>
+</tr>
+<tr>
+<td><code>plugins/loader.ts</code></td>
+<td>456</td>
+<td>Four-layer discovery + jiti compiled loading</td>
+</tr>
+<tr>
+<td><code>plugins/tools.ts</code></td>
+<td>138</td>
+<td>Tool resolution + allowlist + conflict detection</td>
+</tr>
+<tr>
+<td><code>plugins/hooks.ts</code></td>
+<td>—</td>
+<td>Hook executor: void + modifying dual modes</td>
+</tr>
+<tr>
+<td><code>plugins/types.ts</code></td>
+<td>—</td>
+<td>Plugin interfaces + 15 lifecycle hooks</td>
+</tr>
+<tr>
+<td><code>plugin-sdk/index.ts</code></td>
+<td>400</td>
+<td>Public Plugin SDK API</td>
+</tr>
+<tr>
+<td><code>skills/config.ts</code></td>
+<td>—</td>
+<td><code>shouldIncludeSkill</code> capability detection</td>
+</tr>
+</tbody>
+</table>
+<h3 id="letta-skill-module">Letta Skill Module</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>~Lines</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>functions/functions.py</code></td>
+<td>350</td>
+<td><code>derive_openai_json_schema()</code> + dynamic loading</td>
+</tr>
+<tr>
+<td><code>functions/function_sets/base.py</code></td>
+<td>259</td>
+<td>Built-in core functions (memory operations)</td>
+</tr>
+<tr>
+<td><code>schemas/tool.py</code></td>
+<td>169</td>
+<td><code>Tool</code> model + <code>ToolCreate.from_mcp()</code></td>
+</tr>
+<tr>
+<td><code>schemas/tool_rule.py</code></td>
+<td>44</td>
+<td>Tool call chain constraints</td>
+</tr>
+<tr>
+<td><code>services/tool_executor/</code></td>
+<td>~200</td>
+<td>Tool execution management + type dispatch</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nanoclaw-skill-module">NanoClaw Skill Module</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>~Lines</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>agent-runner/src/index.ts</code></td>
+<td>~20</td>
+<td><code>allowedTools</code> + <code>mcpServers</code> configuration</td>
+</tr>
+<tr>
+<td><code>ipc.ts</code></td>
+<td>381</td>
+<td>IPC file watcher + task-level processing</td>
+</tr>
+<tr>
+<td><code>ipc-mcp-stdio.ts</code></td>
+<td>—</td>
+<td>MCP Server: 7 tools</td>
+</tr>
+<tr>
+<td><code>.claude/skills/</code></td>
+<td>—</td>
+<td>Markdown skill files</td>
+</tr>
+</tbody>
+</table>
+<div class="mermaid">flowchart LR
+    subgraph OpenClaw ["OpenClaw Skill Module"]
+        direction TB
+        OL["loader.ts<br/>4-layer discovery + jiti"]
+        OR["registry.ts<br/>Central registry"]
+        OT["tools.ts<br/>Tool resolution + conflict"]
+        OH["hooks.ts<br/>Hook executor"]
+        OL --> OR --> OT
+        OH --> OR
+    end
+
+    subgraph Letta ["Letta Skill Module"]
+        direction TB
+        LF["functions.py<br/>AST + dynamic loading"]
+        LB["base.py<br/>Built-in functions"]
+        LT2["tool.py<br/>Tool model"]
+        LE["tool_executor/<br/>Type dispatch"]
+        LF --> LT2
+        LB --> LE
+    end
+
+    subgraph NanoClaw ["NanoClaw Skill Module"]
+        direction TB
+        NA["allowedTools<br/>Hardcoded list"]
+        NI["ipc.ts<br/>File IPC"]
+        NM["ipc-mcp-stdio.ts<br/>MCP Server"]
+        NA --> NM
+        NI --> NM
+    end
+</div>
+<hr />
+<h2 id="76-lab-build-your-own-skill-module">7.6 Lab: Build Your Own Skill Module</h2>
+<p>This Lab builds <code>mini_agent/skills.py</code> — a skill registration + dynamic loading system that composes with previous modules.</p>
+<h3 id="environment-setup">Environment Setup</h3>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Environment Variable</th>
+<th>Cost Reference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OpenAI</td>
+<td><code>OPENAI_API_KEY</code></td>
+<td>~$0.01/call</td>
+</tr>
+<tr>
+<td>DeepSeek</td>
+<td><code>DEEPSEEK_API_KEY</code></td>
+<td>~¥0.01/call</td>
+</tr>
+<tr>
+<td>Ollama (local)</td>
+<td>No key needed</td>
+<td>Free</td>
+</tr>
+<tr>
+<td>No key</td>
+<td>Auto MockLLM</td>
+<td>Free (limited functionality)</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash"># No extra dependencies (Python standard library only)
+</code></pre>
+<h3 id="prompt-1-build-the-skill-registration-system">Prompt 1 — Build the Skill Registration System</h3>
+<blockquote>
+<p>Implement the skill extension system in <code>mini_agent/skills.py</code>:</p>
+<ol>
+<li><code>Skill</code> dataclass — a collection of related tools (name + description + tools)</li>
+<li><code>SkillRegistry</code> — register, lookup, flatten all tools, export as <code>ToolRegistry</code></li>
+<li><code>SkillLoader</code> — load skills from a directory (manifest.json + handlers.py)</li>
+<li><code>create_builtin_skills()</code> — built-in system tools (get_time, calculator) + optional memory tools</li>
+<li>Reuse <code>mini_agent.runtime.Tool</code> and <code>ToolRegistry</code></li>
+<li><code>if __name__</code> standalone run demo</li>
+</ol>
+</blockquote>
+<p><strong>Verification Checklist:</strong>
+- [ ] <code>Skill</code> dataclass has name, description, tools; <code>tool_names()</code> lists them
+- [ ] <code>SkillRegistry.to_registry()</code> exports as <code>ToolRegistry</code>
+- [ ] <code>SkillLoader.load_from_dir()</code> parses manifest.json + loads handlers.py
+- [ ] <code>create_builtin_skills()</code> provides at least get_time, calculator
+- [ ] <code>python -m mini_agent.skills</code> runs standalone</p>
+<p><strong>Expected Output:</strong></p>
+<pre><code>=== 已注册技能 ===
+[system] 系统工具集
+  - get_time: 获取当前时间
+  - calculator: 数学计算
+
+=== ToolRegistry: ['get_time', 'calculator'] ===
+
+get_time → 2026-02-18 00:00:00
+calculator('2+3*4') → 14
+
+共 1 个技能, 2 个工具
+</code></pre>
+<h3 id="prompt-2-load-skills-from-a-directory-hands-on-c5">Prompt 2 — Load Skills from a Directory (Hands-On C5)</h3>
+<blockquote>
+<p>Create a new skill directory (with <code>manifest.json</code> and <code>handlers.py</code>) implementing custom tools. Verify that <code>SkillLoader.discover()</code> correctly scans and loads the skill.</p>
+</blockquote>
+<h3 id="prompt-3-integrate-reactruntime-security-hands-on-c1c3">Prompt 3 — Integrate ReactRuntime + Security (Hands-On C1+C3)</h3>
+<blockquote>
+<p>Integrate SkillRegistry with ReactRuntime + Sandbox:</p>
+<ul>
+<li>SkillRegistry → ToolRegistry → ReactRuntime</li>
+<li>Sandbox.check() filters unauthorized tools before execution</li>
+<li>Try calling both registered and unregistered tools, and observe the security interception</li>
+</ul>
+</blockquote>
+<h3 id="reference-implementation">Reference Implementation</h3>
+<blockquote>
+<p>Full reference implementation available in <code>mini_agent/skills.py</code>.</p>
+</blockquote>
+<details>
+<summary>Reference Implementation: mini_agent/skills.py (~200 lines)</summary>
+
+
+<pre><code class="language-python">&quot;&quot;&quot;mini_agent/skills.py — 技能扩展系统
+
+第七章 Lab · 工具注册表 + 动态加载 + 技能目录
+
+单独运行: python -m mini_agent.skills
+依赖: 仅 Python 标准库
+&quot;&quot;&quot;
+from __future__ import annotations
+
+import json, os, time, importlib.util
+from dataclasses import dataclass, field
+from typing import Callable
+
+from mini_agent.runtime import Tool, ToolRegistry
+
+
+@dataclass
+class Skill:
+    &quot;&quot;&quot;一组相关工具的集合&quot;&quot;&quot;
+    name: str
+    description: str
+    version: str = &quot;1.0.0&quot;
+    tools: list[Tool] = field(default_factory=list)
+
+    def tool_names(self) -&gt; list[str]:
+        return [t.name for t in self.tools]
+
+
+class SkillRegistry:
+    def __init__(self):
+        self._skills: dict[str, Skill] = {}
+
+    def register(self, skill: Skill) -&gt; None:
+        self._skills[skill.name] = skill
+
+    def get(self, name: str) -&gt; Skill | None:
+        return self._skills.get(name)
+
+    def list_skills(self) -&gt; list[Skill]:
+        return list(self._skills.values())
+
+    def all_tools(self) -&gt; list[Tool]:
+        tools = []
+        for s in self._skills.values():
+            tools.extend(s.tools)
+        return tools
+
+    def to_registry(self) -&gt; ToolRegistry:
+        reg = ToolRegistry()
+        for tool in self.all_tools():
+            reg.register(tool)
+        return reg
+
+    def summary(self) -&gt; str:
+        lines = []
+        for s in self._skills.values():
+            lines.append(f&quot;[{s.name}] {s.description}&quot;)
+            for t in s.tools:
+                lines.append(f&quot;  - {t.name}: {t.description}&quot;)
+        return &quot;\n&quot;.join(lines)
+
+
+class SkillLoader:
+    @staticmethod
+    def load_from_dir(skill_dir: str) -&gt; Skill | None:
+        manifest_path = os.path.join(skill_dir, &quot;manifest.json&quot;)
+        if not os.path.exists(manifest_path):
+            return None
+
+        manifest = json.loads(
+            open(manifest_path, encoding=&quot;utf-8&quot;).read())
+        skill = Skill(
+            name=manifest[&quot;name&quot;],
+            description=manifest.get(&quot;description&quot;, &quot;&quot;),
+            version=manifest.get(&quot;version&quot;, &quot;1.0.0&quot;))
+
+        handlers_module = None
+        handlers_path = os.path.join(skill_dir, &quot;handlers.py&quot;)
+        if os.path.exists(handlers_path):
+            spec = importlib.util.spec_from_file_location(
+                &quot;handlers&quot;, handlers_path)
+            if spec and spec.loader:
+                handlers_module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(handlers_module)
+
+        for tool_def in manifest.get(&quot;tools&quot;, []):
+            handler = None
+            if handlers_module:
+                handler = getattr(
+                    handlers_module, tool_def[&quot;handler&quot;], None)
+            if not handler:
+                _name = tool_def[&quot;name&quot;]
+                def _stub(_n=_name, **kw):
+                    return f&quot;[stub] {_n}({kw})&quot;
+                handler = _stub
+
+            skill.tools.append(Tool(
+                name=tool_def[&quot;name&quot;],
+                description=tool_def.get(&quot;description&quot;, &quot;&quot;),
+                parameters=tool_def.get(&quot;parameters&quot;, {}),
+                handler=handler))
+
+        return skill
+
+    @staticmethod
+    def discover(skills_dir: str) -&gt; list[Skill]:
+        skills = []
+        if not os.path.isdir(skills_dir):
+            return skills
+        for name in sorted(os.listdir(skills_dir)):
+            path = os.path.join(skills_dir, name)
+            if os.path.isdir(path):
+                skill = SkillLoader.load_from_dir(path)
+                if skill:
+                    skills.append(skill)
+        return skills
+
+
+def create_builtin_skills(memory=None) -&gt; list[Skill]:
+    def _safe_calc(expression: str = &quot;&quot;) -&gt; str:
+        if all(c in &quot;0123456789+-*/.() &quot; for c in expression):
+            try:
+                return str(eval(expression))
+            except Exception as e:
+                return f&quot;Error: {e}&quot;
+        return &quot;Error: 非法字符&quot;
+
+    sys_skill = Skill(&quot;system&quot;, &quot;系统工具集&quot;, tools=[
+        Tool(&quot;get_time&quot;, &quot;获取当前时间&quot;, {},
+             lambda: time.strftime(&quot;%Y-%m-%d %H:%M:%S&quot;)),
+        Tool(&quot;calculator&quot;, &quot;数学计算&quot;,
+             {&quot;expression&quot;: {&quot;type&quot;: &quot;string&quot;,
+                             &quot;description&quot;: &quot;数学表达式&quot;}},
+             _safe_calc),
+    ])
+
+    skills: list[Skill] = [sys_skill]
+
+    if memory:
+        mem_skill = Skill(&quot;memory&quot;, &quot;记忆管理工具&quot;, tools=[
+            Tool(&quot;search_memory&quot;, &quot;搜索历史记忆&quot;,
+                 {&quot;query&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;搜索词&quot;}},
+                 lambda query=&quot;&quot;: &quot;\n&quot;.join(
+                     r[&quot;text&quot;] for r in memory.recall(query, 3)
+                 ) or &quot;无结果&quot;),
+            Tool(&quot;remember&quot;, &quot;记住重要信息&quot;,
+                 {&quot;label&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;类别&quot;},
+                  &quot;content&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;内容&quot;}},
+                 lambda label=&quot;human&quot;, content=&quot;&quot;: (
+                     memory.remember(label, content) or
+                     f&quot;已记住: {content}&quot;)),
+        ])
+        skills.append(mem_skill)
+
+    return skills
+
+
+if __name__ == &quot;__main__&quot;:
+    registry = SkillRegistry()
+    for skill in create_builtin_skills():
+        registry.register(skill)
+
+    print(&quot;=== 已注册技能 ===&quot;)
+    print(registry.summary())
+
+    tools = registry.to_registry()
+    print(f&quot;\n=== ToolRegistry: {tools.names()} ===&quot;)
+
+    t = tools.get(&quot;get_time&quot;)
+    print(f&quot;\nget_time → {t.handler() if t else 'N/A'}&quot;)
+    t = tools.get(&quot;calculator&quot;)
+    print(f&quot;calculator('2+3*4') → &quot;
+          f&quot;{t.handler(expression='2+3*4') if t else 'N/A'}&quot;)
+
+    print(f&quot;\n共 {len(registry.list_skills())} 个技能, &quot;
+          f&quot;{len(registry.all_tools())} 个工具&quot;)
+</code></pre>
+
+
+</details>
+
+<h3 id="evaluation-criteria-mapping">Evaluation Criteria Mapping</h3>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Lab Implementation</th>
+<th>Still Needed for Production</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C1 Tool Discovery</strong></td>
+<td>SkillLoader + manifest.json</td>
+<td>Four-layer priority, conditional injection, capability detection</td>
+</tr>
+<tr>
+<td><strong>C2 Error Tolerance</strong></td>
+<td>Stub function fallback</td>
+<td>Structured ToolExecutionResult, friendly errors</td>
+</tr>
+<tr>
+<td><strong>C3 Permission Control</strong></td>
+<td>None (requires Sandbox integration)</td>
+<td>Tool allowlist, approval, ToolRule</td>
+</tr>
+<tr>
+<td><strong>C4 Third-Party Integration</strong></td>
+<td>None</td>
+<td>MCP client, JSON-RPC bridge</td>
+</tr>
+<tr>
+<td><strong>C5 Lifecycle</strong></td>
+<td>Registration + dynamic loading</td>
+<td>Conflict detection, hot reload, version management</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="77-chapter-summary">7.7 Chapter Summary</h2>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Key Insight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C1 Tool Discovery</strong></td>
+<td>Four-layer priority scanning (OpenClaw) enables precise filtering of 36 extensions and 40+ skills; database-driven (Letta) allows runtime tool add/remove; hardcoded + Bash (NanoClaw) substitutes a meta-tool for tool discovery.</td>
+</tr>
+<tr>
+<td><strong>C2 Error Tolerance</strong></td>
+<td>LLM-friendly error messages are critical — raw tracebacks waste context window. Letta's separation of <code>func_return</code> (for the LLM) + <code>stderr</code> (for the developer) is a good practice.</td>
+</tr>
+<tr>
+<td><strong>C3 Permission Control</strong></td>
+<td>Tool allowlist (OpenClaw), approval + sandbox (Letta), container isolation (NanoClaw) — three levels of granularity, matching three product positioning strategies.</td>
+</tr>
+<tr>
+<td><strong>C4 Third-Party Integration</strong></td>
+<td>MCP works well as a "peripheral interface" (connecting third parties), but not as a "kernel interface" (internal framework calls). All three projects retained their native tool mechanisms.</td>
+</tr>
+<tr>
+<td><strong>C5 Lifecycle</strong></td>
+<td>The boundary between "declaration vs. implementation" reveals the framework's values: the greater the separation (OpenClaw), the heavier the framework; the tighter the coupling (NanoClaw), the lighter the framework but the deeper the AI dependency.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Next Chapter Preview</strong>: All six modules are now in place. Chapter 8 assembles Runtime + Memory + Channels + Security + Scheduler + Skills into a complete mini Agent.</p>
+</blockquote>
+<hr />
+<h2 id="source-reference-index">Source Reference Index</h2>
+<table>
+<thead>
+<tr>
+<th>File Path</th>
+<th>Lines</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>openclaw/src/plugins/registry.ts</code></td>
+<td>143-514</td>
+<td><code>createPluginRegistry()</code> central registry</td>
+</tr>
+<tr>
+<td><code>openclaw/src/plugins/loader.ts</code></td>
+<td>170-456</td>
+<td><code>loadOpenClawPlugins()</code> complete loading flow</td>
+</tr>
+<tr>
+<td><code>openclaw/src/plugins/loader.ts</code></td>
+<td>200-210</td>
+<td>Four-layer plugin discovery</td>
+</tr>
+<tr>
+<td><code>openclaw/src/plugins/loader.ts</code></td>
+<td>297-313</td>
+<td>jiti compiled loading</td>
+</tr>
+<tr>
+<td><code>openclaw/src/plugins/tools.ts</code></td>
+<td>44-138</td>
+<td>Tool resolution + allowlist + conflict detection</td>
+</tr>
+<tr>
+<td><code>openclaw/src/plugin-sdk/index.ts</code></td>
+<td>1-400</td>
+<td>Plugin SDK API</td>
+</tr>
+<tr>
+<td><code>openclaw/src/plugins/types.ts</code></td>
+<td>—</td>
+<td>15 lifecycle hooks</td>
+</tr>
+<tr>
+<td><code>openclaw/src/agents/skills/config.ts</code></td>
+<td>122</td>
+<td><code>shouldIncludeSkill</code> capability detection</td>
+</tr>
+<tr>
+<td><code>letta/functions/functions.py</code></td>
+<td>287-317</td>
+<td><code>derive_openai_json_schema()</code></td>
+</tr>
+<tr>
+<td><code>letta/functions/functions.py</code></td>
+<td>327-350</td>
+<td><code>get_function_from_module()</code></td>
+</tr>
+<tr>
+<td><code>letta/functions/function_sets/base.py</code></td>
+<td>86-259</td>
+<td>Built-in core functions</td>
+</tr>
+<tr>
+<td><code>letta/schemas/tool.py</code></td>
+<td>110-169</td>
+<td>Tool model + from_mcp()</td>
+</tr>
+<tr>
+<td><code>letta/schemas/tool_rule.py</code></td>
+<td>13-44</td>
+<td>Tool call chain constraints</td>
+</tr>
+<tr>
+<td><code>letta/schemas/enums.py</code></td>
+<td>200-212</td>
+<td>ToolType enum</td>
+</tr>
+<tr>
+<td><code>letta/services/tool_executor/</code></td>
+<td>—</td>
+<td>Tool execution management + type dispatch</td>
+</tr>
+<tr>
+<td><code>nanoclaw/container/agent-runner/src/index.ts</code></td>
+<td>383-406</td>
+<td>allowedTools + mcpServers</td>
+</tr>
+<tr>
+<td><code>nanoclaw/src/ipc.ts</code></td>
+<td>34-381</td>
+<td>IPC file watcher</td>
+</tr>
+<tr>
+<td><code>nanoclaw/container/agent-runner/src/ipc-mcp-stdio.ts</code></td>
+<td>—</td>
+<td>MCP Server implementation</td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+    <nav class="page-nav">
+      <a class="nav-btn prev" href="scheduling.html">← <span class="zh-text">第六章：调度与自主性</span><span class="en-text">Ch6: Scheduling</span></a>
+      <a class="nav-btn next" href="assembly.html"><span class="zh-text">第八章：终章组装</span><span class="en-text">Ch8: Assembly</span> →</a>
+    </nav>
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({ startOnLoad: true, theme: document.body.classList.contains('light') ? 'default' : 'dark' });
+</script>
+<script src="js/main.js"></script>
+</body>
+</html>

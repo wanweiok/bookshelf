@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第一章：OpenClaw 全景 | Building Your Own AI Agent</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">🤖</span>
+        <div class="logo-text">
+          <span class="zh-text">构建你自己的 AI Agent</span>
+          <span class="en-text">Building Your Own AI Agent</span>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="zh-text"><a class="nav-item " href="preface.html?lang=zh">序章：这本书能给你什么</a>
+<a class="nav-item active" href="panorama.html?lang=zh">第一章：OpenClaw 全景</a>
+<a class="nav-item " href="agent-runtime.html?lang=zh">第二章：Agent 运行时</a>
+<a class="nav-item " href="memory-state.html?lang=zh">第三章：记忆与状态</a>
+<a class="nav-item " href="channels.html?lang=zh">第四章：通信渠道</a>
+<a class="nav-item " href="security.html?lang=zh">第五章：安全与隔离</a>
+<a class="nav-item " href="scheduling.html?lang=zh">第六章：调度与自主性</a>
+<a class="nav-item " href="skills.html?lang=zh">第七章：技能扩展</a>
+<a class="nav-item " href="assembly.html?lang=zh">第八章：终章组装</a></div>
+      <div class="en-text"><a class="nav-item " href="preface.html?lang=en">Preface: What This Book Gives You</a>
+<a class="nav-item active" href="panorama.html?lang=en">Ch1: OpenClaw Panorama</a>
+<a class="nav-item " href="agent-runtime.html?lang=en">Ch2: Agent Runtime</a>
+<a class="nav-item " href="memory-state.html?lang=en">Ch3: Memory & State</a>
+<a class="nav-item " href="channels.html?lang=en">Ch4: Channels</a>
+<a class="nav-item " href="security.html?lang=en">Ch5: Security</a>
+<a class="nav-item " href="scheduling.html?lang=en">Ch6: Scheduling</a>
+<a class="nav-item " href="skills.html?lang=en">Ch7: Skills Extension</a>
+<a class="nav-item " href="assembly.html?lang=en">Ch8: Assembly</a></div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="lang-toggle" onclick="toggleLang()">
+        <span class="zh-text">English</span>
+        <span class="en-text">中文</span>
+      </button>
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">◐</button>
+    </div>
+  </aside>
+  <main class="content">
+    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+    <article class="chapter">
+      <div class="zh-text"><h1 id="openclaw">第一章：OpenClaw 全景 — 在深入之前先看到全貌</h1>
+<blockquote>
+<p>你不会在没有地图的情况下徒步穿越一座城市。阅读 50 万行代码也是一样。</p>
+<p><strong>本章目录</strong></p>
+<ul>
+<li><a href="#11-为什么需要全景地图">1.1 为什么需要全景地图</a></li>
+<li><a href="#12-数字里的-openclaw">1.2 数字里的 OpenClaw</a></li>
+<li><a href="#13-六层架构鸟瞰">1.3 六层架构鸟瞰</a></li>
+<li><a href="#14-代码地图34-个模块怎么组织">1.4 代码地图：34 个模块怎么组织</a></li>
+<li><a href="#15-消息的一生一条-whatsapp-消息的完整旅程">1.5 消息的一生：一条 WhatsApp 消息的完整旅程</a></li>
+<li><a href="#16-技术栈纵览">1.6 技术栈纵览</a></li>
+<li><a href="#17-十八大设计模式速览">1.7 十八大设计模式速览</a></li>
+<li><a href="#18-本章小结你的阅读路线图">1.8 本章小结：你的阅读路线图</a></li>
+</ul>
+</blockquote>
+<hr />
+<h2 id="11">1.1 为什么需要全景地图</h2>
+<p>50 万行代码，34 个模块，不可能逐行读。我们需要先花 10 分钟建立全局认知——这个系统有多大、模块之间怎么连接、一条消息从头到尾经历了什么——然后再逐层深入。</p>
+<p>这一章就是那张地图。所有架构图和数据来自<strong>自动化代码分析</strong>的结果。</p>
+<hr />
+<h2 id="12-openclaw">1.2 数字里的 OpenClaw</h2>
+<p>先建立规模感：</p>
+<div class="mermaid">mindmap
+  root((OpenClaw))
+    规模
+      2,834 源文件
+      ~500,000 行代码
+      34 顶级模块
+    生态
+      65+ 第三方依赖
+      7 种对外接口
+      ~425 测试文件
+    架构
+      18 大设计模式
+      6 层架构
+      15+ 通信渠道
+</div>
+<p>简单说：这是一个中型 SaaS 后端的规模——不是 demo，但也没大到需要专门团队维护构建系统。34 个模块意味着架构师做了认真的关注点分离，这是我们后续能"逐层拆解"的基础。</p>
+<p>⚠️ <strong>注意</strong>：数字基于分析时的版本快照（v2026.2.13）。OpenClaw 持续演进，但核心架构保持稳定。</p>
+<hr />
+<h2 id="13">1.3 六层架构鸟瞰</h2>
+<p>序言中我们从个人助理的六组需求推导出六层架构。现在看看 OpenClaw 的代码<strong>实际上</strong>是如何映射到这六层的：</p>
+<div class="mermaid">flowchart TD
+    User(("用户"))
+
+    subgraph 接入 ["接入层"]
+        direction LR
+        Channel["Ch4 通信渠道<br/>WhatsApp · Telegram · Slack · 11 more"]
+        Scheduler["Ch6 调度与自治<br/>Cron + Event Bus"]
+    end
+
+    subgraph 引擎 ["处理引擎"]
+        direction LR
+        Memory["Ch3 记忆与状态<br/>短期上下文 + 长期 SQLite"]
+        Runtime["Ch2 Agent 运行时<br/>ReAct Loop + LLM"]
+    end
+
+    subgraph 能力 ["能力层"]
+        direction LR
+        Security["Ch5 安全与隔离<br/>Tool Policy + Auth"]
+        Skills["Ch7 技能扩展<br/>Plugin SDK + Built-in Tools"]
+    end
+
+    User <-- "消息收发" --> Channel
+    Scheduler -. "定时触发" .-> Runtime
+    Channel <-- "归一化消息" --> Runtime
+    Runtime <-- "上下文读写" --> Memory
+    Runtime -- "工具调用" --> Security
+    Security -- "授权执行" --> Skills
+</div>
+<p>读法：<strong>自顶向下</strong>是层级关系——用户通过接入层进入，引擎处理请求，能力层提供工具执行。消息的完整旅程（含来回路径）在 §1.5 展开。</p>
+<p>这六层不是理论模型——它是从 OpenClaw 的实际代码结构中提炼出来的。下一节我们看看 34 个模块具体怎么归属到每一层。</p>
+<hr />
+<h2 id="14-34">1.4 代码地图：34 个模块怎么组织</h2>
+<p>OpenClaw 的 <code>src/</code> 下有 34 个一级模块。按六层架构分组，代码量分布如下：</p>
+<div class="mermaid">pie title 代码量分布 ~500K 行
+    "入口+配置 205K" : 205
+    "Ch2 运行时 160K" : 160
+    "Ch5 安全 145K" : 145
+    "Ch4 通道 130K" : 130
+    "Ch3 记忆 25K" : 25
+    "Ch7 技能 20K" : 20
+    "Ch6 调度 15K" : 15
+</div>
+<p>饼图揭示了一个直觉之外的事实：<strong>入口+配置</strong>和<strong>安全网关</strong>占据了近七成代码，而 AI 运行时本身只占三成。这就是为什么本书不只讲 LLM 调用——六层中的每一层都有真实的工程复杂度。</p>
+<h3 id="34">34 个模块归属哪一层？</h3>
+<p>饼图看比例，下面看细节——每个模块属于哪一层、做什么事：</p>
+<table>
+<thead>
+<tr>
+<th>层（章节）</th>
+<th>模块</th>
+<th>一句话职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ch2 运行时</strong></td>
+<td><code>agents/</code> · <code>auto-reply/</code> · <code>openai/</code> · <code>anthropic/</code></td>
+<td>ReAct 循环、回复流水线、LLM 调用</td>
+</tr>
+<tr>
+<td><strong>Ch3 记忆</strong></td>
+<td><code>memory/</code> · <code>media/</code></td>
+<td>会话索引、媒体存储</td>
+</tr>
+<tr>
+<td><strong>Ch4 通道</strong></td>
+<td><code>channels/</code> · <code>telegram/</code> · <code>web/</code> · <code>slack/</code> · <code>discord/</code> · <code>signal/</code> · <code>line/</code> · 8 more</td>
+<td>注册表 + 14 个渠道适配器（彼此无依赖）</td>
+</tr>
+<tr>
+<td><strong>Ch5 安全</strong></td>
+<td><code>gateway/</code> · <code>infra/</code> · <code>security/</code></td>
+<td>WebSocket 网关、TLS、认证、出站投递</td>
+</tr>
+<tr>
+<td><strong>Ch6 调度</strong></td>
+<td><code>cron/</code> · <code>hooks/</code> · <code>daemon/</code></td>
+<td>定时任务、事件钩子、后台进程</td>
+</tr>
+<tr>
+<td><strong>Ch7 技能</strong></td>
+<td><code>plugins/</code> · <code>plugin-sdk/</code></td>
+<td>插件注册、第三方 SDK 类型</td>
+</tr>
+<tr>
+<td><strong>入口+配置</strong></td>
+<td><code>cli/</code> · <code>commands/</code> · <code>config/</code> · <code>tui/</code> · <code>wizard/</code> · <code>logging/</code> · <code>process/</code></td>
+<td>启动入口、Zod 配置、日志、进程管理</td>
+</tr>
+</tbody>
+</table>
+<p>💡 注意两点：<code>config/</code> 被几乎所有模块依赖，它是整个系统的"地基"；14 个通道模块彼此完全解耦，只通过 <code>channels/</code> 注册表统一管理——这就是 OpenClaw 能轻松支持 15+ 渠道的原因。</p>
+<hr />
+<h2 id="15-whatsapp">1.5 消息的一生：一条 WhatsApp 消息的完整旅程</h2>
+<p>用户在 WhatsApp 上发了一句"今天东京天气怎么样？"——这条消息在 OpenClaw 内部经历了什么？</p>
+<div class="mermaid">flowchart TD
+    subgraph 入站 ["入站（接收 + 预处理）"]
+        direction LR
+        A(["用户发消息"]) --> B["接收 + 归一化 + 路由"] --> C["防抖 + 模型选择 + 加载历史"]
+    end
+
+    subgraph 执行 ["Agent 执行（ReAct 循环）"]
+        direction LR
+        D{"ReAct 循环"} -->|"需要工具"| E["工具调用"] -->|"结果"| D
+    end
+
+    subgraph 出站 ["出站（适配 + 投递）"]
+        direction LR
+        F["分块 + 平台适配"] --> G(["回复送达"])
+    end
+
+    C --> D
+    D -->|"最终答案"| F
+</div>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>模块</th>
+<th>发生了什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>入站</strong></td>
+<td><code>web/</code> · <code>channels/</code></td>
+<td>适配器接收消息，归一化为统一格式（不管来自哪个平台），去重后路由到会话</td>
+</tr>
+<tr>
+<td><strong>流水线</strong></td>
+<td><code>auto-reply/</code></td>
+<td>防抖（合并连续消息）→ 模型选择（OpenAI/Anthropic/Ollama）→ 加载历史 + 构建提示词</td>
+</tr>
+<tr>
+<td><strong>Agent 执行</strong></td>
+<td><code>agents/</code></td>
+<td>ReAct 循环：LLM 决定调用 <code>web_search</code> 工具 → 获取结果 → 再次推理 → 生成最终回答</td>
+</tr>
+<tr>
+<td><strong>出站</strong></td>
+<td><code>infra/</code></td>
+<td>回复文本自动分块（适配平台长度限制），通过适配器推送给用户</td>
+</tr>
+</tbody>
+</table>
+<p>关键设计：入站归一化和出站适配器形成两个<strong>解耦点</strong>——中间的所有逻辑完全不知道消息来自哪个平台。这就是 OpenClaw 能支持 14+ 通道而不用为每个通道写不同处理逻辑的原因。</p>
+<hr />
+<h2 id="16">1.6 技术栈纵览</h2>
+<p>OpenClaw 的技术选型反映了一个成熟的 Node.js 全栈项目的架构哲学。按职能分组：</p>
+<h3 id="_1">语言与运行时</h3>
+<table>
+<thead>
+<tr>
+<th>技术</th>
+<th>版本</th>
+<th>选型理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TypeScript</td>
+<td>5.9</td>
+<td>强类型 → IDE 补全 + 重构安全性，50 万行代码没有类型系统是不可想象的</td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td>≥22</td>
+<td>原生 ESM 支持，异步 I/O 天然适合消息驱动的 Agent 系统</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ai-llm">AI / LLM 层</h3>
+<table>
+<thead>
+<tr>
+<th>技术</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pi Agent Core</td>
+<td>自研 ReAct 循环引擎（第二章重点分析）</td>
+</tr>
+<tr>
+<td>OpenAI SDK</td>
+<td>主 LLM 提供商</td>
+</tr>
+<tr>
+<td>Anthropic SDK</td>
+<td>备用提供商（failover）</td>
+</tr>
+<tr>
+<td>AWS Bedrock · Ollama</td>
+<td>企业级 / 本地部署选项</td>
+</tr>
+</tbody>
+</table>
+<p>💡 为什么要接这么多 LLM？不是为了支持而支持——这是 <strong>failover 策略</strong>。当 OpenAI 限流时，系统自动切换到 Anthropic。生产环境中，单一提供商是不可接受的风险。</p>
+<h3 id="sdk">通道 SDK</h3>
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th>SDK</th>
+<th>协议特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Telegram</td>
+<td>grammY</td>
+<td>Bot API，HTTP 轮询 / Webhook</td>
+</tr>
+<tr>
+<td>WhatsApp</td>
+<td>Baileys</td>
+<td>Web 协议，WebSocket 长连接</td>
+</tr>
+<tr>
+<td>Slack</td>
+<td>Bolt</td>
+<td>Events API + Web API</td>
+</tr>
+<tr>
+<td>Discord</td>
+<td>discord.js</td>
+<td>Gateway WebSocket</td>
+</tr>
+<tr>
+<td>LINE · Lark · Signal</td>
+<td>各平台官方 SDK</td>
+<td>协议各异</td>
+</tr>
+</tbody>
+</table>
+<p>💡 每个平台协议差异巨大，试图用统一协议层抹平差异是不现实的。务实做法：<strong>通道内用最合适的 SDK，通道之上做抽象</strong>。这就是第四章"渠道适配器模式"的来源。</p>
+<h3 id="_2">存储</h3>
+<table>
+<thead>
+<tr>
+<th>技术</th>
+<th>用途</th>
+<th>选型理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SQLite + sqlite-vec</td>
+<td>会话索引 + 向量搜索</td>
+<td><strong>本地优先</strong>设计——运行在用户设备上，不需要外部数据库</td>
+</tr>
+<tr>
+<td>JSONL</td>
+<td>会话记录</td>
+<td>追加写入、易于人工审查、每行一条消息</td>
+</tr>
+<tr>
+<td>YAML</td>
+<td>配置文件</td>
+<td>可读性好，支持注释</td>
+</tr>
+</tbody>
+</table>
+<p>💡 为什么是 SQLite 而不是 PostgreSQL？因为 OpenClaw 的哲学是 <strong>Local-first</strong>。单个文件完成关系查询 + 向量搜索，零运维。这个选型直接影响了第三章记忆层的设计。</p>
+<h3 id="_3">基础设施与工具链</h3>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>技术</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>网络</td>
+<td>Express 5 · ws · Tailscale</td>
+<td>HTTP 网关 + WebSocket 实时通信 + 安全组网。所有接口（CLI、UI、IM）最终汇聚到 Gateway WebSocket 一个核心</td>
+</tr>
+<tr>
+<td>配置验证</td>
+<td>Zod 4 · TypeBox</td>
+<td>运行时 schema 验证，把错误拦截在入口</td>
+</tr>
+<tr>
+<td>浏览器/媒体</td>
+<td>Playwright · Sharp · Deepgram</td>
+<td>网页抓取工具、图片处理、语音转文字</td>
+</tr>
+<tr>
+<td>UI</td>
+<td>Lit Web Components</td>
+<td>轻量管理界面</td>
+</tr>
+<tr>
+<td>构建</td>
+<td>pnpm 10 · tsdown · rolldown</td>
+<td>Monorepo 管理 + Rust 工具链极速构建</td>
+</tr>
+<tr>
+<td>测试/质量</td>
+<td>Vitest · oxlint · GitHub Actions</td>
+<td>测试框架 + Rust 实现的超快 linter + CI</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="17">1.7 十八大设计模式速览</h2>
+<p>分析 OpenClaw、Letta、NanoClaw 源码的过程中，我们识别出 18 个反复出现的设计模式——不是教科书理论，而是为解决真实问题而采用的模式。按章节分组：</p>
+<p><strong>第二章 · 运行时</strong>
+- <strong>ReAct Loop</strong> — Reason → Act → Observe 循环，分步推理执行复杂任务
+- <strong>Chain of Responsibility</strong> — 九层策略链式过滤不同工具集
+- <strong>Factory</strong> — 工厂函数封装复杂的工具创建逻辑</p>
+<p><strong>第三章 · 记忆</strong>
+- <strong>Composite</strong> — 向量 + 关键词多源搜索结果融合
+- <strong>Singleton</strong> — 确保搜索索引只创建一个实例
+- <strong>Fallback/Degradation</strong> — 主搜索引擎不可用时自动降级到内建方案</p>
+<p><strong>第四章 · 通道</strong>
+- <strong>Adapter</strong> — 统一接口隔离 14+ 平台的协议差异
+- <strong>Middleware</strong> — 请求经中间件链逐层处理，分离横切关注点
+- <strong>Event-Driven</strong> — 事件发射器解耦组件通信</p>
+<p><strong>第五章 · 安全</strong>
+- <strong>Chain of Responsibility</strong> — 九层安全策略链式过滤
+- <strong>Proxy/Decorator</strong> — 透明包装调用，注入校验和审计</p>
+<p><strong>第六章 · 调度</strong>
+- <strong>Event-Driven + Heartbeat</strong> — 事件循环 + LLM 主动续约心跳
+- <strong>Checkpoint + Failover</strong> — 状态快照 + 崩溃恢复
+- <strong>Command Lane</strong> — 会话专属串行通道，防止并发状态冲突</p>
+<p><strong>第七章 · 技能</strong>
+- <strong>Registry</strong> — 中央注册表，运行时热加载插件
+- <strong>Observer/Hook</strong> — 生命周期钩子通知，解耦扩展点
+- <strong>Dynamic Loading</strong> — 目录扫描 + manifest 驱动，运行时加载技能</p>
+<p><strong>第八章 · 组装</strong>
+- <strong>Dependency Injection</strong> — 外部注入依赖，解耦模块创建与使用
+- <strong>Builder</strong> — 分步构建复杂 Agent 对象</p>
+<p>每个模式<strong>嵌入在对应章节 x.4 节的评价标准展开</strong>中就地分析，包含 Mermaid 原理图 + 跨项目实现对比。第八章 8.4 节提供全书设计模式总览表。</p>
+<hr />
+<h2 id="18">1.8 本章小结：你的阅读路线图</h2>
+<p>10 分钟过去了。你现在对 OpenClaw 有了一张全景地图：</p>
+<ul>
+<li><strong>规模</strong>：50 万行、34 模块，入口+配置和安全网关占近七成代码</li>
+<li><strong>六层架构</strong>：运行时 → 记忆 → 通道 → 安全 → 调度 → 技能，直接映射个人助理的六组需求</li>
+<li><strong>消息流</strong>：入站归一化 → 防抖 + 模型选择 → ReAct 循环 → 出站适配，两个解耦点让 14+ 渠道共享同一套逻辑</li>
+<li><strong>技术哲学</strong>：TypeScript 强类型 + SQLite 本地优先 + 所有接口汇聚 Gateway WebSocket</li>
+<li><strong>18 个设计模式</strong>分布在六章中，每章 2-3 个，第八章提供全书总览表</li>
+</ul>
+<p>带着这张地图，进入后续章节：</p>
+<table>
+<thead>
+<tr>
+<th>章节</th>
+<th>个人助理需求</th>
+<th>核心问题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第二章</td>
+<td>能帮你做事</td>
+<td>LLM 如何变成能"做事"的引擎？</td>
+</tr>
+<tr>
+<td>第三章</td>
+<td>记住你是谁</td>
+<td>Agent 如何"记住"事情？</td>
+</tr>
+<tr>
+<td>第四章</td>
+<td>随时能找到它</td>
+<td>Agent 如何与外界对话？</td>
+</tr>
+<tr>
+<td>第五章</td>
+<td>不会失控</td>
+<td>如何防止 Agent 失控？</td>
+</tr>
+<tr>
+<td>第六章</td>
+<td>主动服务</td>
+<td>Agent 如何自主决定"做什么"？</td>
+</tr>
+<tr>
+<td>第七章</td>
+<td>能学新技能</td>
+<td>如何让 Agent 学会新技能？</td>
+</tr>
+<tr>
+<td>第八章</td>
+<td><strong>六层组装</strong></td>
+<td>如何把所有层组装起来？</td>
+</tr>
+</tbody>
+</table>
+<p>准备好了吗？我们从 Agent 的心脏——运行时——开始。</p></div>
+      <div class="en-text"><h1 id="chapter-1-the-openclaw-panorama-see-the-whole-before-diving-in">Chapter 1: The OpenClaw Panorama — See the Whole Before Diving In</h1>
+<blockquote>
+<p>You wouldn't hike through an unfamiliar city without a map. Reading 500,000 lines of code is no different.</p>
+<p><strong>Contents</strong></p>
+<ul>
+<li><a href="#11-why-you-need-the-big-picture-first">1.1 Why You Need the Big Picture First</a></li>
+<li><a href="#12-openclaw-by-the-numbers">1.2 OpenClaw by the Numbers</a></li>
+<li><a href="#13-six-layer-architecture-overview">1.3 Six-Layer Architecture Overview</a></li>
+<li><a href="#14-code-map-how-34-modules-are-organized">1.4 Code Map: How 34 Modules Are Organized</a></li>
+<li><a href="#15-life-of-a-message-a-whatsapp-messages-complete-journey">1.5 Life of a Message: A WhatsApp Message's Complete Journey</a></li>
+<li><a href="#16-technology-stack-overview">1.6 Technology Stack Overview</a></li>
+<li><a href="#17-eighteen-design-patterns-at-a-glance">1.7 Eighteen Design Patterns at a Glance</a></li>
+<li><a href="#18-chapter-summary-your-reading-roadmap">1.8 Chapter Summary: Your Reading Roadmap</a></li>
+</ul>
+</blockquote>
+<hr />
+<h2 id="11-why-you-need-the-big-picture-first">1.1 Why You Need the Big Picture First</h2>
+<p>500,000 lines of code, 34 modules — you can't read them line by line. We need to spend 10 minutes building a global understanding first: how large is this system, how do modules connect, what does a message go through end to end — then dive layer by layer.</p>
+<p>This chapter is that map. All architecture diagrams and data come from <strong>automated code analysis</strong> results.</p>
+<hr />
+<h2 id="12-openclaw-by-the-numbers">1.2 OpenClaw by the Numbers</h2>
+<p>Let's establish a sense of scale:</p>
+<div class="mermaid">mindmap
+  root((OpenClaw))
+    Scale
+      2,834 source files
+      ~500,000 lines of code
+      34 top-level modules
+    Ecosystem
+      65+ third-party deps
+      7 external interfaces
+      ~425 test files
+    Architecture
+      18 design patterns
+      6 architectural layers
+      15+ comm channels
+</div>
+<p>In short: this is a mid-sized SaaS backend — not a demo, but not so large it needs a dedicated build team. 34 modules means the architect practiced serious separation of concerns, which is the foundation that lets us "dissect layer by layer."</p>
+<p>⚠️ <strong>Watch Out</strong>: Numbers are based on a point-in-time snapshot (v2026.2.13). OpenClaw continuously evolves, but the core architecture remains stable.</p>
+<hr />
+<h2 id="13-six-layer-architecture-overview">1.3 Six-Layer Architecture Overview</h2>
+<p>In the preface, we derived six architectural layers from a personal assistant's six groups of requirements. Now let's see how OpenClaw's code <strong>actually</strong> maps to these six layers:</p>
+<div class="mermaid">flowchart TD
+    User(("User"))
+
+    subgraph Access ["Access Layer"]
+        direction LR
+        Channel["Ch4 Communication Channels<br/>WhatsApp · Telegram · Slack · 11 more"]
+        Scheduler["Ch6 Scheduling & Autonomy<br/>Cron + Event Bus"]
+    end
+
+    subgraph Engine ["Processing Engine"]
+        direction LR
+        Memory["Ch3 Memory & State<br/>Short-term Context + Long-term SQLite"]
+        Runtime["Ch2 Agent Runtime<br/>ReAct Loop + LLM"]
+    end
+
+    subgraph Capability ["Capability Layer"]
+        direction LR
+        Security["Ch5 Security & Isolation<br/>Tool Policy + Auth"]
+        Skills["Ch7 Skill Extension<br/>Plugin SDK + Built-in Tools"]
+    end
+
+    User <-- "messages" --> Channel
+    Scheduler -. "scheduled trigger" .-> Runtime
+    Channel <-- "normalized msg" --> Runtime
+    Runtime <-- "context R/W" --> Memory
+    Runtime -- "tool call" --> Security
+    Security -- "authorized exec" --> Skills
+</div>
+<p>Read top-to-bottom for the layer hierarchy — users enter through the access layer, the engine processes requests, and the capability layer provides tool execution. The complete message journey (including the return path) is expanded in §1.5.</p>
+<p>These six layers are not a theoretical model — they're distilled from OpenClaw's actual code structure. The next section shows how 34 modules are assigned to each layer.</p>
+<hr />
+<h2 id="14-code-map-how-34-modules-are-organized">1.4 Code Map: How 34 Modules Are Organized</h2>
+<p>OpenClaw's <code>src/</code> contains 34 top-level modules. Grouped by the six-layer architecture, the code volume distribution:</p>
+<div class="mermaid">pie title Code Distribution ~500K lines
+    "Entry+Config 205K" : 205
+    "Ch2 Runtime 160K" : 160
+    "Ch5 Security 145K" : 145
+    "Ch4 Channels 130K" : 130
+    "Ch3 Memory 25K" : 25
+    "Ch7 Skills 20K" : 20
+    "Ch6 Scheduling 15K" : 15
+</div>
+<p>The pie chart reveals a counter-intuitive fact: <strong>Entry+Config</strong> and <strong>Security gateway</strong> account for nearly 70% of the code, while the AI runtime itself is only 30%. This is why the book doesn't just cover LLM calls — every one of the six layers has real engineering complexity.</p>
+<h3 id="which-layer-does-each-module-belong-to">Which Layer Does Each Module Belong To?</h3>
+<p>The pie chart shows proportions; here are the details — which layer each module belongs to and what it does:</p>
+<table>
+<thead>
+<tr>
+<th>Layer (Chapter)</th>
+<th>Modules</th>
+<th>One-Line Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ch2 Runtime</strong></td>
+<td><code>agents/</code> · <code>auto-reply/</code> · <code>openai/</code> · <code>anthropic/</code></td>
+<td>ReAct loop, reply pipeline, LLM calls</td>
+</tr>
+<tr>
+<td><strong>Ch3 Memory</strong></td>
+<td><code>memory/</code> · <code>media/</code></td>
+<td>Session index, media storage</td>
+</tr>
+<tr>
+<td><strong>Ch4 Channels</strong></td>
+<td><code>channels/</code> · <code>telegram/</code> · <code>web/</code> · <code>slack/</code> · <code>discord/</code> · <code>signal/</code> · <code>line/</code> · 8 more</td>
+<td>Registry + 14 channel adapters (zero inter-dependencies)</td>
+</tr>
+<tr>
+<td><strong>Ch5 Security</strong></td>
+<td><code>gateway/</code> · <code>infra/</code> · <code>security/</code></td>
+<td>WebSocket gateway, TLS, auth, outbound delivery</td>
+</tr>
+<tr>
+<td><strong>Ch6 Scheduling</strong></td>
+<td><code>cron/</code> · <code>hooks/</code> · <code>daemon/</code></td>
+<td>Scheduled tasks, event hooks, background processes</td>
+</tr>
+<tr>
+<td><strong>Ch7 Skills</strong></td>
+<td><code>plugins/</code> · <code>plugin-sdk/</code></td>
+<td>Plugin registry, third-party SDK types</td>
+</tr>
+<tr>
+<td><strong>Entry+Config</strong></td>
+<td><code>cli/</code> · <code>commands/</code> · <code>config/</code> · <code>tui/</code> · <code>wizard/</code> · <code>logging/</code> · <code>process/</code></td>
+<td>Entry points, Zod config, logging, process management</td>
+</tr>
+</tbody>
+</table>
+<p>💡 Two things to note: <code>config/</code> is depended on by nearly every module — it's the system's "foundation"; the 14 channel modules are fully decoupled from each other, managed only through the <code>channels/</code> registry — this is how OpenClaw supports 15+ channels effortlessly.</p>
+<hr />
+<h2 id="15-life-of-a-message-a-whatsapp-messages-complete-journey">1.5 Life of a Message: A WhatsApp Message's Complete Journey</h2>
+<p>A user sends "What's the weather like in Tokyo today?" on WhatsApp — what does this message go through inside OpenClaw?</p>
+<div class="mermaid">flowchart TD
+    subgraph Inbound ["Inbound (receive + preprocess)"]
+        direction LR
+        A(["User sends msg"]) --> B["Receive + Normalize + Route"] --> C["Debounce + Model select + Load history"]
+    end
+
+    subgraph Execution ["Agent Execution (ReAct loop)"]
+        direction LR
+        D{"ReAct Loop"} -->|"needs tools"| E["Tool call"] -->|"results"| D
+    end
+
+    subgraph Outbound ["Outbound (adapt + deliver)"]
+        direction LR
+        F["Chunk + Platform adapt"] --> G(["Delivered"])
+    end
+
+    C --> D
+    D -->|"final answer"| F
+</div>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Modules</th>
+<th>What Happens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Inbound</strong></td>
+<td><code>web/</code> · <code>channels/</code></td>
+<td>Adapter receives message, normalizes to unified format (regardless of platform), dedupes, routes to session</td>
+</tr>
+<tr>
+<td><strong>Pipeline</strong></td>
+<td><code>auto-reply/</code></td>
+<td>Debounce (merge rapid messages) → model selection (OpenAI/Anthropic/Ollama) → load history + build prompt</td>
+</tr>
+<tr>
+<td><strong>Agent Execution</strong></td>
+<td><code>agents/</code></td>
+<td>ReAct loop: LLM decides to call <code>web_search</code> → gets results → reasons again → generates final answer</td>
+</tr>
+<tr>
+<td><strong>Outbound</strong></td>
+<td><code>infra/</code></td>
+<td>Reply text auto-chunked (for platform size limits), pushed to user via adapter</td>
+</tr>
+</tbody>
+</table>
+<p>Key design: inbound normalization and outbound adapters form two <strong>decoupling points</strong> — all logic in between has zero knowledge of which platform the message came from. This is how OpenClaw supports 14+ channels without writing different processing logic for each one.</p>
+<hr />
+<h2 id="16-technology-stack-overview">1.6 Technology Stack Overview</h2>
+<p>OpenClaw's technology choices reflect the architectural philosophy of a mature Node.js full-stack project. Grouped by function:</p>
+<h3 id="language-runtime">Language &amp; Runtime</h3>
+<table>
+<thead>
+<tr>
+<th>Technology</th>
+<th>Version</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TypeScript</td>
+<td>5.9</td>
+<td>Strong typing → IDE completion + refactoring safety; 500K lines of code without a type system is unimaginable</td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td>≥22</td>
+<td>Native ESM support; async I/O naturally suits message-driven Agent systems</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ai-llm-layer">AI / LLM Layer</h3>
+<table>
+<thead>
+<tr>
+<th>Technology</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pi Agent Core</td>
+<td>In-house ReAct loop engine (analyzed in depth in Chapter 2)</td>
+</tr>
+<tr>
+<td>OpenAI SDK</td>
+<td>Primary LLM provider</td>
+</tr>
+<tr>
+<td>Anthropic SDK</td>
+<td>Backup provider (failover)</td>
+</tr>
+<tr>
+<td>AWS Bedrock · Ollama</td>
+<td>Enterprise / local deployment options</td>
+</tr>
+</tbody>
+</table>
+<p>💡 Why so many LLMs? Not for the sake of support — this is a <strong>failover strategy</strong>. When OpenAI rate-limits, the system auto-switches to Anthropic. In production, a single provider is an unacceptable risk.</p>
+<h3 id="channel-sdks">Channel SDKs</h3>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>SDK</th>
+<th>Protocol Characteristics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Telegram</td>
+<td>grammY</td>
+<td>Bot API, HTTP polling / Webhook</td>
+</tr>
+<tr>
+<td>WhatsApp</td>
+<td>Baileys</td>
+<td>Web protocol, WebSocket long connection</td>
+</tr>
+<tr>
+<td>Slack</td>
+<td>Bolt</td>
+<td>Events API + Web API</td>
+</tr>
+<tr>
+<td>Discord</td>
+<td>discord.js</td>
+<td>Gateway WebSocket</td>
+</tr>
+<tr>
+<td>LINE · Lark · Signal</td>
+<td>Platform official SDKs</td>
+<td>Protocols vary widely</td>
+</tr>
+</tbody>
+</table>
+<p>💡 Protocol differences between platforms are massive; trying to flatten them with a unified protocol layer is unrealistic. The pragmatic approach: <strong>use the best SDK within each channel, abstract above the channel layer</strong>. This is the origin of Chapter 4's "channel adapter pattern."</p>
+<h3 id="storage">Storage</h3>
+<table>
+<thead>
+<tr>
+<th>Technology</th>
+<th>Purpose</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SQLite + sqlite-vec</td>
+<td>Session index + vector search</td>
+<td><strong>Local-first</strong> design — runs on user's device, no external database needed</td>
+</tr>
+<tr>
+<td>JSONL</td>
+<td>Session transcripts</td>
+<td>Append-only, easy to audit, one message per line</td>
+</tr>
+<tr>
+<td>YAML</td>
+<td>Config files</td>
+<td>Human-readable, supports comments</td>
+</tr>
+</tbody>
+</table>
+<p>💡 Why SQLite instead of PostgreSQL? Because OpenClaw's philosophy is <strong>Local-first</strong>. A single file handles relational queries + vector search, zero ops. This choice directly shapes the memory layer design in Chapter 3.</p>
+<h3 id="infrastructure-toolchain">Infrastructure &amp; Toolchain</h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Technology</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Network</td>
+<td>Express 5 · ws · Tailscale</td>
+<td>HTTP gateway + WebSocket real-time + secure networking. All interfaces (CLI, UI, IM) converge on Gateway WebSocket as one core</td>
+</tr>
+<tr>
+<td>Config validation</td>
+<td>Zod 4 · TypeBox</td>
+<td>Runtime schema validation, catching errors at the gate</td>
+</tr>
+<tr>
+<td>Browser/Media</td>
+<td>Playwright · Sharp · Deepgram</td>
+<td>Web scraping tool, image processing, speech-to-text</td>
+</tr>
+<tr>
+<td>UI</td>
+<td>Lit Web Components</td>
+<td>Lightweight admin interface</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>pnpm 10 · tsdown · rolldown</td>
+<td>Monorepo management + Rust toolchain for ultra-fast builds</td>
+</tr>
+<tr>
+<td>Testing/Quality</td>
+<td>Vitest · oxlint · GitHub Actions</td>
+<td>Test framework + Rust-powered ultra-fast linter + CI</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="17-eighteen-design-patterns-at-a-glance">1.7 Eighteen Design Patterns at a Glance</h2>
+<p>Analyzing the source code of OpenClaw, Letta, and NanoClaw, we identified 18 recurring design patterns — not textbook theory, but patterns adopted to solve real problems. Grouped by chapter:</p>
+<p><strong>Chapter 2 · Runtime</strong>
+- <strong>ReAct Loop</strong> — Reason → Act → Observe cycle, step-by-step reasoning for complex tasks
+- <strong>Chain of Responsibility</strong> — Nine-layer policy chain filtering different tool sets
+- <strong>Factory</strong> — Factory functions encapsulate complex tool creation logic</p>
+<p><strong>Chapter 3 · Memory</strong>
+- <strong>Composite</strong> — Vector + keyword multi-source search result fusion
+- <strong>Singleton</strong> — Ensure only one search index instance is created
+- <strong>Fallback/Degradation</strong> — Auto-degrade to built-in when primary search engine is unavailable</p>
+<p><strong>Chapter 4 · Channels</strong>
+- <strong>Adapter</strong> — Unified interface isolates 14+ platforms' protocol differences
+- <strong>Middleware</strong> — Requests processed through middleware chain, separating cross-cutting concerns
+- <strong>Event-Driven</strong> — Event emitters decouple component communication</p>
+<p><strong>Chapter 5 · Security</strong>
+- <strong>Chain of Responsibility</strong> — Nine-layer security policy chain filtering
+- <strong>Proxy/Decorator</strong> — Transparent call wrapping, injecting validation and auditing</p>
+<p><strong>Chapter 6 · Scheduling</strong>
+- <strong>Event-Driven + Heartbeat</strong> — Event loop + LLM-initiated heartbeat renewal
+- <strong>Checkpoint + Failover</strong> — State snapshots + crash recovery
+- <strong>Command Lane</strong> — Session-specific serial channel, preventing concurrent state conflicts</p>
+<p><strong>Chapter 7 · Skills</strong>
+- <strong>Registry</strong> — Central registry, runtime plugin hot-loading
+- <strong>Observer/Hook</strong> — Lifecycle hook notifications, decoupled extension points
+- <strong>Dynamic Loading</strong> — Directory scanning + manifest-driven, runtime skill loading</p>
+<p><strong>Chapter 8 · Assembly</strong>
+- <strong>Dependency Injection</strong> — External dependency injection, decoupling module creation from usage
+- <strong>Builder</strong> — Step-by-step construction of complex Agent objects</p>
+<p>Each pattern is <strong>embedded in the corresponding chapter's section x.4 evaluation criteria expansion</strong> and analyzed in place, with Mermaid principle diagrams + cross-project implementation comparisons. Chapter 8, section 8.4 provides a book-wide design pattern overview table.</p>
+<hr />
+<h2 id="18-chapter-summary-your-reading-roadmap">1.8 Chapter Summary: Your Reading Roadmap</h2>
+<p>10 minutes have passed. You now have a panoramic map of OpenClaw:</p>
+<ul>
+<li><strong>Scale</strong>: 500K lines, 34 modules; entry+config and security gateway account for nearly 70% of the code</li>
+<li><strong>Six-layer architecture</strong>: Runtime → Memory → Channels → Security → Scheduling → Skills, directly mapping a personal assistant's six groups of requirements</li>
+<li><strong>Message flow</strong>: Inbound normalization → debounce + model selection → ReAct loop → outbound adaptation; two decoupling points let 14+ channels share the same logic</li>
+<li><strong>Technical philosophy</strong>: TypeScript strong typing + SQLite local-first + all interfaces converge on Gateway WebSocket</li>
+<li><strong>18 design patterns</strong> distributed across six chapters, 2–3 each, with Chapter 8 providing a book-wide overview table</li>
+</ul>
+<p>Armed with this map, proceed to the subsequent chapters:</p>
+<table>
+<thead>
+<tr>
+<th>Chapter</th>
+<th>Personal Assistant Need</th>
+<th>Core Question</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ch 2</td>
+<td>Can do things for you</td>
+<td>How does an LLM become an engine that can "do things"?</td>
+</tr>
+<tr>
+<td>Ch 3</td>
+<td>Remembers who you are</td>
+<td>How does an agent "remember" things?</td>
+</tr>
+<tr>
+<td>Ch 4</td>
+<td>Always reachable</td>
+<td>How does an agent talk to the outside world?</td>
+</tr>
+<tr>
+<td>Ch 5</td>
+<td>Won't go rogue</td>
+<td>How do you prevent an agent from going rogue?</td>
+</tr>
+<tr>
+<td>Ch 6</td>
+<td>Proactively serves you</td>
+<td>How does an agent autonomously decide "what to do"?</td>
+</tr>
+<tr>
+<td>Ch 7</td>
+<td>Can learn new skills</td>
+<td>How do you teach an agent new skills?</td>
+</tr>
+<tr>
+<td>Ch 8</td>
+<td><strong>Six-layer assembly</strong></td>
+<td>How do you assemble all layers into your own agent?</td>
+</tr>
+</tbody>
+</table>
+<p>Ready? Let's start with the agent's heart — the runtime.</p></div>
+    </article>
+    <nav class="page-nav">
+      <a class="nav-btn prev" href="preface.html">← <span class="zh-text">序章：这本书能给你什么</span><span class="en-text">Preface: What This Book Gives You</span></a>
+      <a class="nav-btn next" href="agent-runtime.html"><span class="zh-text">第二章：Agent 运行时</span><span class="en-text">Ch2: Agent Runtime</span> →</a>
+    </nav>
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({ startOnLoad: true, theme: document.body.classList.contains('light') ? 'default' : 'dark' });
+</script>
+<script src="js/main.js"></script>
+</body>
+</html>
