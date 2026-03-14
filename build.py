@@ -19,6 +19,7 @@ CHAPTERS = [
     {"id": "ch06", "slug": "scheduling", "title_zh": "第六章：调度与自主性", "title_en": "Ch6: Scheduling"},
     {"id": "ch07", "slug": "skills", "title_zh": "第七章：技能扩展", "title_en": "Ch7: Skills Extension"},
     {"id": "ch08", "slug": "assembly", "title_zh": "第八章：终章组装", "title_en": "Ch8: Assembly"},
+    {"id": "appendix-a", "slug": "deployment", "title_zh": "附录 A：部署指南", "title_en": "Appendix A: Deployment Guide"},
 ]
 
 MD_EXTENSIONS = ["tables", "fenced_code", "codehilite", "toc", "attr_list", "md_in_html"]

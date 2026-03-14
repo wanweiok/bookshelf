@@ -2,109 +2,1262 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>第一章：OpenClaw 全景 | Building Your Own AI Agent</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0d1117;font-family:-apple-system,"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;color:#e6edf3}
-.gate{background:#161b22;border:1px solid #30363d;border-radius:16px;padding:48px 40px;max-width:420px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.4)}
-.lock{font-size:3rem;margin-bottom:16px;filter:grayscale(.3)}
-.gate h1{font-size:1.3rem;color:#a78bfa;margin-bottom:6px;letter-spacing:1px}
-.gate p{font-size:.82rem;color:#8b949e;margin-bottom:28px}
-.input-wrap{position:relative;margin-bottom:16px}
-.input-wrap input{width:100%;padding:12px 16px;border-radius:8px;border:1px solid #30363d;background:#0d1117;color:#e6edf3;font-size:1rem;outline:none;transition:border .2s}
-.input-wrap input:focus{border-color:#7c3aed}
-.btn{width:100%;padding:12px;border:none;border-radius:8px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;font-size:.95rem;cursor:pointer;font-weight:600;transition:opacity .2s}
-.btn:hover{opacity:.9}
-.btn:active{transform:scale(.98)}
-.err{color:#f85149;font-size:.82rem;margin-top:12px;min-height:20px;transition:opacity .3s}
-.err.hide{opacity:0}
-.loading{display:none;margin-top:12px;color:#8b949e;font-size:.82rem}
-@keyframes spin{to{transform:rotate(360deg)}}
-.spinner{display:inline-block;width:14px;height:14px;border:2px solid #30363d;border-top-color:#7c3aed;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
-</style>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 </head>
 <body>
-<div class="gate">
-  <div class="lock">&#128274;</div>
-  <h1>第一章：OpenClaw 全景 | Building Your Own AI Agent</h1>
-  <p>This content is password protected</p>
-  <div class="input-wrap">
-    <input id="pw" type="password" placeholder="Enter password / 输入密码" autofocus
-           onkeydown="if(event.key==='Enter')unlock()">
-  </div>
-  <button class="btn" onclick="unlock()">Unlock / 解锁</button>
-  <div class="err hide" id="err">Password incorrect / 密码错误</div>
-  <div class="loading" id="loading"><span class="spinner"></span>Decrypting...</div>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">🤖</span>
+        <div class="logo-text">
+          <span class="zh-text">构建你自己的 AI Agent</span>
+          <span class="en-text">Building Your Own AI Agent</span>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="zh-text"><a class="nav-item " href="preface.html?lang=zh">序章：这本书能给你什么</a>
+<a class="nav-item active" href="panorama.html?lang=zh">第一章：OpenClaw 全景</a>
+<a class="nav-item " href="agent-runtime.html?lang=zh">第二章：Agent 运行时</a>
+<a class="nav-item " href="memory-state.html?lang=zh">第三章：记忆与状态</a>
+<a class="nav-item " href="channels.html?lang=zh">第四章：通信渠道</a>
+<a class="nav-item " href="security.html?lang=zh">第五章：安全与隔离</a>
+<a class="nav-item " href="scheduling.html?lang=zh">第六章：调度与自主性</a>
+<a class="nav-item " href="skills.html?lang=zh">第七章：技能扩展</a>
+<a class="nav-item " href="assembly.html?lang=zh">第八章：终章组装</a>
+<a class="nav-item " href="deployment.html?lang=zh">附录 A：部署指南</a></div>
+      <div class="en-text"><a class="nav-item " href="preface.html?lang=en">Preface: What This Book Gives You</a>
+<a class="nav-item active" href="panorama.html?lang=en">Ch1: OpenClaw Panorama</a>
+<a class="nav-item " href="agent-runtime.html?lang=en">Ch2: Agent Runtime</a>
+<a class="nav-item " href="memory-state.html?lang=en">Ch3: Memory & State</a>
+<a class="nav-item " href="channels.html?lang=en">Ch4: Channels</a>
+<a class="nav-item " href="security.html?lang=en">Ch5: Security</a>
+<a class="nav-item " href="scheduling.html?lang=en">Ch6: Scheduling</a>
+<a class="nav-item " href="skills.html?lang=en">Ch7: Skills Extension</a>
+<a class="nav-item " href="assembly.html?lang=en">Ch8: Assembly</a>
+<a class="nav-item " href="deployment.html?lang=en">Appendix A: Deployment Guide</a></div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="lang-toggle" onclick="toggleLang()">
+        <span class="zh-text">English</span>
+        <span class="en-text">中文</span>
+      </button>
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">◐</button>
+    </div>
+  </aside>
+  <main class="content">
+    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+    <article class="chapter">
+      <div class="zh-text"><h1 id="openclaw-50">第一章：OpenClaw 全景 — 跟着一条消息走完 50 万行代码</h1>
+<blockquote>
+<p>你不会在没有地图的情况下徒步穿越一座城市。阅读 50 万行代码也是一样。但最好的地图不是鸟瞰图——而是一条路线。</p>
+<p><strong>本章目录</strong></p>
+<ul>
+<li><a href="#11-一条消息的一生">1.1 一条消息的一生</a></li>
+<li><a href="#12-规模感数字里的-openclaw">1.2 规模感：数字里的 OpenClaw</a></li>
+<li><a href="#13-六层架构消息经过的每一层">1.3 六层架构：消息经过的每一层</a></li>
+<li><a href="#14-代码地图34-个模块住在哪里">1.4 代码地图：34 个模块住在哪里</a></li>
+<li><a href="#15-技术栈为什么选这些工具">1.5 技术栈：为什么选这些工具</a></li>
+<li><a href="#16-设计模式索引">1.6 设计模式索引</a></li>
+<li><a href="#17-本章小结你的阅读路线图">1.7 本章小结：你的阅读路线图</a></li>
+</ul>
+</blockquote>
+<hr />
+<h2 id="11">1.1 一条消息的一生</h2>
+<p>早上八点，你在 WhatsApp 上发了一句：<strong>"今天东京天气怎么样？"</strong></p>
+<p>五秒后，你收到一条图文并茂的回复：温度 18°C，晴，适合穿单衣，下午 3 点可能有短暂阵雨。</p>
+<p>这五秒里发生了什么？你的消息穿越了六层架构、经过了 34 个模块中的 12 个、触发了两次 LLM 调用和一次工具执行。让我们跟着它走一遍。</p>
+<div class="mermaid">sequenceDiagram
+    participant U as 用户 (WhatsApp)
+    participant CH as ① 通道层
+    participant RT as ② 运行时
+    participant MEM as ③ 记忆层
+    participant SEC as ④ 安全层
+    participant SK as ⑤ 技能层
+    participant LLM as LLM (Claude)
+    participant SCH as ⑥ 调度层
+
+    U->>CH: "今天东京天气怎么样？"
+    Note over CH: Baileys SDK 接收<br/>归一化为 Message 对象
+    CH->>RT: Message{content, sender, channel}
+    RT->>MEM: 加载最近 20 条对话
+    MEM-->>RT: 上下文（含用户偏好："偏好中文回复"）
+    RT->>LLM: system + history + "今天东京天气怎么样？"
+    LLM-->>RT: tool_call: get_weather(city="Tokyo")
+    RT->>SEC: check("get_weather", {city: "Tokyo"})
+    SEC-->>RT: ✅ 放行 + 记审计日志
+    RT->>SK: execute("get_weather", {city: "Tokyo"})
+    SK-->>RT: "18°C, 晴, 午后短暂阵雨"
+    RT->>LLM: tool_result + "请用中文回复"
+    LLM-->>RT: "东京现在 18°C，晴天..."
+    RT->>MEM: 保存本轮对话
+    RT->>CH: reply("东京现在 18°C，晴天...")
+    CH->>U: WhatsApp 消息送达
+    Note over SCH: (后台) 检查是否有<br/>定时任务待执行
 </div>
+<p>一条消息，六层接力：</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>架构层</th>
+<th>做了什么</th>
+<th>对应章节</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>入站</strong></td>
+<td>通道层</td>
+<td>WhatsApp Baileys SDK 接收 → 归一化为统一 <code>Message</code> 格式 → 路由到正确的会话</td>
+<td>第四章</td>
+</tr>
+<tr>
+<td><strong>准备</strong></td>
+<td>记忆层</td>
+<td>加载最近 20 条对话 + 用户偏好（"中文回复"），拼入 system prompt</td>
+<td>第三章</td>
+</tr>
+<tr>
+<td><strong>推理</strong></td>
+<td>运行时</td>
+<td>ReAct（Reasoning + Acting）循环：LLM 判断需要查天气 → 发出 <code>tool_call</code></td>
+<td>第二章</td>
+</tr>
+<tr>
+<td><strong>拦截</strong></td>
+<td>安全层</td>
+<td>检查 <code>get_weather</code> 是否在允许列表 → 参数校验 → 记审计日志</td>
+<td>第五章</td>
+</tr>
+<tr>
+<td><strong>执行</strong></td>
+<td>技能层</td>
+<td>从注册表找到 <code>get_weather</code> 插件 → 调用天气 API → 返回结果</td>
+<td>第七章</td>
+</tr>
+<tr>
+<td><strong>出站</strong></td>
+<td>通道层</td>
+<td>回复文本按 WhatsApp 字数限制自动分块 → 适配器推送</td>
+<td>第四章</td>
+</tr>
+<tr>
+<td><em>(后台)</em></td>
+<td>调度层</td>
+<td>检查是否有定时任务（如"每天 9 点推送新闻"）待执行</td>
+<td>第六章</td>
+</tr>
+</tbody>
+</table>
+<p>注意两个关键的<strong>解耦点</strong>：</p>
+<ol>
+<li>
+<p><strong>入站归一化</strong>——通道层把 WhatsApp 的原始消息格式转换为统一的 <code>Message</code> 对象。从这一刻起，运行时完全不知道消息来自哪个平台。这意味着换成 Telegram、Slack、甚至 CLI，后面的全部逻辑零修改。</p>
+</li>
+<li>
+<p><strong>工具注册表</strong>——运行时通过名字查找工具，不关心工具的实现细节。<code>get_weather</code> 可以是一个 HTTP API 调用，也可以是一个本地 Python 函数，对运行时来说完全透明。</p>
+</li>
+</ol>
+<p>这就是 OpenClaw 能支持 15+ 渠道、50+ 工具、4 种 LLM 提供商而核心逻辑不变的原因。</p>
+<p>💡 <strong>全书线索</strong>：后续每一章深入一层，都会回到"消息的一生"这条线上，展示该层在真实消息流中的角色。</p>
+<hr />
+<h2 id="12-openclaw">1.2 规模感：数字里的 OpenClaw</h2>
+<p>跟着消息走了一遍，你可能好奇：这个系统到底有多大？</p>
+<div class="mermaid">mindmap
+  root((OpenClaw))
+    规模
+      2,834 源文件
+      ~500,000 行代码
+      34 顶级模块
+    生态
+      65+ 第三方依赖
+      7 种对外接口
+      ~425 测试文件
+    架构
+      18 大设计模式
+      6 层架构
+      15+ 通信渠道
+</div>
+<p>这是一个中型 SaaS 后端的规模——不是 demo，但也没大到需要专门团队维护构建系统。34 个模块意味着架构师做了认真的关注点分离，这是我们后续能"逐层拆解"的基础。</p>
+<p>但最让人意外的是代码量的分布：</p>
+<div class="mermaid">pie title 代码量分布 ~500K 行
+    "入口+配置 205K" : 205
+    "Ch2 运行时 160K" : 160
+    "Ch5 安全 145K" : 145
+    "Ch4 通道 130K" : 130
+    "Ch3 记忆 25K" : 25
+    "Ch7 技能 20K" : 20
+    "Ch6 调度 15K" : 15
+</div>
+<p><strong>入口+配置</strong>和<strong>安全</strong>占据了近七成代码，而"智能"的部分（运行时 + 记忆）只占不到三成。这揭示了一个重要事实：<strong>造一个能用的 Agent 很容易，造一个安全、可配置、可运维的 Agent 才是真正的工程挑战。</strong> 这就是为什么本书不只讲 LLM 调用——六层中的每一层都有真实的工程复杂度。</p>
+<p>⚠️ 数字基于分析时的版本快照（v2026.2.13）。OpenClaw 持续演进，但核心架构保持稳定。</p>
+<hr />
+<h2 id="13">1.3 六层架构：消息经过的每一层</h2>
+<p>§ 1.1 用时间线展示了消息如何穿过系统。现在换一个视角——<strong>空间结构</strong>：六层之间的依赖关系和数据流向。</p>
+<div class="mermaid">flowchart TD
+    User(("用户"))
 
-<script>
-var ENC = {
-  salt: "7Zw5fAAnVECCnaTPzU3Z0w==",
-  iv:   "pnEAcsyS8y/n+i1P",
-  ct:   "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"
-};
-var ITER = 100000;
+    subgraph 接入 ["接入层"]
+        direction LR
+        Channel["Ch4 通信渠道<br/>WhatsApp · Telegram · Slack · 11 more"]
+        Scheduler["Ch6 调度与自治<br/>Cron + Event Bus"]
+    end
 
-function b64decode(s) {
-  var bin = atob(s), arr = new Uint8Array(bin.length);
-  for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
-  return arr;
-}
+    subgraph 引擎 ["处理引擎"]
+        direction LR
+        Memory["Ch3 记忆与状态<br/>短期上下文 + 长期 SQLite"]
+        Runtime["Ch2 Agent 运行时<br/>ReAct Loop + LLM"]
+    end
 
-async function deriveKey(pw, salt) {
-  var enc = new TextEncoder();
-  var km = await crypto.subtle.importKey("raw", enc.encode(pw), "PBKDF2", false, ["deriveKey"]);
-  return crypto.subtle.deriveKey(
-    { name: "PBKDF2", salt: salt, iterations: ITER, hash: "SHA-256" },
-    km,
-    { name: "AES-GCM", length: 256 },
-    false,
-    ["decrypt"]
-  );
-}
+    subgraph 能力 ["能力层"]
+        direction LR
+        Security["Ch5 安全与隔离<br/>Tool Policy + Auth"]
+        Skills["Ch7 技能扩展<br/>Plugin SDK + Built-in Tools"]
+    end
 
-async function tryDecrypt(pw) {
-  var salt = b64decode(ENC.salt);
-  var iv   = b64decode(ENC.iv);
-  var ct   = b64decode(ENC.ct);
-  var key  = await deriveKey(pw, salt);
-  var dec  = await crypto.subtle.decrypt({ name: "AES-GCM", iv: iv }, key, ct);
-  return new TextDecoder().decode(dec);
-}
+    User <-- "消息收发" --> Channel
+    Scheduler -. "定时触发" .-> Runtime
+    Channel <-- "归一化消息" --> Runtime
+    Runtime <-- "上下文读写" --> Memory
+    Runtime -- "工具调用" --> Security
+    Security -- "授权执行" --> Skills
+</div>
+<p>读法：<strong>自顶向下</strong>是层级关系——用户通过接入层进入，引擎处理请求，能力层提供工具执行。箭头方向是数据流。</p>
+<p>对照 § 1.1 的消息旅程：消息从<strong>接入层</strong>（通道）进入，经过<strong>引擎</strong>（记忆 + 运行时）处理，必要时经<strong>能力层</strong>（安全 + 技能）执行工具，最后回到接入层出站。调度层是特殊的——它不在消息流上，而是在<strong>时间轴</strong>上触发运行时（"每天 9 点推新闻"）。</p>
+<p>这六层不是理论模型——它直接映射序章中个人助理的六组需求，并且可以在 OpenClaw 的实际代码结构中一一对应。</p>
+<hr />
+<h2 id="14-34">1.4 代码地图：34 个模块住在哪里</h2>
+<p>OpenClaw 的 <code>src/</code> 下有 34 个一级模块。每个模块属于六层中的哪一层？</p>
+<table>
+<thead>
+<tr>
+<th>层（章节）</th>
+<th>模块</th>
+<th>一句话职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ch2 运行时</strong></td>
+<td><code>agents/</code> · <code>auto-reply/</code> · <code>openai/</code> · <code>anthropic/</code></td>
+<td>ReAct 循环、回复流水线、LLM 调用</td>
+</tr>
+<tr>
+<td><strong>Ch3 记忆</strong></td>
+<td><code>memory/</code> · <code>media/</code></td>
+<td>会话索引、媒体存储</td>
+</tr>
+<tr>
+<td><strong>Ch4 通道</strong></td>
+<td><code>channels/</code> · <code>telegram/</code> · <code>web/</code> · <code>slack/</code> · <code>discord/</code> · <code>signal/</code> · <code>line/</code> · 8 more</td>
+<td>注册表 + 14 个渠道适配器（彼此无依赖）</td>
+</tr>
+<tr>
+<td><strong>Ch5 安全</strong></td>
+<td><code>gateway/</code> · <code>infra/</code> · <code>security/</code></td>
+<td>WebSocket 网关、TLS、认证、出站投递</td>
+</tr>
+<tr>
+<td><strong>Ch6 调度</strong></td>
+<td><code>cron/</code> · <code>hooks/</code> · <code>daemon/</code></td>
+<td>定时任务、事件钩子、后台进程</td>
+</tr>
+<tr>
+<td><strong>Ch7 技能</strong></td>
+<td><code>plugins/</code> · <code>plugin-sdk/</code></td>
+<td>插件注册、第三方 SDK 类型</td>
+</tr>
+<tr>
+<td><strong>入口+配置</strong></td>
+<td><code>cli/</code> · <code>commands/</code> · <code>config/</code> · <code>tui/</code> · <code>wizard/</code> · <code>logging/</code> · <code>process/</code></td>
+<td>启动入口、Zod 配置、日志、进程管理</td>
+</tr>
+</tbody>
+</table>
+<p>两个值得留意的设计：</p>
+<ul>
+<li>
+<p><strong><code>config/</code> 是地基</strong>——被几乎所有模块依赖。OpenClaw 用 Zod 做运行时 schema 验证，配置错误在启动时就暴露，不会带到运行时。</p>
+</li>
+<li>
+<p><strong>14 个通道模块彼此完全解耦</strong>——它们只通过 <code>channels/</code> 注册表统一管理。新增一个渠道就是新增一个目录，不需要碰任何现有代码。这就是 § 1.1 里"入站归一化"解耦点在代码层面的体现。</p>
+</li>
+</ul>
+<hr />
+<h2 id="15">1.5 技术栈：为什么选这些工具</h2>
+<p>技术选型不是填表——每个选择背后都有一个产品约束或架构信念。以下按职能分组，<strong>重点标注选型理由</strong>：</p>
+<h3 id="_1">语言与运行时</h3>
+<table>
+<thead>
+<tr>
+<th>技术</th>
+<th>版本</th>
+<th>选型理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TypeScript</td>
+<td>5.9</td>
+<td>强类型 → IDE 补全 + 重构安全性，50 万行代码没有类型系统是不可想象的</td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td>≥22</td>
+<td>原生 ESM 支持，异步 I/O 天然适合消息驱动的 Agent 系统</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ai-llm">AI / LLM 层</h3>
+<table>
+<thead>
+<tr>
+<th>技术</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pi Agent Core</td>
+<td>自研 ReAct 循环引擎（第二章重点分析）</td>
+</tr>
+<tr>
+<td>OpenAI SDK</td>
+<td>主 LLM 提供商</td>
+</tr>
+<tr>
+<td>Anthropic SDK</td>
+<td>备用提供商（failover）</td>
+</tr>
+<tr>
+<td>AWS Bedrock · Ollama</td>
+<td>企业级 / 本地部署选项</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>📐 <strong>ADR-01: 为什么接 4 个 LLM 提供商？</strong></p>
+<ul>
+<li><strong>背景</strong>：生产环境中单一提供商是不可接受的风险——OpenAI 限流时整个系统瘫痪</li>
+<li><strong>决策</strong>：多提供商 + 自动 failover</li>
+<li><strong>放弃的替代方案</strong>：只接 OpenAI（简单但脆弱）；用 LiteLLM 统一代理（多一层抽象 + 延迟）</li>
+<li><strong>后果</strong>：需要维护 4 套 API 适配代码，但换来了生产级可靠性</li>
+</ul>
+</blockquote>
+<h3 id="sdk">通道 SDK</h3>
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th>SDK</th>
+<th>协议特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Telegram</td>
+<td>grammY</td>
+<td>Bot API，HTTP 轮询 / Webhook</td>
+</tr>
+<tr>
+<td>WhatsApp</td>
+<td>Baileys</td>
+<td>Web 协议，WebSocket 长连接</td>
+</tr>
+<tr>
+<td>Slack</td>
+<td>Bolt</td>
+<td>Events API + Web API</td>
+</tr>
+<tr>
+<td>Discord</td>
+<td>discord.js</td>
+<td>Gateway WebSocket</td>
+</tr>
+<tr>
+<td>LINE · Lark · Signal</td>
+<td>各平台官方 SDK</td>
+<td>协议各异</td>
+</tr>
+</tbody>
+</table>
+<p>每个平台协议差异巨大——Telegram 是 HTTP 请求-响应，WhatsApp 是 WebSocket 长连接，Slack 用 Events API + OAuth。试图用统一协议层抹平差异是不现实的。务实做法：<strong>通道内用最合适的 SDK，通道之上做抽象</strong>。这就是第四章"渠道适配器模式"的来源。</p>
+<h3 id="_2">存储</h3>
+<table>
+<thead>
+<tr>
+<th>技术</th>
+<th>用途</th>
+<th>选型理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SQLite + sqlite-vec</td>
+<td>会话索引 + 向量搜索</td>
+<td><strong>Local-first</strong> 设计——运行在用户设备上，不需要外部数据库</td>
+</tr>
+<tr>
+<td>JSONL</td>
+<td>会话记录</td>
+<td>追加写入、易于人工审查、每行一条消息</td>
+</tr>
+<tr>
+<td>YAML</td>
+<td>配置文件</td>
+<td>可读性好，支持注释</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>📐 <strong>ADR-02: 为什么是 SQLite 而不是 PostgreSQL？</strong></p>
+<ul>
+<li><strong>背景</strong>：OpenClaw 的哲学是 Local-first——运行在个人电脑上，<code>npx openclaw</code> 一条命令启动</li>
+<li><strong>决策</strong>：SQLite + sqlite-vec（单文件完成关系查询 + 向量搜索，零运维）</li>
+<li><strong>放弃的替代方案</strong>：PostgreSQL + pgvector（功能更强但需要额外进程）；纯文件存储（无法做复杂查询）</li>
+<li><strong>后果</strong>：并发写入受限（单写锁），但对单用户个人助理完全够用。这个选型直接影响了第三章记忆层的设计</li>
+</ul>
+</blockquote>
+<h3 id="_3">基础设施与工具链</h3>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>技术</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>网络</td>
+<td>Express 5 · ws · Tailscale</td>
+<td>HTTP 网关 + WebSocket 实时通信 + 安全组网</td>
+</tr>
+<tr>
+<td>配置验证</td>
+<td>Zod 4 · TypeBox</td>
+<td>运行时 schema 验证，把错误拦截在入口</td>
+</tr>
+<tr>
+<td>浏览器/媒体</td>
+<td>Playwright · Sharp · Deepgram</td>
+<td>网页抓取、图片处理、语音转文字</td>
+</tr>
+<tr>
+<td>UI</td>
+<td>Lit Web Components</td>
+<td>轻量管理界面</td>
+</tr>
+<tr>
+<td>构建</td>
+<td>pnpm 10 · tsdown · rolldown</td>
+<td>Monorepo + Rust 工具链极速构建</td>
+</tr>
+<tr>
+<td>测试/质量</td>
+<td>Vitest · oxlint · GitHub Actions</td>
+<td>测试 + Rust 实现的超快 linter + CI</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="16">1.6 设计模式索引</h2>
+<p>分析三个项目的源码过程中，我们识别出 18 个反复出现的设计模式——不是教科书理论，而是为解决真实问题而采用的模式。每个模式都<strong>嵌入在对应章节的 x.4 节</strong>中就地分析，包含 Mermaid 原理图 + 跨项目实现对比。</p>
+<p>这里给出索引表，方便按需查阅：</p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>章</th>
+<th>解决的问题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ReAct Loop</strong></td>
+<td>2</td>
+<td>Agent 决策控制流：Think → Act → Observe</td>
+</tr>
+<tr>
+<td><strong>Chain of Responsibility</strong></td>
+<td>2, 5</td>
+<td>九层策略链式过滤工具集 / 安全策略</td>
+</tr>
+<tr>
+<td><strong>Factory</strong></td>
+<td>2</td>
+<td>工厂函数封装复杂的工具创建逻辑</td>
+</tr>
+<tr>
+<td><strong>Composite</strong></td>
+<td>3</td>
+<td>向量 + 关键词多源搜索结果融合</td>
+</tr>
+<tr>
+<td><strong>Singleton</strong></td>
+<td>3</td>
+<td>确保搜索索引只创建一个实例</td>
+</tr>
+<tr>
+<td><strong>Fallback/Degradation</strong></td>
+<td>3</td>
+<td>主搜索引擎不可用时自动降级</td>
+</tr>
+<tr>
+<td><strong>Adapter</strong></td>
+<td>4</td>
+<td>统一接口隔离 14+ 平台的协议差异</td>
+</tr>
+<tr>
+<td><strong>Middleware</strong></td>
+<td>4</td>
+<td>请求经中间件链逐层处理</td>
+</tr>
+<tr>
+<td><strong>Event-Driven</strong></td>
+<td>4, 6</td>
+<td>事件发射器解耦组件通信</td>
+</tr>
+<tr>
+<td><strong>Proxy/Decorator</strong></td>
+<td>5</td>
+<td>透明包装调用，注入校验和审计</td>
+</tr>
+<tr>
+<td><strong>Heartbeat</strong></td>
+<td>6</td>
+<td>LLM 主动续约心跳，实现自驱动</td>
+</tr>
+<tr>
+<td><strong>Checkpoint + Failover</strong></td>
+<td>6</td>
+<td>状态快照 + 崩溃恢复</td>
+</tr>
+<tr>
+<td><strong>Command Lane</strong></td>
+<td>6</td>
+<td>会话专属串行通道，防止并发冲突</td>
+</tr>
+<tr>
+<td><strong>Registry</strong></td>
+<td>7</td>
+<td>中央注册表，运行时热加载插件</td>
+</tr>
+<tr>
+<td><strong>Observer/Hook</strong></td>
+<td>7</td>
+<td>生命周期钩子通知，解耦扩展点</td>
+</tr>
+<tr>
+<td><strong>Dynamic Loading</strong></td>
+<td>7</td>
+<td>目录扫描 + manifest 驱动加载</td>
+</tr>
+<tr>
+<td><strong>Dependency Injection</strong></td>
+<td>8</td>
+<td>外部注入依赖，模块可替换可测试</td>
+</tr>
+<tr>
+<td><strong>Builder</strong></td>
+<td>8</td>
+<td>分步构建复杂 Agent 对象</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="17">1.7 本章小结：你的阅读路线图</h2>
+<p>你现在对 OpenClaw 有了一张全景地图：</p>
+<ul>
+<li><strong>一条消息的旅程</strong>串联了六层架构——入站归一化 → 上下文加载 → ReAct 循环 → 安全检查 → 工具执行 → 出站适配</li>
+<li><strong>50 万行代码</strong>中，入口+配置和安全占近七成，真正的"智能"部分不到三成——AI Agent 的工程挑战远不止 LLM 调用</li>
+<li><strong>两个解耦点</strong>（入站归一化 + 工具注册表）是整个架构的灵魂，让系统能支持 15+ 渠道和 50+ 工具而核心逻辑不变</li>
+<li><strong>SQLite Local-first + 多 LLM failover</strong> 反映了"个人助理"这个产品定位对技术选型的决定性影响</li>
+<li><strong>18 个设计模式</strong>分布在六章中，每个都是为解决真实问题而采用</li>
+</ul>
+<p>带着这张地图，进入后续章节：</p>
+<table>
+<thead>
+<tr>
+<th>章节</th>
+<th>个人助理需求</th>
+<th>核心问题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第二章</td>
+<td>能帮你做事</td>
+<td>LLM 如何变成能"做事"的引擎？</td>
+</tr>
+<tr>
+<td>第三章</td>
+<td>记住你是谁</td>
+<td>Agent 如何"记住"事情？</td>
+</tr>
+<tr>
+<td>第四章</td>
+<td>随时能找到它</td>
+<td>Agent 如何与外界对话？</td>
+</tr>
+<tr>
+<td>第五章</td>
+<td>不会失控</td>
+<td>如何防止 Agent 失控？</td>
+</tr>
+<tr>
+<td>第六章</td>
+<td>主动服务</td>
+<td>Agent 如何自主决定"做什么"？</td>
+</tr>
+<tr>
+<td>第七章</td>
+<td>能学新技能</td>
+<td>如何让 Agent 学会新技能？</td>
+</tr>
+<tr>
+<td>第八章</td>
+<td><strong>六层组装</strong></td>
+<td>如何把所有层组装起来？</td>
+</tr>
+</tbody>
+</table>
+<p>准备好了吗？我们从 Agent 的心脏——运行时——开始。</p>
+<hr />
+<h2 id="_4">参考文献</h2>
+<ol>
+<li>
+<p><strong>Wang, L., Ma, C., Feng, X., et al.</strong> (2024). "A Survey on Large Language Model based Autonomous Agents." <em>Frontiers of Computer Science</em>, 18(6), 186345. DOI: 10.1007/s11704-024-40231-1 — 提出了 Agent 系统的模块化分析框架（Profile/Memory/Planning/Action），与本章六层架构形成互补视角。</p>
+</li>
+<li>
+<p><strong>Bass, L., Clements, P., &amp; Kazman, R.</strong> (2021). <em>Software Architecture in Practice</em>, 4th Edition. Addison-Wesley. ISBN: 978-0136886099 — 软件架构分析的经典教材，"架构即决策"的思想贯穿本书全部 ADR 侧栏。</p>
+</li>
+<li>
+<p><strong>Richards, M., &amp; Ford, N.</strong> (2020). <em>Fundamentals of Software Architecture</em>. O'Reilly. ISBN: 978-1492043454 — 提供了架构特性（-ility）的分类框架，启发了本书 C1-C5 评价标准的设计。</p>
+</li>
+<li>
+<p><strong>Gamma, E., Helm, R., Johnson, R., &amp; Vlissides, J.</strong> (1994). <em>Design Patterns: Elements of Reusable Object-Oriented Software</em>. Addison-Wesley. ISBN: 978-0201633610 — GoF 设计模式经典，本书识别的 18 个模式中有 10 个源自此书（Adapter、Singleton、Factory 等）。</p>
+</li>
+<li>
+<p><strong>Martin, R.C.</strong> (2017). <em>Clean Architecture: A Craftsman's Guide to Software Structure and Design</em>. Prentice Hall. ISBN: 978-0134494166 — 依赖反转原则和组件边界设计，直接影响了第八章的组装层分析。</p>
+</li>
+</ol></div>
+      <div class="en-text"><h1 id="chapter-1-openclaw-panorama-following-one-message-through-500k-lines-of-code">Chapter 1: OpenClaw Panorama — Following One Message Through 500K Lines of Code</h1>
+<blockquote>
+<p>You wouldn't hike through an unfamiliar city without a map. Reading 500,000 lines of code is no different. But the best map isn't a bird's-eye view—it's a route.</p>
+<p><strong>Contents</strong></p>
+<ul>
+<li><a href="#11-one-messages-lifetime">1.1 One Message's Lifetime</a></li>
+<li><a href="#12-scale-openclaw-in-numbers">1.2 Scale: OpenClaw in Numbers</a></li>
+<li><a href="#13-six-layer-architecture-every-layer-the-message-passes-through">1.3 Six-Layer Architecture: Every Layer the Message Passes Through</a></li>
+<li><a href="#14-code-map-where-34-modules-live">1.4 Code Map: Where 34 Modules Live</a></li>
+<li><a href="#15-tech-stack-why-these-tools">1.5 Tech Stack: Why These Tools</a></li>
+<li><a href="#16-design-patterns-index">1.6 Design Patterns Index</a></li>
+<li><a href="#17-chapter-summary-your-reading-roadmap">1.7 Chapter Summary: Your Reading Roadmap</a></li>
+</ul>
+</blockquote>
+<hr />
+<h2 id="11-one-messages-lifetime">1.1 One Message's Lifetime</h2>
+<p>At eight in the morning, you send a message on WhatsApp: <strong>"What's the weather in Tokyo today?"</strong></p>
+<p>Five seconds later, you receive a rich reply: 18°C, sunny, suitable for light clothing, with a brief afternoon shower possible around 3 PM.</p>
+<p>What happened in those five seconds? Your message traversed six architectural layers, passed through 12 of 34 modules, and triggered two LLM calls and one tool execution. Let's follow it through.</p>
+<div class="mermaid">sequenceDiagram
+    participant U as User (WhatsApp)
+    participant CH as ① Channel Layer
+    participant RT as ② Runtime
+    participant MEM as ③ Memory Layer
+    participant SEC as ④ Security Layer
+    participant SK as ⑤ Skills Layer
+    participant LLM as LLM (Claude)
+    participant SCH as ⑥ Scheduler Layer
 
-async function unlock() {
-  var pw = document.getElementById("pw").value;
-  if (!pw) return;
-  var errEl = document.getElementById("err");
-  var loadEl = document.getElementById("loading");
-  errEl.classList.add("hide");
-  loadEl.style.display = "block";
-  try {
-    var html = await tryDecrypt(pw);
-    sessionStorage.setItem("book-pw", pw);
-    document.open();
-    document.write(html);
-    document.close();
-  } catch(e) {
-    loadEl.style.display = "none";
-    errEl.classList.remove("hide");
-    document.getElementById("pw").select();
-  }
-}
+    U->>CH: "What's the weather in Tokyo today?"
+    Note over CH: Baileys SDK receives<br/>normalizes to Message object
+    CH->>RT: Message{content, sender, channel}
+    RT->>MEM: Load last 20 messages
+    MEM-->>RT: Context (incl. user pref: "prefer Chinese reply")
+    RT->>LLM: system + history + "What's the weather in Tokyo today?"
+    LLM-->>RT: tool_call: get_weather(city="Tokyo")
+    RT->>SEC: check("get_weather", {city: "Tokyo"})
+    SEC-->>RT: ✅ Pass + record audit log
+    RT->>SK: execute("get_weather", {city: "Tokyo"})
+    SK-->>RT: "18°C, sunny, brief afternoon shower"
+    RT->>LLM: tool_result + "Please reply in Chinese"
+    LLM-->>RT: "Tokyo now 18°C, sunny..."
+    RT->>MEM: Save this round's conversation
+    RT->>CH: reply("Tokyo now 18°C, sunny...")
+    CH->>U: WhatsApp message delivered
+    Note over SCH: (background) Check for<br/>pending scheduled tasks
+</div>
+<p>One message, six layers in relay:</p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Layer</th>
+<th>What Happens</th>
+<th>Chapter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Inbound</strong></td>
+<td>Channel Layer</td>
+<td>WhatsApp Baileys SDK receives → normalizes to unified <code>Message</code> format → routes to correct session</td>
+<td>Chapter 4</td>
+</tr>
+<tr>
+<td><strong>Prepare</strong></td>
+<td>Memory Layer</td>
+<td>Load last 20 messages + user preference ("Chinese reply"), merge into system prompt</td>
+<td>Chapter 3</td>
+</tr>
+<tr>
+<td><strong>Reasoning</strong></td>
+<td>Runtime</td>
+<td>ReAct (Reasoning + Acting) loop: LLM decides to query weather → emits <code>tool_call</code></td>
+<td>Chapter 2</td>
+</tr>
+<tr>
+<td><strong>Intercept</strong></td>
+<td>Security Layer</td>
+<td>Check whether <code>get_weather</code> is on allowlist → parameter validation → record audit log</td>
+<td>Chapter 5</td>
+</tr>
+<tr>
+<td><strong>Execute</strong></td>
+<td>Skills Layer</td>
+<td>Find <code>get_weather</code> plugin in registry → call weather API → return result</td>
+<td>Chapter 7</td>
+</tr>
+<tr>
+<td><strong>Outbound</strong></td>
+<td>Channel Layer</td>
+<td>Reply text auto-chunked for WhatsApp limits → adapter delivers</td>
+<td>Chapter 4</td>
+</tr>
+<tr>
+<td><em>(background)</em></td>
+<td>Scheduler Layer</td>
+<td>Check for pending scheduled tasks (e.g., "push news at 9 AM daily")</td>
+<td>Chapter 6</td>
+</tr>
+</tbody>
+</table>
+<p>Two key <strong>decoupling points</strong>:</p>
+<ol>
+<li>
+<p><strong>Inbound normalization</strong> — The channel layer converts raw WhatsApp message format into a unified <code>Message</code> object. From that moment on, the runtime has no idea which platform the message came from. That means switching to Telegram, Slack, or even CLI requires zero changes to downstream logic.</p>
+</li>
+<li>
+<p><strong>Tool registry</strong> — The runtime looks up tools by name; it doesn't care about implementation details. <code>get_weather</code> can be an HTTP API call or a local Python function—completely transparent to the runtime.</p>
+</li>
+</ol>
+<p>That's why OpenClaw supports 15+ channels, 50+ tools, and 4 LLM providers while core logic stays unchanged.</p>
+<p>💡 <strong>Thread through the book</strong>: Every later chapter digs into one layer and traces back to "one message's lifetime," showing that layer's role in the real message flow.</p>
+<hr />
+<h2 id="12-scale-openclaw-in-numbers">1.2 Scale: OpenClaw in Numbers</h2>
+<p>After following a message through the system, you might wonder: how big is this thing?</p>
+<div class="mermaid">mindmap
+  root((OpenClaw))
+    Scale
+      2,834 source files
+      ~500,000 lines of code
+      34 top-level modules
+    Ecosystem
+      65+ third-party deps
+      7 external interfaces
+      ~425 test files
+    Architecture
+      18 design patterns
+      6 architectural layers
+      15+ comm channels
+</div>
+<p>This is mid-sized SaaS backend scale—not a demo, but not large enough to need a dedicated build team. 34 modules means the architect practiced serious separation of concerns; that's the foundation for "dissecting layer by layer."</p>
+<p>The surprising part is how code is distributed:</p>
+<div class="mermaid">pie title Code Distribution ~500K lines
+    "Entry+Config 205K" : 205
+    "Ch2 Runtime 160K" : 160
+    "Ch5 Security 145K" : 145
+    "Ch4 Channels 130K" : 130
+    "Ch3 Memory 25K" : 25
+    "Ch7 Skills 20K" : 20
+    "Ch6 Scheduling 15K" : 15
+</div>
+<p><strong>Entry+Config</strong> and <strong>Security</strong> account for nearly 70% of the code, while the "intelligent" parts (runtime + memory) are under 30%. That reveals an important fact: <strong>building a usable Agent is easy; building one that is secure, configurable, and operable is the real engineering challenge.</strong> That's why this book doesn't stop at LLM calls—every one of the six layers has real engineering complexity.</p>
+<p>⚠️ Numbers are based on an analysis-time snapshot (v2026.2.13). OpenClaw evolves continuously, but core architecture remains stable.</p>
+<hr />
+<h2 id="13-six-layer-architecture-every-layer-the-message-passes-through">1.3 Six-Layer Architecture: Every Layer the Message Passes Through</h2>
+<p>§ 1.1 showed how a message flows through the system on a timeline. Now switch perspective—<strong>spatial structure</strong>: the dependency relationships and data flow between the six layers.</p>
+<div class="mermaid">flowchart TD
+    User(("User"))
 
-(async function() {
-  var cached = sessionStorage.getItem("book-pw");
-  if (!cached) return;
-  try {
-    var html = await tryDecrypt(cached);
-    document.open();
-    document.write(html);
-    document.close();
-  } catch(e) {
-    sessionStorage.removeItem("book-pw");
-  }
-})();
+    subgraph Access ["Access Layer"]
+        direction LR
+        Channel["Ch4 Communication Channels<br/>WhatsApp · Telegram · Slack · 11 more"]
+        Scheduler["Ch6 Scheduling & Autonomy<br/>Cron + Event Bus"]
+    end
+
+    subgraph Engine ["Processing Engine"]
+        direction LR
+        Memory["Ch3 Memory & State<br/>Short-term Context + Long-term SQLite"]
+        Runtime["Ch2 Agent Runtime<br/>ReAct Loop + LLM"]
+    end
+
+    subgraph Capability ["Capability Layer"]
+        direction LR
+        Security["Ch5 Security & Isolation<br/>Tool Policy + Auth"]
+        Skills["Ch7 Skill Extension<br/>Plugin SDK + Built-in Tools"]
+    end
+
+    User <-- "messages" --> Channel
+    Scheduler -. "scheduled trigger" .-> Runtime
+    Channel <-- "normalized msg" --> Runtime
+    Runtime <-- "context R/W" --> Memory
+    Runtime -- "tool call" --> Security
+    Security -- "authorized exec" --> Skills
+</div>
+<p>How to read it: <strong>Top-to-bottom</strong> is the layer hierarchy—users enter through the access layer, the engine processes requests, and the capability layer executes tools. Arrows indicate data flow.</p>
+<p>Compare with § 1.1's message journey: the message enters from the <strong>access layer</strong> (channel), is processed by the <strong>engine</strong> (memory + runtime), and when needed goes through the <strong>capability layer</strong> (security + skills) for tool execution, then returns to the access layer for outbound delivery. The scheduler is special—it sits off the message path and triggers the runtime <strong>on the time axis</strong> (e.g., "push news at 9 AM daily").</p>
+<p>These six layers are not a theoretical model—they map directly to the six groups of personal-assistant requirements from the preface, and correspond one-to-one to OpenClaw's real code structure.</p>
+<hr />
+<h2 id="14-code-map-where-34-modules-live">1.4 Code Map: Where 34 Modules Live</h2>
+<p>Under OpenClaw's <code>src/</code> there are 34 top-level modules. Which layer does each belong to?</p>
+<table>
+<thead>
+<tr>
+<th>Layer (Chapter)</th>
+<th>Modules</th>
+<th>One-Line Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ch2 Runtime</strong></td>
+<td><code>agents/</code> · <code>auto-reply/</code> · <code>openai/</code> · <code>anthropic/</code></td>
+<td>ReAct loop, reply pipeline, LLM calls</td>
+</tr>
+<tr>
+<td><strong>Ch3 Memory</strong></td>
+<td><code>memory/</code> · <code>media/</code></td>
+<td>Session index, media storage</td>
+</tr>
+<tr>
+<td><strong>Ch4 Channels</strong></td>
+<td><code>channels/</code> · <code>telegram/</code> · <code>web/</code> · <code>slack/</code> · <code>discord/</code> · <code>signal/</code> · <code>line/</code> · 8 more</td>
+<td>Registry + 14 channel adapters (zero inter-dependencies)</td>
+</tr>
+<tr>
+<td><strong>Ch5 Security</strong></td>
+<td><code>gateway/</code> · <code>infra/</code> · <code>security/</code></td>
+<td>WebSocket gateway, TLS, auth, outbound delivery</td>
+</tr>
+<tr>
+<td><strong>Ch6 Scheduling</strong></td>
+<td><code>cron/</code> · <code>hooks/</code> · <code>daemon/</code></td>
+<td>Scheduled tasks, event hooks, background processes</td>
+</tr>
+<tr>
+<td><strong>Ch7 Skills</strong></td>
+<td><code>plugins/</code> · <code>plugin-sdk/</code></td>
+<td>Plugin registry, third-party SDK types</td>
+</tr>
+<tr>
+<td><strong>Entry+Config</strong></td>
+<td><code>cli/</code> · <code>commands/</code> · <code>config/</code> · <code>tui/</code> · <code>wizard/</code> · <code>logging/</code> · <code>process/</code></td>
+<td>Startup entry, Zod config, logging, process management</td>
+</tr>
+</tbody>
+</table>
+<p>Two design choices worth noting:</p>
+<ul>
+<li>
+<p><strong><code>config/</code> is the foundation</strong> — depended on by almost every module. OpenClaw uses Zod for runtime schema validation; config errors surface at startup, never at runtime.</p>
+</li>
+<li>
+<p><strong>The 14 channel modules are fully decoupled from each other</strong> — they're managed only through the <code>channels/</code> registry. Adding a new channel means adding a new directory; no changes to existing code. That's the "inbound normalization" decoupling point from § 1.1, embodied in code.</p>
+</li>
+</ul>
+<hr />
+<h2 id="15-tech-stack-why-these-tools">1.5 Tech Stack: Why These Tools</h2>
+<p>Technology selection isn't a checklist—every choice reflects a product constraint or architectural belief. Grouped by function, <strong>with rationale</strong>:</p>
+<h3 id="language-runtime">Language &amp; Runtime</h3>
+<table>
+<thead>
+<tr>
+<th>Technology</th>
+<th>Version</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TypeScript</td>
+<td>5.9</td>
+<td>Strong typing → IDE completion + refactoring safety; 500K lines without a type system is unimaginable</td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td>≥22</td>
+<td>Native ESM support; async I/O naturally suits message-driven Agent systems</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ai-llm-layer">AI / LLM Layer</h3>
+<table>
+<thead>
+<tr>
+<th>Technology</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pi Agent Core</td>
+<td>In-house ReAct loop engine (analyzed in depth in Chapter 2)</td>
+</tr>
+<tr>
+<td>OpenAI SDK</td>
+<td>Primary LLM provider</td>
+</tr>
+<tr>
+<td>Anthropic SDK</td>
+<td>Backup provider (failover)</td>
+</tr>
+<tr>
+<td>AWS Bedrock · Ollama</td>
+<td>Enterprise / local deployment options</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>📐 <strong>ADR-01: Why Four LLM Providers?</strong></p>
+<ul>
+<li><strong>Context</strong>: A single provider in production is unacceptable risk—when OpenAI rate-limits, the whole system goes down</li>
+<li><strong>Decision</strong>: Multiple providers + automatic failover</li>
+<li><strong>Alternatives rejected</strong>: OpenAI only (simple but fragile); LiteLLM as unified proxy (extra abstraction + latency)</li>
+<li><strong>Consequences</strong>: Need to maintain four API adapter implementations, but gain production-grade reliability</li>
+</ul>
+</blockquote>
+<h3 id="channel-sdks">Channel SDKs</h3>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>SDK</th>
+<th>Protocol Characteristics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Telegram</td>
+<td>grammY</td>
+<td>Bot API, HTTP polling / Webhook</td>
+</tr>
+<tr>
+<td>WhatsApp</td>
+<td>Baileys</td>
+<td>Web protocol, WebSocket long connection</td>
+</tr>
+<tr>
+<td>Slack</td>
+<td>Bolt</td>
+<td>Events API + Web API</td>
+</tr>
+<tr>
+<td>Discord</td>
+<td>discord.js</td>
+<td>Gateway WebSocket</td>
+</tr>
+<tr>
+<td>LINE · Lark · Signal</td>
+<td>Platform official SDKs</td>
+<td>Protocols vary widely</td>
+</tr>
+</tbody>
+</table>
+<p>Protocol differences across platforms are large—Telegram uses HTTP request-response, WhatsApp uses WebSocket long connections, Slack uses Events API + OAuth. Trying to flatten them with a unified protocol layer is unrealistic. The pragmatic approach: <strong>use the best SDK within each channel, abstract above it</strong>. That's the origin of Chapter 4's "channel adapter pattern."</p>
+<h3 id="storage">Storage</h3>
+<table>
+<thead>
+<tr>
+<th>Technology</th>
+<th>Purpose</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SQLite + sqlite-vec</td>
+<td>Session index + vector search</td>
+<td><strong>Local-first</strong> design—runs on the user's device, no external database</td>
+</tr>
+<tr>
+<td>JSONL</td>
+<td>Session transcripts</td>
+<td>Append-only, easy to audit, one message per line</td>
+</tr>
+<tr>
+<td>YAML</td>
+<td>Config files</td>
+<td>Human-readable, supports comments</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>📐 <strong>ADR-02: Why SQLite Instead of PostgreSQL?</strong></p>
+<ul>
+<li><strong>Context</strong>: OpenClaw's philosophy is Local-first—run on a personal machine, <code>npx openclaw</code> starts it with one command</li>
+<li><strong>Decision</strong>: SQLite + sqlite-vec (single file for relational queries + vector search, zero ops)</li>
+<li><strong>Alternatives rejected</strong>: PostgreSQL + pgvector (more capable but needs an extra process); pure file storage (no complex queries)</li>
+<li><strong>Consequences</strong>: Concurrency limited (single-writer lock), but enough for a single-user personal assistant. This choice directly shapes the memory layer design in Chapter 3</li>
+</ul>
+</blockquote>
+<h3 id="infrastructure-toolchain">Infrastructure &amp; Toolchain</h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Technology</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Network</td>
+<td>Express 5 · ws · Tailscale</td>
+<td>HTTP gateway + WebSocket real-time + secure networking</td>
+</tr>
+<tr>
+<td>Config validation</td>
+<td>Zod 4 · TypeBox</td>
+<td>Runtime schema validation, errors caught at the gate</td>
+</tr>
+<tr>
+<td>Browser/Media</td>
+<td>Playwright · Sharp · Deepgram</td>
+<td>Web scraping, image processing, speech-to-text</td>
+</tr>
+<tr>
+<td>UI</td>
+<td>Lit Web Components</td>
+<td>Lightweight admin interface</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>pnpm 10 · tsdown · rolldown</td>
+<td>Monorepo + Rust toolchain for fast builds</td>
+</tr>
+<tr>
+<td>Testing/Quality</td>
+<td>Vitest · oxlint · GitHub Actions</td>
+<td>Tests + Rust-powered linter + CI</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="16-design-patterns-index">1.6 Design Patterns Index</h2>
+<p>While analyzing the source of three projects, we identified 18 recurring design patterns—not textbook theory, but patterns adopted to solve real problems. Each is <strong>analyzed in place in the corresponding chapter's § x.4</strong>, with Mermaid diagrams and cross-project implementation comparison.</p>
+<p>Index table for quick lookup:</p>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Ch</th>
+<th>Problem Addressed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ReAct Loop</strong></td>
+<td>2</td>
+<td>Agent decision control flow: Think → Act → Observe</td>
+</tr>
+<tr>
+<td><strong>Chain of Responsibility</strong></td>
+<td>2, 5</td>
+<td>Nine-layer policy chain filtering tool sets / security policies</td>
+</tr>
+<tr>
+<td><strong>Factory</strong></td>
+<td>2</td>
+<td>Factory functions encapsulate complex tool creation logic</td>
+</tr>
+<tr>
+<td><strong>Composite</strong></td>
+<td>3</td>
+<td>Vector + keyword multi-source search result fusion</td>
+</tr>
+<tr>
+<td><strong>Singleton</strong></td>
+<td>3</td>
+<td>Ensure only one search index instance is created</td>
+</tr>
+<tr>
+<td><strong>Fallback/Degradation</strong></td>
+<td>3</td>
+<td>Auto-degrade when primary search engine is unavailable</td>
+</tr>
+<tr>
+<td><strong>Adapter</strong></td>
+<td>4</td>
+<td>Unified interface isolates 14+ platforms' protocol differences</td>
+</tr>
+<tr>
+<td><strong>Middleware</strong></td>
+<td>4</td>
+<td>Requests processed through middleware chain</td>
+</tr>
+<tr>
+<td><strong>Event-Driven</strong></td>
+<td>4, 6</td>
+<td>Event emitters decouple component communication</td>
+</tr>
+<tr>
+<td><strong>Proxy/Decorator</strong></td>
+<td>5</td>
+<td>Transparent call wrapping, inject validation and auditing</td>
+</tr>
+<tr>
+<td><strong>Heartbeat</strong></td>
+<td>6</td>
+<td>LLM-initiated heartbeat renewal for self-driven behavior</td>
+</tr>
+<tr>
+<td><strong>Checkpoint + Failover</strong></td>
+<td>6</td>
+<td>State snapshots + crash recovery</td>
+</tr>
+<tr>
+<td><strong>Command Lane</strong></td>
+<td>6</td>
+<td>Session-specific serial channel, prevent concurrent conflicts</td>
+</tr>
+<tr>
+<td><strong>Registry</strong></td>
+<td>7</td>
+<td>Central registry, runtime plugin hot-loading</td>
+</tr>
+<tr>
+<td><strong>Observer/Hook</strong></td>
+<td>7</td>
+<td>Lifecycle hook notifications, decoupled extension points</td>
+</tr>
+<tr>
+<td><strong>Dynamic Loading</strong></td>
+<td>7</td>
+<td>Directory scan + manifest-driven loading</td>
+</tr>
+<tr>
+<td><strong>Dependency Injection</strong></td>
+<td>8</td>
+<td>External dependency injection, modules swappable and testable</td>
+</tr>
+<tr>
+<td><strong>Builder</strong></td>
+<td>8</td>
+<td>Step-by-step construction of complex Agent objects</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="17-chapter-summary-your-reading-roadmap">1.7 Chapter Summary: Your Reading Roadmap</h2>
+<p>You now have a panorama of OpenClaw:</p>
+<ul>
+<li><strong>One message's journey</strong> threads through six layers—inbound normalization → context load → ReAct loop → security check → tool execution → outbound adaptation</li>
+<li>Among <strong>500K lines of code</strong>, entry+config and security account for nearly 70%; the truly "intelligent" part is under 30%—AI Agent engineering is far more than LLM calls</li>
+<li><strong>Two decoupling points</strong> (inbound normalization + tool registry) are the soul of the architecture, enabling 15+ channels and 50+ tools with unchanged core logic</li>
+<li><strong>SQLite Local-first + multi-LLM failover</strong> reflects how the "personal assistant" product position drives technology choices</li>
+<li><strong>18 design patterns</strong> spread across six chapters, each adopted to solve real problems</li>
+</ul>
+<p>With this map, proceed to the chapters ahead:</p>
+<table>
+<thead>
+<tr>
+<th>Chapter</th>
+<th>Personal Assistant Need</th>
+<th>Core Question</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ch 2</td>
+<td>Can do things for you</td>
+<td>How does an LLM become an engine that can "do things"?</td>
+</tr>
+<tr>
+<td>Ch 3</td>
+<td>Remembers who you are</td>
+<td>How does an agent "remember" things?</td>
+</tr>
+<tr>
+<td>Ch 4</td>
+<td>Always reachable</td>
+<td>How does an agent talk to the outside world?</td>
+</tr>
+<tr>
+<td>Ch 5</td>
+<td>Won't go rogue</td>
+<td>How do you prevent an agent from going rogue?</td>
+</tr>
+<tr>
+<td>Ch 6</td>
+<td>Proactively serves you</td>
+<td>How does an agent autonomously decide "what to do"?</td>
+</tr>
+<tr>
+<td>Ch 7</td>
+<td>Can learn new skills</td>
+<td>How do you teach an agent new skills?</td>
+</tr>
+<tr>
+<td>Ch 8</td>
+<td><strong>Six-layer assembly</strong></td>
+<td>How do you assemble all layers into your own agent?</td>
+</tr>
+</tbody>
+</table>
+<p>Ready? Let's start with the agent's heart—the runtime.</p>
+<hr />
+<h2 id="references">References</h2>
+<ol>
+<li>
+<p><strong>Wang, L., Ma, C., Feng, X., et al.</strong> (2024). "A Survey on Large Language Model based Autonomous Agents." <em>Frontiers of Computer Science</em>, 18(6), 186345. DOI: 10.1007/s11704-024-40231-1 — Proposes a modular analysis framework (Profile/Memory/Planning/Action) for Agent systems, complementing this chapter's six-layer architecture.</p>
+</li>
+<li>
+<p><strong>Bass, L., Clements, P., &amp; Kazman, R.</strong> (2021). <em>Software Architecture in Practice</em>, 4th Edition. Addison-Wesley. ISBN: 978-0136886099 — Classic text on software architecture analysis; the idea that "architecture is decisions" runs through all ADR sidebars in this book.</p>
+</li>
+<li>
+<p><strong>Richards, M., &amp; Ford, N.</strong> (2020). <em>Fundamentals of Software Architecture</em>. O'Reilly. ISBN: 978-1492043454 — Provides a classification framework for architectural qualities (-ilities), inspiring the book's C1-C5 evaluation criteria.</p>
+</li>
+<li>
+<p><strong>Gamma, E., Helm, R., Johnson, R., &amp; Vlissides, J.</strong> (1994). <em>Design Patterns: Elements of Reusable Object-Oriented Software</em>. Addison-Wesley. ISBN: 978-0201633610 — GoF design patterns classic; 10 of the 18 patterns identified in this book originate here (Adapter, Singleton, Factory, etc.).</p>
+</li>
+<li>
+<p><strong>Martin, R.C.</strong> (2017). <em>Clean Architecture: A Craftsman's Guide to Software Structure and Design</em>. Prentice Hall. ISBN: 978-0134494166 — Dependency inversion and component boundary design directly influence the assembly layer analysis in Chapter 8.</p>
+</li>
+</ol></div>
+    </article>
+    <nav class="page-nav">
+      <a class="nav-btn prev" href="preface.html">← <span class="zh-text">序章：这本书能给你什么</span><span class="en-text">Preface: What This Book Gives You</span></a>
+      <a class="nav-btn next" href="agent-runtime.html"><span class="zh-text">第二章：Agent 运行时</span><span class="en-text">Ch2: Agent Runtime</span> →</a>
+    </nav>
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({ startOnLoad: true, theme: document.body.classList.contains('light') ? 'default' : 'dark' });
 </script>
+<script src="js/main.js"></script>
 </body>
 </html>

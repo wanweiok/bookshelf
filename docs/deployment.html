@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>附录 A：部署指南 | Building Your Own AI Agent</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">🤖</span>
+        <div class="logo-text">
+          <span class="zh-text">构建你自己的 AI Agent</span>
+          <span class="en-text">Building Your Own AI Agent</span>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="zh-text"><a class="nav-item " href="preface.html?lang=zh">序章：这本书能给你什么</a>
+<a class="nav-item " href="panorama.html?lang=zh">第一章：OpenClaw 全景</a>
+<a class="nav-item " href="agent-runtime.html?lang=zh">第二章：Agent 运行时</a>
+<a class="nav-item " href="memory-state.html?lang=zh">第三章：记忆与状态</a>
+<a class="nav-item " href="channels.html?lang=zh">第四章：通信渠道</a>
+<a class="nav-item " href="security.html?lang=zh">第五章：安全与隔离</a>
+<a class="nav-item " href="scheduling.html?lang=zh">第六章：调度与自主性</a>
+<a class="nav-item " href="skills.html?lang=zh">第七章：技能扩展</a>
+<a class="nav-item " href="assembly.html?lang=zh">第八章：终章组装</a>
+<a class="nav-item active" href="deployment.html?lang=zh">附录 A：部署指南</a></div>
+      <div class="en-text"><a class="nav-item " href="preface.html?lang=en">Preface: What This Book Gives You</a>
+<a class="nav-item " href="panorama.html?lang=en">Ch1: OpenClaw Panorama</a>
+<a class="nav-item " href="agent-runtime.html?lang=en">Ch2: Agent Runtime</a>
+<a class="nav-item " href="memory-state.html?lang=en">Ch3: Memory & State</a>
+<a class="nav-item " href="channels.html?lang=en">Ch4: Channels</a>
+<a class="nav-item " href="security.html?lang=en">Ch5: Security</a>
+<a class="nav-item " href="scheduling.html?lang=en">Ch6: Scheduling</a>
+<a class="nav-item " href="skills.html?lang=en">Ch7: Skills Extension</a>
+<a class="nav-item " href="assembly.html?lang=en">Ch8: Assembly</a>
+<a class="nav-item active" href="deployment.html?lang=en">Appendix A: Deployment Guide</a></div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="lang-toggle" onclick="toggleLang()">
+        <span class="zh-text">English</span>
+        <span class="en-text">中文</span>
+      </button>
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">◐</button>
+    </div>
+  </aside>
+  <main class="content">
+    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+    <article class="chapter">
+      <div class="zh-text"><h1 id="a-mini_agent">附录 A：从笔记本到服务器 — mini_agent 部署指南</h1>
+<blockquote>
+<p>全书的 Lab 练习都在本地运行。本附录帮你走完"最后一公里"：把 mini_agent 部署到真实环境。</p>
+</blockquote>
+<hr />
+<h2 id="a1">A.1 本地运行（回顾）</h2>
+<p>确保 <code>mini_agent/</code> 目录结构完整：</p>
+<pre><code>mini_agent/
+├── __init__.py
+├── __main__.py
+├── main.py        # Ch08: 六层组装
+├── runtime.py     # Ch02: ReAct 循环
+├── memory.py      # Ch03: 双层记忆
+├── channels.py    # Ch04: CLI + HTTP
+├── security.py    # Ch05: 安全沙箱
+├── scheduler.py   # Ch06: 定时调度
+└── skills.py      # Ch07: 技能注册
+</code></pre>
+<pre><code class="language-bash"># Mock 模式（零依赖）
+python -m mini_agent
+
+# 真实 LLM（设置任一 API Key）
+OPENAI_API_KEY=sk-xxx python -m mini_agent
+ANTHROPIC_API_KEY=sk-ant-xxx python -m mini_agent
+</code></pre>
+<hr />
+<h2 id="a2-docker">A.2 Docker 化</h2>
+<h3 id="dockerfile">最小 Dockerfile</h3>
+<pre><code class="language-dockerfile">FROM python:3.12-slim
+
+WORKDIR /app
+COPY mini_agent/ ./mini_agent/
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+EXPOSE 3000
+
+ENV PYTHONUNBUFFERED=1
+
+CMD [&quot;python&quot;, &quot;-m&quot;, &quot;mini_agent&quot;]
+</code></pre>
+<h3 id="requirementstxt">requirements.txt</h3>
+<pre><code>openai&gt;=1.0
+anthropic&gt;=0.40
+croniter&gt;=2.0
+</code></pre>
+<h3 id="_1">构建 &amp; 运行</h3>
+<pre><code class="language-bash">docker build -t mini-agent .
+
+# Mock 模式
+docker run -it --rm -p 3000:3000 mini-agent
+
+# 真实 LLM
+docker run -it --rm -p 3000:3000 \
+  -e OPENAI_API_KEY=sk-xxx \
+  mini-agent
+</code></pre>
+<h3 id="docker-compose">Docker Compose（推荐）</h3>
+<pre><code class="language-yaml">services:
+  agent:
+    build: .
+    ports:
+      - &quot;3000:3000&quot;
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./data:/app/data
+      - ./skills:/app/skills
+    restart: unless-stopped
+</code></pre>
+<pre><code class="language-bash">docker compose up -d
+docker compose logs -f agent
+</code></pre>
+<hr />
+<h2 id="a3-vps-ubuntudebian">A.3 VPS 部署（Ubuntu/Debian）</h2>
+<h3 id="1">步骤 1：准备环境</h3>
+<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt install -y python3.12 python3.12-venv git
+</code></pre>
+<h3 id="2">步骤 2：部署代码</h3>
+<pre><code class="language-bash">cd /opt
+git clone &lt;your-repo&gt; mini-agent
+cd mini-agent
+python3.12 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+</code></pre>
+<h3 id="3systemd">步骤 3：systemd 服务</h3>
+<pre><code class="language-ini"># /etc/systemd/system/mini-agent.service
+[Unit]
+Description=Mini Agent - Six-Layer AI Assistant
+After=network.target
+
+[Service]
+Type=simple
+User=agent
+WorkingDirectory=/opt/mini-agent
+Environment=OPENAI_API_KEY=sk-xxx
+ExecStart=/opt/mini-agent/.venv/bin/python -m mini_agent
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+<pre><code class="language-bash">sudo systemctl daemon-reload
+sudo systemctl enable --now mini-agent
+sudo journalctl -u mini-agent -f
+</code></pre>
+<hr />
+<h2 id="a4">A.4 成本估算</h2>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>模型</th>
+<th>每次对话成本</th>
+<th>每月成本（100 次/天）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>轻度使用</td>
+<td>gpt-4o-mini</td>
+<td>~$0.003</td>
+<td>~$9</td>
+</tr>
+<tr>
+<td>中度使用</td>
+<td>gpt-4o</td>
+<td>~$0.03</td>
+<td>~$90</td>
+</tr>
+<tr>
+<td>本地模型</td>
+<td>Ollama (Qwen2.5)</td>
+<td>$0</td>
+<td>VPS 费用 ~$5-20</td>
+</tr>
+<tr>
+<td>零成本</td>
+<td>MockLLM</td>
+<td>$0</td>
+<td>$0（功能受限）</td>
+</tr>
+</tbody>
+</table>
+<p>💡 <strong>省钱策略</strong>：
+- 简单查询路由到 <code>gpt-4o-mini</code>，复杂任务才用 <code>gpt-4o</code>
+- 本地部署 Ollama 处理隐私敏感查询
+- <code>memory.py</code> 的上下文窗口控制直接影响每次调用的 token 数</p>
+<hr />
+<h2 id="a5">A.5 日志与监控</h2>
+<h3 id="_2">结构化日志</h3>
+<p>mini_agent 的 <code>main.py</code> 使用 Python <code>logging</code> 模块。生产环境建议改为 JSON 格式：</p>
+<pre><code class="language-python">import json, logging
+
+class JSONFormatter(logging.Formatter):
+    def format(self, record):
+        return json.dumps({
+            &quot;ts&quot;: self.formatTime(record),
+            &quot;level&quot;: record.levelname,
+            &quot;logger&quot;: record.name,
+            &quot;msg&quot;: record.getMessage(),
+        })
+
+handler = logging.StreamHandler()
+handler.setFormatter(JSONFormatter())
+logging.root.addHandler(handler)
+</code></pre>
+<h3 id="_3">审计日志分析</h3>
+<p><code>audit.jsonl</code> 记录了每次工具调用的完整轨迹：</p>
+<pre><code class="language-bash"># 统计工具调用频次
+cat audit.jsonl | python -c &quot;
+import json, sys, collections
+tools = collections.Counter(
+    json.loads(l)['tool'] for l in sys.stdin)
+for t, c in tools.most_common():
+    print(f'{t}: {c}')
+&quot;
+
+# 查看失败的调用
+cat audit.jsonl | python -c &quot;
+import json, sys
+for l in sys.stdin:
+    e = json.loads(l)
+    if not e['success']:
+        print(f\&quot;{e['tool']}: {e['error']}\&quot;)
+&quot;
+</code></pre>
+<hr />
+<h2 id="a6">A.6 安全加固清单</h2>
+<p>部署到公网前的最低安全要求：</p>
+<ul>
+<li>[ ] <strong>API Key 不要硬编码</strong>——使用环境变量或 secrets manager</li>
+<li>[ ] <strong>HTTP 端口加认证</strong>——mini_agent 的 HTTP 渠道默认无认证，需添加 token 验证</li>
+<li>[ ] <strong>限制工具白名单</strong>——生产环境中 <code>allowed_tools</code> 不要用 <code>["*"]</code></li>
+<li>[ ] <strong>设置 <code>denied_tools</code></strong>——至少禁止 <code>run_command</code>、<code>delete_file</code></li>
+<li>[ ] <strong>审计日志定期归档</strong>——<code>audit.jsonl</code> 会持续增长</li>
+<li>[ ] <strong>设置 LLM 调用预算</strong>——通过 OpenAI 的 usage limits 防止意外费用</li>
+</ul>
+<hr />
+<h2 id="a7-mini_agent">A.7 从 mini_agent 到生产级的差距</h2>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>mini_agent（本书）</th>
+<th>生产级（OpenClaw 级别）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用户</td>
+<td>单用户</td>
+<td>多用户隔离</td>
+</tr>
+<tr>
+<td>渠道</td>
+<td>CLI + HTTP</td>
+<td>WhatsApp + Telegram + 13 more</td>
+</tr>
+<tr>
+<td>安全</td>
+<td>策略白名单 + 审计日志</td>
+<td>Docker 沙箱 + 九层策略链</td>
+</tr>
+<tr>
+<td>记忆</td>
+<td>内存 SQLite</td>
+<td>持久化 SQLite + 向量搜索</td>
+</tr>
+<tr>
+<td>部署</td>
+<td>单进程</td>
+<td>systemd / Docker Compose / K8s</td>
+</tr>
+<tr>
+<td>监控</td>
+<td>logging + audit.jsonl</td>
+<td>结构化日志 + 事件流 + 告警</td>
+</tr>
+</tbody>
+</table>
+<p>关键差距不在架构——mini_agent 的六层结构和 OpenClaw 是同构的。差距在于每一层的<strong>生产化细节</strong>：多用户隔离、真实 IM SDK、容器级沙箱、自动故障转移。但你理解了骨架，就理解了这些细节为什么存在、应该放在哪里。</p></div>
+      <div class="en-text"><h1 id="appendix-a-from-laptop-to-server-mini_agent-deployment-guide">Appendix A: From Laptop to Server — mini_agent Deployment Guide</h1>
+<blockquote>
+<p>All Labs in this book run locally. This appendix walks you through the "last mile": deploying mini_agent to a real environment.</p>
+</blockquote>
+<hr />
+<h2 id="a1-local-run-recap">A.1 Local Run (Recap)</h2>
+<p>Ensure the <code>mini_agent/</code> directory structure is complete:</p>
+<pre><code>mini_agent/
+├── __init__.py
+├── __main__.py
+├── main.py        # Ch08: six-layer assembly
+├── runtime.py     # Ch02: ReAct loop
+├── memory.py      # Ch03: dual-layer memory
+├── channels.py    # Ch04: CLI + HTTP
+├── security.py    # Ch05: security sandbox
+├── scheduler.py   # Ch06: scheduled tasks
+└── skills.py      # Ch07: skill registration
+</code></pre>
+<pre><code class="language-bash"># Mock mode (zero dependencies)
+python -m mini_agent
+
+# Real LLM (set any API key)
+OPENAI_API_KEY=sk-xxx python -m mini_agent
+ANTHROPIC_API_KEY=sk-ant-xxx python -m mini_agent
+</code></pre>
+<hr />
+<h2 id="a2-dockerizing">A.2 Dockerizing</h2>
+<h3 id="minimal-dockerfile">Minimal Dockerfile</h3>
+<pre><code class="language-dockerfile">FROM python:3.12-slim
+
+WORKDIR /app
+COPY mini_agent/ ./mini_agent/
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+EXPOSE 3000
+
+ENV PYTHONUNBUFFERED=1
+
+CMD [&quot;python&quot;, &quot;-m&quot;, &quot;mini_agent&quot;]
+</code></pre>
+<h3 id="requirementstxt">requirements.txt</h3>
+<pre><code>openai&gt;=1.0
+anthropic&gt;=0.40
+croniter&gt;=2.0
+</code></pre>
+<h3 id="build-run">Build &amp; Run</h3>
+<pre><code class="language-bash">docker build -t mini-agent .
+
+# Mock mode
+docker run -it --rm -p 3000:3000 mini-agent
+
+# Real LLM
+docker run -it --rm -p 3000:3000 \
+  -e OPENAI_API_KEY=sk-xxx \
+  mini-agent
+</code></pre>
+<h3 id="docker-compose-recommended">Docker Compose (Recommended)</h3>
+<pre><code class="language-yaml">services:
+  agent:
+    build: .
+    ports:
+      - &quot;3000:3000&quot;
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./data:/app/data
+      - ./skills:/app/skills
+    restart: unless-stopped
+</code></pre>
+<pre><code class="language-bash">docker compose up -d
+docker compose logs -f agent
+</code></pre>
+<hr />
+<h2 id="a3-vps-deployment-ubuntudebian">A.3 VPS Deployment (Ubuntu/Debian)</h2>
+<h3 id="step-1-prepare-the-environment">Step 1: Prepare the Environment</h3>
+<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt install -y python3.12 python3.12-venv git
+</code></pre>
+<h3 id="step-2-deploy-code">Step 2: Deploy Code</h3>
+<pre><code class="language-bash">cd /opt
+git clone &lt;your-repo&gt; mini-agent
+cd mini-agent
+python3.12 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+</code></pre>
+<h3 id="step-3-systemd-service">Step 3: systemd Service</h3>
+<pre><code class="language-ini"># /etc/systemd/system/mini-agent.service
+[Unit]
+Description=Mini Agent - Six-Layer AI Assistant
+After=network.target
+
+[Service]
+Type=simple
+User=agent
+WorkingDirectory=/opt/mini-agent
+Environment=OPENAI_API_KEY=sk-xxx
+ExecStart=/opt/mini-agent/.venv/bin/python -m mini_agent
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+<pre><code class="language-bash">sudo systemctl daemon-reload
+sudo systemctl enable --now mini-agent
+sudo journalctl -u mini-agent -f
+</code></pre>
+<hr />
+<h2 id="a4-cost-estimation">A.4 Cost Estimation</h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Model</th>
+<th>Cost per Conversation</th>
+<th>Monthly Cost (100 conv/day)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Light use</td>
+<td>gpt-4o-mini</td>
+<td>~$0.003</td>
+<td>~$9</td>
+</tr>
+<tr>
+<td>Moderate use</td>
+<td>gpt-4o</td>
+<td>~$0.03</td>
+<td>~$90</td>
+</tr>
+<tr>
+<td>Local model</td>
+<td>Ollama (Qwen2.5)</td>
+<td>$0</td>
+<td>VPS ~$5–20</td>
+</tr>
+<tr>
+<td>Zero cost</td>
+<td>MockLLM</td>
+<td>$0</td>
+<td>$0 (limited features)</td>
+</tr>
+</tbody>
+</table>
+<p>💡 <strong>Cost-saving tips</strong>:
+- Route simple queries to <code>gpt-4o-mini</code>, reserve <code>gpt-4o</code> for complex tasks
+- Run Ollama locally for privacy-sensitive queries
+- <code>memory.py</code> context-window sizing directly affects tokens per call</p>
+<hr />
+<h2 id="a5-logging-monitoring">A.5 Logging &amp; Monitoring</h2>
+<h3 id="structured-logging">Structured Logging</h3>
+<p>mini_agent's <code>main.py</code> uses Python <code>logging</code>. For production, switch to JSON format:</p>
+<pre><code class="language-python">import json, logging
+
+class JSONFormatter(logging.Formatter):
+    def format(self, record):
+        return json.dumps({
+            &quot;ts&quot;: self.formatTime(record),
+            &quot;level&quot;: record.levelname,
+            &quot;logger&quot;: record.name,
+            &quot;msg&quot;: record.getMessage(),
+        })
+
+handler = logging.StreamHandler()
+handler.setFormatter(JSONFormatter())
+logging.root.addHandler(handler)
+</code></pre>
+<h3 id="audit-log-analysis">Audit Log Analysis</h3>
+<p><code>audit.jsonl</code> records full traces of every tool call:</p>
+<pre><code class="language-bash"># Count tool call frequency
+cat audit.jsonl | python -c &quot;
+import json, sys, collections
+tools = collections.Counter(
+    json.loads(l)['tool'] for l in sys.stdin)
+for t, c in tools.most_common():
+    print(f'{t}: {c}')
+&quot;
+
+# View failed calls
+cat audit.jsonl | python -c &quot;
+import json, sys
+for l in sys.stdin:
+    e = json.loads(l)
+    if not e['success']:
+        print(f\&quot;{e['tool']}: {e['error']}\&quot;)
+&quot;
+</code></pre>
+<hr />
+<h2 id="a6-security-hardening-checklist">A.6 Security Hardening Checklist</h2>
+<p>Minimum security before exposing to the internet:</p>
+<ul>
+<li>[ ] <strong>No hardcoded API keys</strong> — use environment variables or a secrets manager</li>
+<li>[ ] <strong>Add auth to the HTTP channel</strong> — mini_agent's HTTP channel has no auth by default; add token validation</li>
+<li>[ ] <strong>Restrict tool whitelist</strong> — in production, avoid <code>allowed_tools=["*"]</code></li>
+<li>[ ] <strong>Configure <code>denied_tools</code></strong> — at minimum block <code>run_command</code>, <code>delete_file</code></li>
+<li>[ ] <strong>Rotate and archive audit logs</strong> — <code>audit.jsonl</code> grows indefinitely</li>
+<li>[ ] <strong>Set LLM spend limits</strong> — use OpenAI usage limits to avoid billing surprises</li>
+</ul>
+<hr />
+<h2 id="a7-from-mini_agent-to-production-grade">A.7 From mini_agent to Production Grade</h2>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>mini_agent (this book)</th>
+<th>Production (OpenClaw level)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Users</td>
+<td>Single user</td>
+<td>Multi-user isolation</td>
+</tr>
+<tr>
+<td>Channels</td>
+<td>CLI + HTTP</td>
+<td>WhatsApp + Telegram + 13 more</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>Policy whitelist + audit log</td>
+<td>Docker sandbox + nine-layer policy chain</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>In-memory SQLite</td>
+<td>Persistent SQLite + vector search</td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td>Single process</td>
+<td>systemd / Docker Compose / K8s</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td>logging + audit.jsonl</td>
+<td>Structured logs + event stream + alerting</td>
+</tr>
+</tbody>
+</table>
+<p>The gap is not in architecture — mini_agent's six-layer structure is isomorphic to OpenClaw. The gap is in production-grade details at each layer: multi-user isolation, real IM SDKs, container-level sandboxing, automatic failover. Once you understand the skeleton, you understand why these details exist and where they belong.</p></div>
+    </article>
+    <nav class="page-nav">
+      <a class="nav-btn prev" href="assembly.html">← <span class="zh-text">第八章：终章组装</span><span class="en-text">Ch8: Assembly</span></a>
+      
+    </nav>
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({ startOnLoad: true, theme: document.body.classList.contains('light') ? 'default' : 'dark' });
+</script>
+<script src="js/main.js"></script>
+</body>
+</html>
