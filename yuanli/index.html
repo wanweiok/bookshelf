@@ -18,6 +18,18 @@
   --green: #3fb950;
   --orange: #d29922;
 }
+[data-theme="light"] {
+  --bg: #f8f7fc;
+  --bg2: #ffffff;
+  --bg3: #ede9f6;
+  --text: #1e1b2e;
+  --text2: #6b6580;
+  --accent: #6d28d9;
+  --accent2: #7c3aed;
+  --border: #d4d0e0;
+  --green: #16a34a;
+  --orange: #ca8a04;
+}
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
@@ -27,7 +39,28 @@ body {
   line-height: 1.8;
   display: flex;
   min-height: 100vh;
+  transition: background .3s, color .3s;
 }
+#theme-toggle {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 300;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: var(--text);
+  transition: all .2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+}
+#theme-toggle:hover { border-color: var(--accent); color: var(--accent); transform: scale(1.1); }
 .sidebar {
   width: 280px;
   min-width: 280px;
@@ -85,7 +118,8 @@ h2 { font-size: 1.35rem; margin: 28px 0 12px; color: var(--text); }
 h3 { font-size: 1.1rem; margin: 20px 0 8px; color: var(--accent2); }
 p { margin: 10px 0; }
 hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
-strong { color: #fff; }
+strong { color: var(--text); font-weight: 700; }
+[data-theme="light"] strong { color: #1e1b2e; }
 em { color: var(--accent2); font-style: italic; }
 code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 0.88em; color: var(--orange); }
 pre { background: var(--bg3); padding: 16px; border-radius: 8px; overflow-x: auto; margin: 16px 0; border: 1px solid var(--border); }
@@ -121,7 +155,7 @@ blockquote.bq {
   text-align: center;
 }
 .svg-wrap {
-  background: #fff;
+  background: var(--bg2);
   border-radius: 10px;
   padding: 16px;
   display: inline-block;
@@ -177,6 +211,8 @@ blockquote.bq {
 </style>
 </head>
 <body>
+<script>(function(){var t=localStorage.getItem('yuanli-theme')||'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})()</script>
+<button id="theme-toggle" onclick="toggleTheme()" title="切换主题">🌙</button>
 <button class="hamburger" onclick="toggleSidebar()">☰</button>
 <nav class="sidebar" id="sidebar">
   <div class="sidebar-header">
@@ -2413,6 +2449,29 @@ blockquote.bq {
 
 </main>
 <script>
+function toggleTheme(){
+  var html=document.documentElement;
+  var btn=document.getElementById('theme-toggle');
+  if(html.getAttribute('data-theme')==='light'){
+    html.removeAttribute('data-theme');
+    btn.textContent='🌙';
+    localStorage.setItem('yuanli-theme','dark');
+    mermaid.initialize({startOnLoad:false,theme:'dark',themeVariables:{primaryColor:'#7c3aed',primaryTextColor:'#fff',lineColor:'#8b949e',secondaryColor:'#1c2333'}});
+  }else{
+    html.setAttribute('data-theme','light');
+    btn.textContent='☀️';
+    localStorage.setItem('yuanli-theme','light');
+    mermaid.initialize({startOnLoad:false,theme:'default',themeVariables:{primaryColor:'#7c3aed',primaryTextColor:'#fff',lineColor:'#6b6580',secondaryColor:'#ede9f6'}});
+  }
+  var active=document.querySelector('.chapter.active');
+  if(active) mermaid.run({querySelector:'#'+active.id+' .mermaid'});
+}
+(function(){
+  if(localStorage.getItem('yuanli-theme')==='light'){
+    document.getElementById('theme-toggle').textContent='☀️';
+  }
+})();
+
 const chapters = document.querySelectorAll('.chapter');
 const tocItems = document.querySelectorAll('.toc-item');
 const chapterIds = Array.from(chapters).map(c => c.id);
@@ -2449,7 +2508,8 @@ function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
 }
 
-mermaid.initialize({ startOnLoad: false, theme: 'dark', themeVariables: { primaryColor: '#7c3aed', primaryTextColor: '#fff', lineColor: '#8b949e', secondaryColor: '#1c2333' }});
+var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+mermaid.initialize({ startOnLoad: false, theme: isLight ? 'default' : 'dark', themeVariables: isLight ? { primaryColor: '#7c3aed', primaryTextColor: '#fff', lineColor: '#6b6580', secondaryColor: '#ede9f6' } : { primaryColor: '#7c3aed', primaryTextColor: '#fff', lineColor: '#8b949e', secondaryColor: '#1c2333' }});
 
 const hash = location.hash.replace('#', '') || 'ch00';
 showChapter(hash);
