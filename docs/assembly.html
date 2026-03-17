@@ -1,0 +1,2036 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第八章：终章组装 | Building Your Own AI Agent</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">🤖</span>
+        <div class="logo-text">
+          <span class="zh-text">构建你自己的 AI Agent</span>
+          <span class="en-text">Building Your Own AI Agent</span>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="zh-text"><a class="nav-item " href="preface.html?lang=zh">序章：这本书能给你什么</a>
+<a class="nav-item " href="panorama.html?lang=zh">第一章：OpenClaw 全景</a>
+<a class="nav-item " href="agent-runtime.html?lang=zh">第二章：Agent 运行时</a>
+<a class="nav-item " href="memory-state.html?lang=zh">第三章：记忆与状态</a>
+<a class="nav-item " href="channels.html?lang=zh">第四章：通信渠道</a>
+<a class="nav-item " href="security.html?lang=zh">第五章：安全与隔离</a>
+<a class="nav-item " href="scheduling.html?lang=zh">第六章：调度与自主性</a>
+<a class="nav-item " href="skills.html?lang=zh">第七章：技能扩展</a>
+<a class="nav-item active" href="assembly.html?lang=zh">第八章：终章组装</a>
+<a class="nav-item " href="deployment.html?lang=zh">附录 A：部署指南</a></div>
+      <div class="en-text"><a class="nav-item " href="preface.html?lang=en">Preface: What This Book Gives You</a>
+<a class="nav-item " href="panorama.html?lang=en">Ch1: OpenClaw Panorama</a>
+<a class="nav-item " href="agent-runtime.html?lang=en">Ch2: Agent Runtime</a>
+<a class="nav-item " href="memory-state.html?lang=en">Ch3: Memory & State</a>
+<a class="nav-item " href="channels.html?lang=en">Ch4: Channels</a>
+<a class="nav-item " href="security.html?lang=en">Ch5: Security</a>
+<a class="nav-item " href="scheduling.html?lang=en">Ch6: Scheduling</a>
+<a class="nav-item " href="skills.html?lang=en">Ch7: Skills Extension</a>
+<a class="nav-item active" href="assembly.html?lang=en">Ch8: Assembly</a>
+<a class="nav-item " href="deployment.html?lang=en">Appendix A: Deployment Guide</a></div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="lang-toggle" onclick="toggleLang()">
+        <span class="zh-text">English</span>
+        <span class="en-text">中文</span>
+      </button>
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">◐</button>
+    </div>
+  </aside>
+  <main class="content">
+    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+    <article class="chapter">
+      <div class="zh-text"><h1 id="_1">第八章：终章组装 — 六层架构怎么变成一个可运行的系统？</h1>
+<blockquote>
+<p>六个独立的模块放在一起，涌现出新的问题：初始化顺序、跨层依赖、配置爆炸、部署差异。本章把它们组装成一个完整的 Agent。</p>
+<p><strong>本章目录</strong></p>
+<ul>
+<li><a href="#81-组装模块为什么需要它">8.1 组装模块：为什么需要它？</a></li>
+<li><a href="#82-模块规格输入输出接口评价标准">8.2 模块规格：输入、输出、接口、评价标准</a></li>
+<li><a href="#83-核心算法flat-import">8.3 核心算法：flat-import</a></li>
+<li><a href="#84-生产级实现从-10-行到完整系统">8.4 生产级实现：从 10 行到完整系统</a></li>
+<li><a href="#c1-依赖解析谁先启动">C1 依赖解析：谁先启动？</a></li>
+<li><a href="#c2-配置管理30-字段怎么管">C2 配置管理：30+ 字段怎么管？</a></li>
+<li><a href="#c3-优雅启停崩溃后怎么恢复">C3 优雅启停：崩溃后怎么恢复？</a></li>
+<li><a href="#c4-部署策略单进程还是多容器">C4 部署策略：单进程还是多容器？</a></li>
+<li><a href="#c5-运行监控agent-在想什么你怎么知道">C5 运行监控：Agent 在想什么，你怎么知道？</a></li>
+<li><a href="#跨项目对比两种组装哲学">跨项目对比：两种组装哲学</a></li>
+<li><a href="#85-组装层代码全景">8.5 组装层代码全景</a></li>
+<li><a href="#86-lab组装你的六层-agent">8.6 Lab：组装你的六层 Agent</a></li>
+<li><a href="#87-本章总结--全书总结">8.7 本章总结 &amp; 全书总结</a></li>
+</ul>
+</blockquote>
+<hr />
+<h2 id="81">8.1 组装模块：为什么需要它？</h2>
+<p>你兴奋地把过去六章构建的模块放在一起，运行 <code>python -m mini_agent</code>——</p>
+<pre><code>RuntimeError: cannot schedule task: memory not initialized
+</code></pre>
+<p>调度器在记忆层之前启动了。你调整了顺序，再试一次——</p>
+<pre><code>AttributeError: 'NoneType' object has no attribute 'check'
+</code></pre>
+<p>运行时试图调用安全层的 <code>check()</code> 方法，但安全层还是 <code>None</code>。六个模块，每个都能独立运行、独立测试——<strong>放在一起却全崩了</strong>。</p>
+<p>这就是<strong>涌现复杂度</strong>：单独能跑的模块，放在一起会产生新的问题——初始化顺序、跨层依赖、配置冲突。</p>
+<p>组装模块解决的核心问题：</p>
+<blockquote>
+<p><strong>按正确的依赖顺序初始化六层架构，统一管理配置，在生产环境中保持系统稳定运行，并提供可观测性。</strong></p>
+</blockquote>
+<hr />
+<h2 id="82">8.2 模块规格：输入、输出、接口、评价标准</h2>
+<h3 id="_2">六层依赖图</h3>
+<p>六层之间不是简单的线性堆叠，而是一个有向无环图（DAG）：</p>
+<p><img alt="图 8-1: 六层依赖图" src="./images/ch08-fig1-six-layer-dag.svg" /></p>
+<p>运行时（④）是依赖汇聚点——需要记忆、安全、技能三层就绪后才能启动。渠道（⑥）和调度（⑤）依赖运行时，是最后初始化的。</p>
+<h3 id="_3">评价标准</h3>
+<table>
+<thead>
+<tr>
+<th>标准</th>
+<th>问题</th>
+<th>理想状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C1 依赖解析</strong></td>
+<td>六层启动顺序怎么确定？</td>
+<td>DAG 拓扑排序 or 固定序列</td>
+</tr>
+<tr>
+<td><strong>C2 配置管理</strong></td>
+<td>30+ 配置字段怎么管？</td>
+<td>三层合并 + 运行时校验 + 启动日志</td>
+</tr>
+<tr>
+<td><strong>C3 优雅启停</strong></td>
+<td>启动失败/崩溃后怎么办？</td>
+<td>降级策略 + 逆序关闭 + 守护进程</td>
+</tr>
+<tr>
+<td><strong>C4 部署策略</strong></td>
+<td>单进程 vs 多容器？</td>
+<td>匹配产品约束，先简单后复杂</td>
+</tr>
+<tr>
+<td><strong>C5 运行监控</strong></td>
+<td>非确定性 Agent 怎么调试？</td>
+<td>结构化日志 + 全量 prompt/response 记录</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="83-flat-import">8.3 核心算法：flat-import</h2>
+<p>组装模块的最简实现只需 10 行：</p>
+<pre><code class="language-python">from runtime import Runtime
+from memory import Memory
+from channel import CLI
+
+memory = Memory()
+runtime = Runtime(memory=memory)
+for msg in CLI.listen():
+    print(runtime.run(msg))
+</code></pre>
+<p>对照评价标准打分：</p>
+<table>
+<thead>
+<tr>
+<th>标准</th>
+<th>最简实现</th>
+<th>得分</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C1 依赖解析</strong></td>
+<td>隐式顺序</td>
+<td>❌ 缺安全、调度、技能</td>
+</tr>
+<tr>
+<td><strong>C2 配置管理</strong></td>
+<td>硬编码</td>
+<td>❌ 无法覆盖</td>
+</tr>
+<tr>
+<td><strong>C3 优雅启停</strong></td>
+<td>无</td>
+<td>❌ Ctrl+C 直接死</td>
+</tr>
+<tr>
+<td><strong>C4 部署策略</strong></td>
+<td>单脚本</td>
+<td>❌ 无法生产部署</td>
+</tr>
+<tr>
+<td><strong>C5 运行监控</strong></td>
+<td>print</td>
+<td>❌ 无结构化日志</td>
+</tr>
+</tbody>
+</table>
+<p>全部不及格。接下来看生产项目如何逐条补齐。</p>
+<hr />
+<h2 id="84-10">8.4 生产级实现：从 10 行到完整系统</h2>
+<h3 id="c1">C1 依赖解析：谁先启动？</h3>
+<p><strong>OpenClaw 有 50+ 插件</strong>，不能硬编码初始化顺序。它的解决方案是<strong>三阶段插件生命周期</strong>：</p>
+<ol>
+<li><strong>Load</strong>——四层优先级扫描（config → workspace → global → bundled）+ manifest 加载</li>
+<li><strong>Validate</strong>——启用状态检查 + 配置 schema 校验</li>
+<li><strong>Register</strong>——调用 <code>register(api)</code> 注册 tools/hooks/channels</li>
+</ol>
+<p>这本质上是一个<strong>依赖注入容器</strong>的简化版。</p>
+<p><strong>NanoClaw</strong> 的整个启动逻辑在 <code>main()</code>（<code>index.ts:456-504</code>）里，固定顺序：容器检查 → initDB → loadState → shutdown 处理器 → 子系统初始化 → recoverPendingMessages。没有插件系统——依赖关系通过代码调用顺序隐式表达。</p>
+<pre><code class="language-python"># OpenClaw 风格 —— 动态组合（运行时决定）
+def boot_with_plugins(plugin_dirs):
+    manifests = discover(plugin_dirs)       # Load
+    validated = validate(manifests)          # Validate
+    for plugin in validated:
+        plugin.register(shared_services)     # Register
+
+# NanoClaw 风格 —— 静态组合（编译时确定）
+def main():
+    db = init_database()
+    state = load_state(db)
+    whatsapp = connect_whatsapp(state)
+    start_message_loop(whatsapp)
+</code></pre>
+<blockquote>
+<p><strong>设计模式就地展开——Dependency Injection（依赖注入）</strong></p>
+<p><strong>解决的问题</strong>：模块之间硬编码依赖导致无法替换、无法测试。</p>
+<p><strong>解决的方法</strong>：依赖由外部注入而非内部硬编码。OpenClaw 的插件 <code>register()</code> 接收 <code>api</code> 对象，通过它注入 tools/channels/hooks——插件不需要知道运行时内部结构。</p>
+</blockquote>
+<p>💡 <strong>设计法则</strong>：组件 &lt; 10 且组合固定 → 简单调用顺序。组件 &gt; 10 或需运行时决定 → 插件框架或 DI 容器。</p>
+<hr />
+<h3 id="c2-30">C2 配置管理：30+ 字段怎么管？</h3>
+<p><strong>OpenClaw 的配置来自三层</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>来源</th>
+<th>优先级</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>环境变量</td>
+<td>最高</td>
+<td><code>OPENAI_API_KEY</code></td>
+</tr>
+<tr>
+<td>配置文件</td>
+<td>中</td>
+<td>JSON/YAML 模型参数</td>
+</tr>
+<tr>
+<td>代码默认值</td>
+<td>最低</td>
+<td><code>max_iterations=10</code></td>
+</tr>
+</tbody>
+</table>
+<p>TypeBox 做运行时类型校验——加载后立即验证。启动日志打印所有非敏感配置的当前值。</p>
+<p><strong>NanoClaw</strong> 只需 <code>.env</code> + 少量环境变量。没有类型校验，没有多来源合并——功能集小到不需要。</p>
+<pre><code class="language-python"># 三层配置合并
+def load_config(path=&quot;config.json&quot;):
+    cfg = dict(DEFAULTS)                    # ③ 代码默认值
+    if os.path.exists(path):
+        cfg.update(json.load(open(path)))   # ② 配置文件覆盖
+    for key in os.environ:                  # ① 环境变量最高优先
+        if key.startswith(&quot;AGENT_&quot;):
+            cfg[key[6:].lower()] = os.environ[key]
+    return cfg
+</code></pre>
+<blockquote>
+<p><strong>设计模式就地展开——Builder（构建者）</strong></p>
+<p><strong>解决的问题</strong>：复杂对象（配置 / 系统）需要分步构造，每步可独立验证。</p>
+<p><strong>解决的方法</strong>：从 defaults → file → env 三步合并，每步产出中间结果。NanoClaw 的 <code>main()</code> 也是构建者模式——initDB → loadState → WhatsApp → 子系统 → messageLoop，每步成功是下步前置条件。</p>
+</blockquote>
+<hr />
+<h3 id="c3">C3 优雅启停：崩溃后怎么恢复？</h3>
+<p><strong>OpenClaw：乐观启动 + 运行时降级。</strong> 所有插件尽可能启动，失败的标记为 disabled，运行时返回降级响应。结合 launchd/systemd/schtasks 实现跨平台守护进程自动重启。</p>
+<p><strong>NanoClaw：严格启动 + 外部重启。</strong> 任何一步失败就终止进程。Docker Compose 自动重启失败容器。<code>ensureContainerSystemRunning()</code> 在启动时清理孤儿容器。</p>
+<pre><code class="language-python"># 优雅关闭 —— 逆序释放
+async def shutdown(agent):
+    log.info(&quot;Shutting down...&quot;)
+    if agent.scheduler: agent.scheduler.stop()    # ⑤ 调度
+    if agent.channels: await agent.channels.disconnect_all()  # ⑥ 渠道
+    if agent.memory: agent.memory.close()          # ① 记忆
+    log.info(&quot;Goodbye.&quot;)
+</code></pre>
+<p>💡 <strong>选择信号</strong>：有容器编排 → 严格启动 + 外部重启。单机裸跑 → 应用层降级。</p>
+<hr />
+<h3 id="c4">C4 部署策略：单进程还是多容器？</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>OpenClaw</th>
+<th>NanoClaw</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>进程模型</strong></td>
+<td>单进程 Node.js</td>
+<td>多容器 Docker Compose</td>
+</tr>
+<tr>
+<td><strong>最小部署</strong></td>
+<td><code>npx openclaw</code></td>
+<td><code>docker compose up</code></td>
+</tr>
+<tr>
+<td><strong>存储</strong></td>
+<td>SQLite + 本地目录</td>
+<td>容器卷挂载</td>
+</tr>
+<tr>
+<td><strong>故障隔离</strong></td>
+<td>无（单点故障）</td>
+<td>有（容器独立）</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>个人电脑常驻</td>
+<td>服务器 / VPS</td>
+</tr>
+</tbody>
+</table>
+<p><strong>OpenClaw 的单进程哲学</strong>：所有层在同一 Node.js 进程中运行。<code>resolveGatewayService()</code>（<code>daemon/service.ts:66-155</code>）抽象了跨平台守护进程——macOS LaunchAgent、Linux systemd、Windows Scheduled Task。</p>
+<p><strong>NanoClaw 的容器隔离哲学</strong>：API、WhatsApp 连接器、代码执行器各自是独立容器。故障隔离——代码执行容器崩了不影响消息接收。</p>
+<p>📐 <strong>设计法则</strong>：个人 Agent → 单进程。团队/多用户 → 容器化。先简单后复杂。</p>
+<hr />
+<h3 id="c5-agent">C5 运行监控：Agent 在想什么，你怎么知道？</h3>
+<p>Agent 的调试比普通应用难——LLM 行为是<strong>非确定性的</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>OpenClaw</th>
+<th>NanoClaw</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>系统级</strong></td>
+<td>结构化日志（JSON）</td>
+<td>Docker stdout/stderr</td>
+</tr>
+<tr>
+<td><strong>运行时级</strong></td>
+<td>事件流（prompt/response/tokens）</td>
+<td>容器日志</td>
+</tr>
+<tr>
+<td><strong>工具级</strong></td>
+<td>工具调用日志</td>
+<td>Bash 输出捕获</td>
+</tr>
+</tbody>
+</table>
+<p>⚠️ <strong>生产必备</strong>：每次 LLM 调用必须记录完整 prompt 和 response。这是 Agent 行为异常时唯一的回溯手段。</p>
+<hr />
+<h3 id="_4">跨项目对比：两种组装哲学</h3>
+<table>
+<thead>
+<tr>
+<th>评价标准</th>
+<th>OpenClaw</th>
+<th>NanoClaw</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C1 依赖解析</strong></td>
+<td>三阶段插件生命周期（Load → Validate → Register）</td>
+<td>固定 <code>main()</code> 调用顺序</td>
+</tr>
+<tr>
+<td><strong>C2 配置管理</strong></td>
+<td>三层合并 + TypeBox 校验</td>
+<td><code>.env</code> + 环境变量</td>
+</tr>
+<tr>
+<td><strong>C3 优雅启停</strong></td>
+<td>乐观启动 + 降级 + 跨平台守护</td>
+<td>严格启动 + Docker 重启</td>
+</tr>
+<tr>
+<td><strong>C4 部署策略</strong></td>
+<td>单进程 + launchd/systemd</td>
+<td>多容器 Docker Compose</td>
+</tr>
+<tr>
+<td><strong>C5 运行监控</strong></td>
+<td>结构化日志 + 事件流</td>
+<td>Docker 日志 + 健康检查</td>
+</tr>
+<tr>
+<td><strong>核心设计模式</strong></td>
+<td>DI + Builder + Plugin Lifecycle</td>
+<td>Builder（main() 分步）</td>
+</tr>
+<tr>
+<td><strong>组装哲学</strong></td>
+<td>动态组合——运行时决定启用什么</td>
+<td>静态组合——编译时确定</td>
+</tr>
+</tbody>
+</table>
+<p>💡 <strong>核心洞察</strong>：OpenClaw 需要 DI 因为有<strong>动态组合</strong>需求（用户选择启用哪些插件）。NanoClaw 用简单导入就够了因为组合是<strong>编译时确定</strong>的。组装方式是产品复杂度的函数。</p>
+<hr />
+<h2 id="85">8.5 组装层代码全景</h2>
+<h3 id="openclaw">OpenClaw 组装模块</h3>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>~行数</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>index.ts</code></td>
+<td>94</td>
+<td>CLI 入口 + 环境变量归一化</td>
+</tr>
+<tr>
+<td><code>gateway/boot.ts</code></td>
+<td>105</td>
+<td>启动引导：buildBootPrompt + loadBootFile + runBootOnce</td>
+</tr>
+<tr>
+<td><code>daemon/service.ts</code></td>
+<td>155</td>
+<td>跨平台守护进程（LaunchAgent/systemd/schtasks）</td>
+</tr>
+<tr>
+<td><code>config/</code></td>
+<td>~55k</td>
+<td>配置 Schema + TypeBox 校验</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nanoclaw">NanoClaw 组装模块</h3>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>~行数</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>index.ts (main)</code></td>
+<td>~50</td>
+<td>主函数：六步初始化</td>
+</tr>
+<tr>
+<td><code>config.ts</code></td>
+<td>~25</td>
+<td>路径 + 目录 + 容器镜像</td>
+</tr>
+<tr>
+<td><code>group-queue.ts</code></td>
+<td>302</td>
+<td>并发管理器</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="图 8-2: 启动流程对比" src="./images/ch08-fig2-boot-comparison.svg" /></p>
+<hr />
+<h2 id="86-lab-agent">8.6 Lab：组装你的六层 Agent</h2>
+<p>这是全书的高潮——构建 <code>mini_agent/main.py</code>，<strong>真正导入并组装前六章的所有模块</strong>。不是重写，是组装。</p>
+<h3 id="_5">环境准备</h3>
+<table>
+<thead>
+<tr>
+<th>提供商</th>
+<th>环境变量</th>
+<th>费用参考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OpenAI</td>
+<td><code>OPENAI_API_KEY</code></td>
+<td>~$0.01/次</td>
+</tr>
+<tr>
+<td>DeepSeek</td>
+<td><code>DEEPSEEK_API_KEY</code></td>
+<td>~¥0.01/次</td>
+</tr>
+<tr>
+<td>Ollama (本地)</td>
+<td>无需 key</td>
+<td>免费</td>
+</tr>
+<tr>
+<td>无 key</td>
+<td>自动 MockLLM</td>
+<td>免费（功能受限）</td>
+</tr>
+</tbody>
+</table>
+<p>确保前六章的 <code>mini_agent/</code> 模块都已就绪：</p>
+<pre><code>mini_agent/
+├── __init__.py    # 空文件，标记为 Python 包
+├── __main__.py    # python -m mini_agent 入口
+├── runtime.py     # Ch02: ReactRuntime + create_llm()
+├── memory.py      # Ch03: DualMemory
+├── channels.py    # Ch04: ChannelManager + CLIChannel + HTTPChannel
+├── security.py    # Ch05: Sandbox + ToolPolicy + AuditLog
+├── scheduler.py   # Ch06: Scheduler
+├── skills.py      # Ch07: SkillRegistry + create_builtin_skills()
+└── main.py        # Ch08: 本章 Lab — 六层组装
+</code></pre>
+<blockquote>
+<p><strong>提示：</strong> 如果你还没有 <code>__init__.py</code> 和 <code>__main__.py</code>，现在创建它们：
+```python</p>
+<h1 id="initpy"><strong>init</strong>.py — 空文件即可</h1>
+<p>"""mini_agent — 六层 AI Agent 教学框架"""</p>
+<h1 id="mainpy-python-m-mini_agent"><strong>main</strong>.py — 让 python -m mini_agent 直接启动</h1>
+<p>import asyncio
+from mini_agent.main import main
+asyncio.run(main())
+```</p>
+</blockquote>
+<h3 id="prompt-1-mainpy">Prompt 1 — 组装 main.py（核心）</h3>
+<blockquote>
+<p>构建 <code>mini_agent/main.py</code>，组装前六章的所有模块：</p>
+<ol>
+<li><code>load_config()</code> — JSON 文件 + 环境变量覆盖 + 代码默认值（三层合并）</li>
+<li><code>Agent</code> 类 — 六层启动序列（不可变）：
+   ① Memory → ② Sandbox → ③ Skills → ④ Runtime → ⑤ Scheduler → ⑥ Channel</li>
+<li><code>boot()</code> — 逐层初始化，日志记录每层启动</li>
+<li><code>run()</code> — 连接渠道，监听消息，转发到 Runtime</li>
+<li><code>shutdown()</code> — 逆序释放资源</li>
+<li><code>main()</code> — 信号处理 + 优雅关闭</li>
+</ol>
+<p><strong>关键：必须 <code>from mini_agent.xxx import ...</code> 导入所有六个模块</strong></p>
+</blockquote>
+<p><strong>验证清单：</strong>
+- [ ] <code>python -m mini_agent</code> 能启动，六层按顺序初始化
+- [ ] 发送消息后 Agent 回复（MockLLM 或真实 LLM）
+- [ ] 输入 <code>exit</code> 优雅关闭
+- [ ] 启动日志可见每层状态</p>
+<p><strong>预期输出：</strong></p>
+<pre><code>00:00:01 [agent] ═══ Boot sequence ═══
+00:00:01 [agent] ① Memory initialized
+00:00:01 [agent] ② Sandbox initialized
+00:00:01 [agent] ③ Skills: ['system'] (2 tools)
+00:00:01 [agent] ④ Runtime initialized (Mock mode)
+00:00:01 [agent] ⑥ Channels registered
+00:00:01 [agent] ═══ All 6 layers assembled ═══
+
+You: 今天天气怎么样？
+[Mock] 让我查一下天气...
+Agent: 北京当前温度 15°C，晴
+
+You: exit
+Goodbye.
+</code></pre>
+<h3 id="prompt-2-c2">Prompt 2 — 添加配置文件支持（亲手体验 C2）</h3>
+<blockquote>
+<p>创建 <code>agent_config.json</code>，包含模型、记忆窗口、允许/拒绝工具列表等配置。
+验证环境变量可以覆盖文件配置。</p>
+</blockquote>
+<h3 id="prompt-3-c5">Prompt 3 — 全链路测试（亲手体验 C5）</h3>
+<blockquote>
+<p>对组装好的 Agent 进行全链路测试：</p>
+<ul>
+<li>发送天气查询 → 观察运行时工具调用 → 检查审计日志</li>
+<li>发送敏感路径 → 观察安全拦截 → 检查审计日志拒绝记录</li>
+<li>查看 <code>audit.jsonl</code> 的统计数据</li>
+</ul>
+</blockquote>
+<h3 id="_6">参考实现</h3>
+<blockquote>
+<p>完整参考实现见 <code>mini_agent/main.py</code>。</p>
+</blockquote>
+<details>
+<summary>参考实现：mini_agent/main.py（约 170 行）</summary>
+
+
+<pre><code class="language-python">&quot;&quot;&quot;mini_agent/main.py — 六层 Agent 组装
+
+第八章 Lab · 启动序列 → 主循环 → 优雅关闭
+真正导入并组装前六章的所有模块 — 不是重写，是组装。
+
+运行: python -m mini_agent
+依赖: openai（可选）, croniter（可选）
+&quot;&quot;&quot;
+from __future__ import annotations
+
+import asyncio, signal, json, os, logging
+
+from mini_agent.runtime import ReactRuntime, create_llm, MockLLM
+from mini_agent.memory import DualMemory
+from mini_agent.channels import ChannelManager, CLIChannel, HTTPChannel
+from mini_agent.security import Sandbox, ToolPolicy, AuditLog
+from mini_agent.scheduler import Scheduler
+from mini_agent.skills import SkillRegistry, create_builtin_skills
+
+logging.basicConfig(level=logging.INFO,
+                    format=&quot;%(asctime)s [%(name)s] %(message)s&quot;)
+log = logging.getLogger(&quot;agent&quot;)
+
+
+DEFAULT_CONFIG = {
+    &quot;model&quot;: &quot;gpt-4o-mini&quot;,
+    &quot;memory_db&quot;: &quot;:memory:&quot;,
+    &quot;memory_window&quot;: 20,
+    &quot;allowed_tools&quot;: [&quot;*&quot;],
+    &quot;denied_tools&quot;: [&quot;run_command&quot;, &quot;delete_file&quot;],
+    &quot;http_port&quot;: None,
+    &quot;scheduler_enabled&quot;: False,
+    &quot;skills_dir&quot;: &quot;./skills&quot;,
+}
+
+
+def load_config(path: str = &quot;agent_config.json&quot;) -&gt; dict:
+    cfg = dict(DEFAULT_CONFIG)
+    if os.path.exists(path):
+        cfg.update(json.loads(open(path, encoding=&quot;utf-8&quot;).read()))
+    for key in (&quot;OPENAI_API_KEY&quot;, &quot;DEEPSEEK_API_KEY&quot;, &quot;OPENAI_MODEL&quot;):
+        val = os.environ.get(key)
+        if val:
+            cfg[key.lower()] = val
+    return cfg
+
+
+class Agent:
+    &quot;&quot;&quot;六层 Agent — 导入并组装前六章的所有模块
+
+    Boot 顺序（不可变）:
+      ① Memory (Ch03) → ② Sandbox (Ch05) → ③ Skills (Ch07)
+      → ④ Runtime (Ch02) → ⑤ Scheduler (Ch06) → ⑥ Channel (Ch04)
+    &quot;&quot;&quot;
+
+    def __init__(self, config: dict | None = None):
+        self.config = config or load_config()
+        self.memory: DualMemory | None = None
+        self.sandbox: Sandbox | None = None
+        self.skills: SkillRegistry | None = None
+        self.runtime: ReactRuntime | None = None
+        self.scheduler: Scheduler | None = None
+        self.channels: ChannelManager | None = None
+
+    def boot(self) -&gt; &quot;Agent&quot;:
+        log.info(&quot;═══ Boot sequence ═══&quot;)
+
+        # ① Memory (Ch03)
+        self.memory = DualMemory(
+            db_path=self.config[&quot;memory_db&quot;],
+            window=self.config[&quot;memory_window&quot;])
+        log.info(&quot;① Memory initialized&quot;)
+
+        # ② Sandbox (Ch05)
+        self.sandbox = Sandbox(
+            policy=ToolPolicy(
+                allow=self.config[&quot;allowed_tools&quot;],
+                deny=self.config[&quot;denied_tools&quot;]),
+            audit=AuditLog(&quot;audit.jsonl&quot;))
+        log.info(&quot;② Sandbox initialized&quot;)
+
+        # ③ Skills → Tools (Ch07)
+        self.skills = SkillRegistry()
+        for skill in create_builtin_skills(self.memory):
+            self.skills.register(skill)
+        from mini_agent.skills import SkillLoader
+        for skill in SkillLoader.discover(self.config[&quot;skills_dir&quot;]):
+            self.skills.register(skill)
+        tools = self.skills.to_registry()
+        log.info(f&quot;③ Skills: {[s.name for s in self.skills.list_skills()]}&quot;
+                 f&quot; ({len(tools.names())} tools)&quot;)
+
+        # ④ Runtime (Ch02)
+        llm = create_llm(self.config)
+        self.runtime = ReactRuntime(
+            llm, tools,
+            memory=self.memory,
+            sandbox=self.sandbox)
+        mode = &quot;Mock&quot; if isinstance(llm, MockLLM) else &quot;LLM&quot;
+        log.info(f&quot;④ Runtime initialized ({mode} mode)&quot;)
+
+        # ⑤ Scheduler (Ch06)
+        if self.config.get(&quot;scheduler_enabled&quot;):
+            self.scheduler = Scheduler()
+            log.info(&quot;⑤ Scheduler initialized&quot;)
+
+        # ⑥ Channels (Ch04)
+        self.channels = ChannelManager()
+        self.channels.register(CLIChannel())
+        if self.config.get(&quot;http_port&quot;):
+            self.channels.register(
+                HTTPChannel(self.config[&quot;http_port&quot;]))
+        log.info(&quot;⑥ Channels registered&quot;)
+
+        log.info(&quot;═══ All 6 layers assembled ═══\n&quot;)
+        return self
+
+    async def run(self) -&gt; None:
+        assert self.channels and self.runtime
+        await self.channels.connect_all()
+
+        if self.scheduler:
+            asyncio.create_task(self.scheduler.start())
+
+        async for msg in self.channels.listen_all():
+            log.info(f&quot;[{msg.channel}] {msg.sender}: {msg.content}&quot;)
+
+            if msg.content.strip().lower() in (&quot;exit&quot;, &quot;quit&quot;, &quot;bye&quot;):
+                await self.channels.send(
+                    msg.channel, msg.sender, &quot;再见！&quot;)
+                break
+
+            answer = self.runtime.run(msg.content)
+            await self.channels.send(msg.channel, msg.sender, answer)
+
+    async def shutdown(self) -&gt; None:
+        log.info(&quot;Shutting down...&quot;)
+        if self.scheduler:
+            self.scheduler.stop()
+        if self.channels:
+            await self.channels.disconnect_all()
+        if self.memory:
+            self.memory.close()
+        log.info(&quot;Goodbye.&quot;)
+
+
+async def main():
+    agent = Agent().boot()
+    for sig in (signal.SIGINT, signal.SIGTERM):
+        try:
+            signal.signal(sig, lambda *_: None)
+        except (OSError, ValueError):
+            pass
+    try:
+        await agent.run()
+    except (KeyboardInterrupt, EOFError):
+        pass
+    finally:
+        await agent.shutdown()
+
+
+if __name__ == &quot;__main__&quot;:
+    asyncio.run(main())
+</code></pre>
+
+
+</details>
+
+<h3 id="_7">评价标准对照</h3>
+<table>
+<thead>
+<tr>
+<th>C 标准</th>
+<th>Lab 实现</th>
+<th>生产级还需</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C1 依赖解析</strong></td>
+<td>固定六步序列</td>
+<td>插件生命周期（Load → Validate → Register）</td>
+</tr>
+<tr>
+<td><strong>C2 配置管理</strong></td>
+<td>JSON + env + defaults</td>
+<td>TypeBox/Zod 校验、启动日志</td>
+</tr>
+<tr>
+<td><strong>C3 优雅启停</strong></td>
+<td>逆序 shutdown + 信号处理</td>
+<td>守护进程、降级策略</td>
+</tr>
+<tr>
+<td><strong>C4 部署策略</strong></td>
+<td>单脚本 <code>python -m</code></td>
+<td>Docker Compose、launchd/systemd</td>
+</tr>
+<tr>
+<td><strong>C5 运行监控</strong></td>
+<td>logging + audit.jsonl</td>
+<td>事件流、结构化日志、全量记录</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="87">8.7 本章总结 &amp; 全书总结</h2>
+<h3 id="_8">本章总结</h3>
+<table>
+<thead>
+<tr>
+<th>评价标准</th>
+<th>核心洞察</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C1 依赖解析</strong></td>
+<td>组件 &lt; 10 且组合固定 → 简单调用顺序。组件 &gt; 10 或动态组合 → 插件框架/DI 容器。</td>
+</tr>
+<tr>
+<td><strong>C2 配置管理</strong></td>
+<td>三层合并（env &gt; file &gt; defaults）+ 启动时校验打印，避免"本地能跑线上挂"的配置漂移。</td>
+</tr>
+<tr>
+<td><strong>C3 优雅启停</strong></td>
+<td>有容器编排 → 严格启动 + 外部重启。单机裸跑 → 应用层降级。逆序关闭是基本纪律。</td>
+</tr>
+<tr>
+<td><strong>C4 部署策略</strong></td>
+<td>个人 → 单进程（简单够用）。团队 → 容器化（隔离可扩展）。先简单后复杂。</td>
+</tr>
+<tr>
+<td><strong>C5 运行监控</strong></td>
+<td>每次 LLM 调用必须记录完整 prompt/response——这是非确定性系统唯一的回溯手段。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_9">全书设计模式总览</h3>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>章</th>
+<th>应用</th>
+<th>解决的问题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ReAct 循环</td>
+<td>2</td>
+<td>Think → Act → Observe</td>
+<td>Agent 决策控制流</td>
+</tr>
+<tr>
+<td>策略模式 / Factory</td>
+<td>2</td>
+<td>LLM Provider 切换</td>
+<td>运行时选择算法</td>
+</tr>
+<tr>
+<td>Composite / Singleton / Fallback</td>
+<td>3</td>
+<td>双层记忆 + 混合搜索</td>
+<td>多级信息管理</td>
+</tr>
+<tr>
+<td>Adapter / Middleware</td>
+<td>4</td>
+<td>统一 Message 接口</td>
+<td>一次编写多处接入</td>
+</tr>
+<tr>
+<td>Chain of Responsibility</td>
+<td>5</td>
+<td>7 层策略链</td>
+<td>多级放行/拦截</td>
+</tr>
+<tr>
+<td>Proxy / Decorator</td>
+<td>5</td>
+<td>Auth Wall + Docker</td>
+<td>透明包装执行</td>
+</tr>
+<tr>
+<td>Command Lane</td>
+<td>6</td>
+<td>Session 级串行</td>
+<td>并发不冲突</td>
+</tr>
+<tr>
+<td>Checkpoint + Failover</td>
+<td>6</td>
+<td>runMissedJobs</td>
+<td>崩溃不丢活</td>
+</tr>
+<tr>
+<td>Event-Driven + Heartbeat</td>
+<td>6</td>
+<td>心跳续行</td>
+<td>被动与自主的平衡</td>
+</tr>
+<tr>
+<td>Registry</td>
+<td>7</td>
+<td>Plugin Registry</td>
+<td>扩展统一管理</td>
+</tr>
+<tr>
+<td>Dynamic Loading</td>
+<td>7</td>
+<td>jiti / importlib</td>
+<td>无需重编译获新能力</td>
+</tr>
+<tr>
+<td>Observer</td>
+<td>7</td>
+<td>生命周期钩子 + IPC</td>
+<td>松耦合通信</td>
+</tr>
+<tr>
+<td>Dependency Injection</td>
+<td>8</td>
+<td>插件注入 tools/hooks</td>
+<td>模块可替换可测试</td>
+</tr>
+<tr>
+<td>Builder</td>
+<td>8</td>
+<td>分步配置 + 初始化</td>
+<td>复杂对象逐步组装</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_10">全书各章一句话回顾</h3>
+<table>
+<thead>
+<tr>
+<th>章</th>
+<th>模块</th>
+<th>一句话</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>运行时</td>
+<td>循环的控制权决定了你对 Agent 行为的掌控力</td>
+</tr>
+<tr>
+<td>3</td>
+<td>记忆</td>
+<td>记忆的形态决定了 Agent 能"记住"多少、"遗忘"多少</td>
+</tr>
+<tr>
+<td>4</td>
+<td>通道</td>
+<td>适配器模式是"一次编写、多处接入"的关键</td>
+</tr>
+<tr>
+<td>5</td>
+<td>安全</td>
+<td>安全级别是产品定位的函数</td>
+</tr>
+<tr>
+<td>6</td>
+<td>调度</td>
+<td>自主性是一个光谱，给油门的同时必须给刹车</td>
+</tr>
+<tr>
+<td>7</td>
+<td>技能</td>
+<td>每种扩展方案的优势都建立在它所放弃的东西之上</td>
+</tr>
+<tr>
+<td>8</td>
+<td>组装</td>
+<td>组装 = 依赖解析；从最简方案开始，痛点驱动升级</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_11">架构决策流程图</h3>
+<p><img alt="图 8-3: 架构决策流程图" src="./images/ch08-fig3-architecture-decision.svg" /></p>
+<h3 id="_12">下一步去哪</h3>
+<p>本书覆盖了单 Agent 核心骨架。以下方向超出范围但同样重要：</p>
+<ul>
+<li><strong>多模态</strong>：语音 I/O（Whisper + TTS）、图像理解（GPT-4o Vision）</li>
+<li><strong>多 Agent 协作</strong>：AutoGen / CrewAI / LangGraph</li>
+<li><strong>评估与微调</strong>：LMSYS Chatbot Arena、OpenAI Evals</li>
+<li><strong>生产部署</strong>：LangSmith 可观测性、vLLM 自托管、Kubernetes</li>
+</ul>
+<p><strong>全书核心信念</strong>：一个 AI Agent 的架构反映的是它的架构师对"好助手"的理解。没有最好的架构，只有最匹配约束的架构。从 50 行 ReAct 循环开始，让痛点引导你走向下一层。</p>
+<p>开始构建吧。</p>
+<hr />
+<h2 id="_13">参考文献</h2>
+<ol>
+<li>
+<p><strong>Martin, R.C.</strong> (2017). <em>Clean Architecture: A Craftsman's Guide to Software Structure and Design</em>. Prentice Hall. ISBN: 978-0134494166 — 依赖反转原则和组件耦合管理，直接影响了本章 § C1 依赖解析的 DAG 拓扑分析。</p>
+</li>
+<li>
+<p><strong>Fowler, M.</strong> (2004). "Inversion of Control Containers and the Dependency Injection Pattern." martinfowler.com. https://martinfowler.com/articles/injection.html — 依赖注入模式的经典文章，OpenClaw 的 Load → Validate → Register 三阶段生命周期是 DI 容器的简化实现。</p>
+</li>
+<li>
+<p><strong>Newman, S.</strong> (2021). <em>Building Microservices</em>, 2nd Edition. O'Reilly. ISBN: 978-1492034025 — 单进程 vs 微服务的部署策略分析，为 § C4 OpenClaw 单进程 vs NanoClaw 多容器的对比提供了架构参照。</p>
+</li>
+<li>
+<p><strong>Kleppmann, M.</strong> (2017). <em>Designing Data-Intensive Applications</em>. O'Reilly. ISBN: 978-1449373320 — 分布式系统的可靠性、可扩展性和可维护性框架，本章的"启动失败降级"和"优雅关闭"设计从中获益。</p>
+</li>
+<li>
+<p><strong>Nygard, M.</strong> (2018). <em>Release It! Design and Deploy Production-Ready Software</em>, 2nd Edition. Pragmatic Bookshelf. ISBN: 978-1680502398 — 生产环境中的稳定性模式（断路器、超时、降级），对应本章 § C3 优雅启停和 § C5 运行监控。</p>
+</li>
+</ol>
+<hr />
+<h2 id="_14">源码参考索引</h2>
+<table>
+<thead>
+<tr>
+<th>文件路径</th>
+<th>行号</th>
+<th>内容描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>openclaw/src/index.ts</code></td>
+<td>1-94</td>
+<td>CLI 入口</td>
+</tr>
+<tr>
+<td><code>openclaw/src/index.ts</code></td>
+<td>36-38</td>
+<td>环境变量归一化</td>
+</tr>
+<tr>
+<td><code>openclaw/src/gateway/boot.ts</code></td>
+<td>27-39</td>
+<td><code>buildBootPrompt()</code></td>
+</tr>
+<tr>
+<td><code>openclaw/src/gateway/boot.ts</code></td>
+<td>41-59</td>
+<td><code>loadBootFile()</code></td>
+</tr>
+<tr>
+<td><code>openclaw/src/gateway/boot.ts</code></td>
+<td>61-105</td>
+<td><code>runBootOnce()</code></td>
+</tr>
+<tr>
+<td><code>openclaw/src/daemon/service.ts</code></td>
+<td>66-155</td>
+<td>跨平台守护进程</td>
+</tr>
+<tr>
+<td><code>nanoclaw/src/index.ts</code></td>
+<td>456-504</td>
+<td><code>main()</code></td>
+</tr>
+<tr>
+<td><code>nanoclaw/src/config.ts</code></td>
+<td>8-24</td>
+<td>路径 + 目录 + 镜像</td>
+</tr>
+<tr>
+<td><code>nanoclaw/src/group-queue.ts</code></td>
+<td>27-302</td>
+<td>GroupQueue</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>全书完。</em></p></div>
+      <div class="en-text"><h1 id="chapter-8-the-finale-how-do-six-layers-become-a-running-system">Chapter 8: The Finale. How Do Six Layers Become a Running System?</h1>
+<blockquote>
+<p>Six independent modules placed together give rise to new problems: initialization order, cross-layer dependencies, configuration explosion, deployment differences. This chapter assembles them into a complete Agent.</p>
+<p><strong>Table of Contents</strong></p>
+<ul>
+<li><a href="#81-the-assembly-module-why-do-we-need-it">8.1 The Assembly Module: Why Do We Need It?</a></li>
+<li><a href="#82-module-specification-inputs-outputs-interfaces-evaluation-criteria">8.2 Module Specification: Inputs, Outputs, Interfaces, Evaluation Criteria</a></li>
+<li><a href="#83-core-algorithm-flat-import">8.3 Core Algorithm: flat-import</a></li>
+<li><a href="#84-production-implementation-from-10-lines-to-a-complete-system">8.4 Production Implementation: From 10 Lines to a Complete System</a></li>
+<li><a href="#c1-dependency-resolution-who-starts-first">C1 Dependency Resolution: Who Starts First?</a></li>
+<li><a href="#c2-configuration-management-how-to-manage-30-fields">C2 Configuration Management: How to Manage 30+ Fields?</a></li>
+<li><a href="#c3-graceful-startupshutdown-how-to-recover-after-a-crash">C3 Graceful Startup/Shutdown: How to Recover After a Crash?</a></li>
+<li><a href="#c4-deployment-strategy-single-process-or-multi-container">C4 Deployment Strategy: Single Process or Multi-Container?</a></li>
+<li><a href="#c5-runtime-monitoring-how-do-you-know-what-the-agent-is-thinking">C5 Runtime Monitoring: How Do You Know What the Agent Is Thinking?</a></li>
+<li><a href="#cross-project-comparison-two-assembly-philosophies">Cross-Project Comparison: Two Assembly Philosophies</a></li>
+<li><a href="#85-assembly-layer-code-panorama">8.5 Assembly Layer Code Panorama</a></li>
+<li><a href="#86-lab-assemble-your-six-layer-agent">8.6 Lab: Assemble Your Six-Layer Agent</a></li>
+<li><a href="#87-chapter-summary--book-summary">8.7 Chapter Summary &amp; Book Summary</a></li>
+</ul>
+</blockquote>
+<hr />
+<h2 id="81-the-assembly-module-why-do-we-need-it">8.1 The Assembly Module: Why Do We Need It?</h2>
+<p>You excitedly put together all six modules from the previous chapters and run <code>python -m mini_agent</code>:</p>
+<pre><code>RuntimeError: cannot schedule task: memory not initialized
+</code></pre>
+<p>The Scheduler started before the Memory layer. You fix the order and try again.</p>
+<pre><code>AttributeError: 'NoneType' object has no attribute 'check'
+</code></pre>
+<p>Runtime tried to call Security's <code>check()</code> method, but Security was still <code>None</code>. Six modules, each running and testing fine independently, <strong>but crashing the moment you combine them</strong>.</p>
+<p>This is <strong>emergent complexity</strong>: modules that work alone produce new problems when assembled: initialization order, cross-layer dependencies, configuration conflicts.</p>
+<p>The core problem the Assembly module solves:</p>
+<blockquote>
+<p><strong>Initialize the six-layer architecture in the correct dependency order, manage configuration uniformly, keep the system running stably in production, and provide observability.</strong></p>
+</blockquote>
+<hr />
+<h2 id="82-module-specification-inputs-outputs-interfaces-evaluation-criteria">8.2 Module Specification: Inputs, Outputs, Interfaces, Evaluation Criteria</h2>
+<h3 id="six-layer-dependency-graph">Six-Layer Dependency Graph</h3>
+<p>The six layers are not a simple linear stack. They form a Directed Acyclic Graph (DAG):</p>
+<p><img alt="Figure 8-1: Six-Layer Dependency Graph" src="./images/ch08-fig1-six-layer-dag-en.svg" /></p>
+<p>Runtime (④) is the dependency convergence point. It can only start after Memory, Security, and Skills are all ready. Channels (⑥) and Scheduler (⑤) depend on Runtime and are initialized last.</p>
+<h3 id="evaluation-criteria">Evaluation Criteria</h3>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Question</th>
+<th>Ideal State</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C1 Dependency Resolution</strong></td>
+<td>How is the six-layer startup order determined?</td>
+<td>DAG topological sort or fixed sequence</td>
+</tr>
+<tr>
+<td><strong>C2 Configuration Management</strong></td>
+<td>How to manage 30+ config fields?</td>
+<td>Three-layer merge + runtime validation + startup log</td>
+</tr>
+<tr>
+<td><strong>C3 Graceful Startup/Shutdown</strong></td>
+<td>What happens after startup failure / crash?</td>
+<td>Degradation strategy + reverse-order shutdown + daemon</td>
+</tr>
+<tr>
+<td><strong>C4 Deployment Strategy</strong></td>
+<td>Single process vs multi-container?</td>
+<td>Match product constraints; start simple, evolve later</td>
+</tr>
+<tr>
+<td><strong>C5 Runtime Monitoring</strong></td>
+<td>How to debug a non-deterministic Agent?</td>
+<td>Structured logs + full prompt/response recording</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="83-core-algorithm-flat-import">8.3 Core Algorithm: flat-import</h2>
+<p>The simplest Assembly module implementation takes only 10 lines:</p>
+<pre><code class="language-python">from runtime import Runtime
+from memory import Memory
+from channel import CLI
+
+memory = Memory()
+runtime = Runtime(memory=memory)
+for msg in CLI.listen():
+    print(runtime.run(msg))
+</code></pre>
+<p>Scoring against the evaluation criteria:</p>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Minimal Implementation</th>
+<th>Score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C1 Dependency Resolution</strong></td>
+<td>Implicit order</td>
+<td>❌ Missing Security, Scheduler, Skills</td>
+</tr>
+<tr>
+<td><strong>C2 Configuration Management</strong></td>
+<td>Hard-coded</td>
+<td>❌ Cannot override</td>
+</tr>
+<tr>
+<td><strong>C3 Graceful Startup/Shutdown</strong></td>
+<td>None</td>
+<td>❌ Ctrl+C kills immediately</td>
+</tr>
+<tr>
+<td><strong>C4 Deployment Strategy</strong></td>
+<td>Single script</td>
+<td>❌ Cannot deploy to production</td>
+</tr>
+<tr>
+<td><strong>C5 Runtime Monitoring</strong></td>
+<td>print</td>
+<td>❌ No structured logging</td>
+</tr>
+</tbody>
+</table>
+<p>All failing. Let's see how production projects address each one.</p>
+<hr />
+<h2 id="84-production-implementation-from-10-lines-to-a-complete-system">8.4 Production Implementation: From 10 Lines to a Complete System</h2>
+<h3 id="c1-dependency-resolution-who-starts-first">C1 Dependency Resolution: Who Starts First?</h3>
+<p><strong>OpenClaw has 50+ plugins</strong>, so it cannot hard-code the initialization order. Its solution is a <strong>three-phase plugin lifecycle</strong>:</p>
+<ol>
+<li><strong>Load</strong>: Four-priority scanning (config → workspace → global → bundled) + manifest loading</li>
+<li><strong>Validate</strong>: Enable-status check + config schema validation</li>
+<li><strong>Register</strong>: Call <code>register(api)</code> to register tools/hooks/channels</li>
+</ol>
+<p>This is essentially a simplified <strong>dependency injection container</strong>.</p>
+<p><strong>NanoClaw</strong>'s entire startup logic lives in <code>main()</code> (<code>index.ts:456-504</code>), with a fixed order: container check → initDB → loadState → shutdown handler → subsystem initialization → recoverPendingMessages. No plugin system. Dependencies are expressed implicitly through code call order.</p>
+<pre><code class="language-python"># OpenClaw style — dynamic composition (decided at runtime)
+def boot_with_plugins(plugin_dirs):
+    manifests = discover(plugin_dirs)       # Load
+    validated = validate(manifests)          # Validate
+    for plugin in validated:
+        plugin.register(shared_services)     # Register
+
+# NanoClaw style — static composition (decided at compile time)
+def main():
+    db = init_database()
+    state = load_state(db)
+    whatsapp = connect_whatsapp(state)
+    start_message_loop(whatsapp)
+</code></pre>
+<blockquote>
+<p><strong>Design Pattern In-Place: Dependency Injection</strong></p>
+<p><strong>Problem it solves</strong>: Hard-coded dependencies between modules make them impossible to replace or test.</p>
+<p><strong>How it solves it</strong>: Dependencies are injected from the outside rather than hard-coded internally. OpenClaw's plugin <code>register()</code> receives an <code>api</code> object through which tools/channels/hooks are injected. The plugin doesn't need to know the runtime's internal structure.</p>
+</blockquote>
+<p>💡 <strong>Design Principle</strong>: Components &lt; 10 and composition is fixed → simple call order. Components &gt; 10 or composition decided at runtime → plugin framework or DI container.</p>
+<hr />
+<h3 id="c2-configuration-management-how-to-manage-30-fields">C2 Configuration Management: How to Manage 30+ Fields?</h3>
+<p><strong>OpenClaw's configuration comes from three layers</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Priority</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Environment variables</td>
+<td>Highest</td>
+<td><code>OPENAI_API_KEY</code></td>
+</tr>
+<tr>
+<td>Config file</td>
+<td>Medium</td>
+<td>JSON/YAML model parameters</td>
+</tr>
+<tr>
+<td>Code defaults</td>
+<td>Lowest</td>
+<td><code>max_iterations=10</code></td>
+</tr>
+</tbody>
+</table>
+<p>TypeBox performs runtime type validation. Values are verified immediately after loading. Startup logs print the current value of all non-sensitive configuration fields.</p>
+<p><strong>NanoClaw</strong> needs only <code>.env</code> + a few environment variables. No type validation, no multi-source merging. Its feature set is small enough not to need it.</p>
+<pre><code class="language-python"># Three-layer configuration merge
+def load_config(path=&quot;config.json&quot;):
+    cfg = dict(DEFAULTS)                    # ③ Code defaults
+    if os.path.exists(path):
+        cfg.update(json.load(open(path)))   # ② Config file override
+    for key in os.environ:                  # ① Env vars highest priority
+        if key.startswith(&quot;AGENT_&quot;):
+            cfg[key[6:].lower()] = os.environ[key]
+    return cfg
+</code></pre>
+<blockquote>
+<p><strong>Design Pattern In-Place: Builder</strong></p>
+<p><strong>Problem it solves</strong>: Complex objects (configuration / systems) need step-by-step construction, with each step independently verifiable.</p>
+<p><strong>How it solves it</strong>: Merge in three steps from defaults → file → env, each producing an intermediate result. NanoClaw's <code>main()</code> is also a Builder pattern: initDB → loadState → WhatsApp → subsystems → messageLoop, where each step's success is a precondition for the next.</p>
+</blockquote>
+<hr />
+<h3 id="c3-graceful-startupshutdown-how-to-recover-after-a-crash">C3 Graceful Startup/Shutdown: How to Recover After a Crash?</h3>
+<p><strong>OpenClaw: Optimistic startup + runtime degradation.</strong> All plugins are started as aggressively as possible; failures are marked as disabled, and the runtime returns degraded responses. Combined with launchd/systemd/schtasks for cross-platform daemon auto-restart.</p>
+<p><strong>NanoClaw: Strict startup + external restart.</strong> Any step failure terminates the process. Docker Compose automatically restarts failed containers. <code>ensureContainerSystemRunning()</code> cleans up orphan containers at startup.</p>
+<pre><code class="language-python"># Graceful shutdown — reverse-order release
+async def shutdown(agent):
+    log.info(&quot;Shutting down...&quot;)
+    if agent.scheduler: agent.scheduler.stop()    # ⑤ Scheduler
+    if agent.channels: await agent.channels.disconnect_all()  # ⑥ Channels
+    if agent.memory: agent.memory.close()          # ① Memory
+    log.info(&quot;Goodbye.&quot;)
+</code></pre>
+<p>💡 <strong>Selection Signal</strong>: Have container orchestration → strict startup + external restart. Running bare-metal → application-layer degradation.</p>
+<hr />
+<h3 id="c4-deployment-strategy-single-process-or-multi-container">C4 Deployment Strategy: Single Process or Multi-Container?</h3>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>OpenClaw</th>
+<th>NanoClaw</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Process model</strong></td>
+<td>Single-process Node.js</td>
+<td>Multi-container Docker Compose</td>
+</tr>
+<tr>
+<td><strong>Minimum deployment</strong></td>
+<td><code>npx openclaw</code></td>
+<td><code>docker compose up</code></td>
+</tr>
+<tr>
+<td><strong>Storage</strong></td>
+<td>SQLite + local directory</td>
+<td>Container volume mounts</td>
+</tr>
+<tr>
+<td><strong>Fault isolation</strong></td>
+<td>None (single point of failure)</td>
+<td>Yes (containers are independent)</td>
+</tr>
+<tr>
+<td><strong>Use case</strong></td>
+<td>Personal computer always-on</td>
+<td>Server / VPS</td>
+</tr>
+</tbody>
+</table>
+<p><strong>OpenClaw's single-process philosophy</strong>: All layers run within the same Node.js process. <code>resolveGatewayService()</code> (<code>daemon/service.ts:66-155</code>) abstracts cross-platform daemons: macOS LaunchAgent, Linux systemd, Windows Scheduled Task.</p>
+<p><strong>NanoClaw's container-isolation philosophy</strong>: API, WhatsApp connector, and code executor are each independent containers. Fault isolation: a crashed code-execution container doesn't affect message reception.</p>
+<p>📐 <strong>Design Principle</strong>: Personal Agent → single process. Team / multi-user → containerized. Start simple, evolve later.</p>
+<hr />
+<h3 id="c5-runtime-monitoring-how-do-you-know-what-the-agent-is-thinking">C5 Runtime Monitoring: How Do You Know What the Agent Is Thinking?</h3>
+<p>Debugging an Agent is harder than a normal application. LLM behavior is <strong>non-deterministic</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>OpenClaw</th>
+<th>NanoClaw</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>System-level</strong></td>
+<td>Structured logs (JSON)</td>
+<td>Docker stdout/stderr</td>
+</tr>
+<tr>
+<td><strong>Runtime-level</strong></td>
+<td>Event stream (prompt/response/tokens)</td>
+<td>Container logs</td>
+</tr>
+<tr>
+<td><strong>Tool-level</strong></td>
+<td>Tool invocation logs</td>
+<td>Bash output capture</td>
+</tr>
+</tbody>
+</table>
+<p>⚠️ <strong>Production Essential</strong>: Every LLM call must record the full prompt and response. This is the only way to trace back when Agent behavior goes wrong.</p>
+<hr />
+<h3 id="cross-project-comparison-two-assembly-philosophies">Cross-Project Comparison: Two Assembly Philosophies</h3>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>OpenClaw</th>
+<th>NanoClaw</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C1 Dependency Resolution</strong></td>
+<td>Three-phase plugin lifecycle (Load → Validate → Register)</td>
+<td>Fixed <code>main()</code> call order</td>
+</tr>
+<tr>
+<td><strong>C2 Configuration Management</strong></td>
+<td>Three-layer merge + TypeBox validation</td>
+<td><code>.env</code> + environment variables</td>
+</tr>
+<tr>
+<td><strong>C3 Graceful Startup/Shutdown</strong></td>
+<td>Optimistic startup + degradation + cross-platform daemon</td>
+<td>Strict startup + Docker restart</td>
+</tr>
+<tr>
+<td><strong>C4 Deployment Strategy</strong></td>
+<td>Single process + launchd/systemd</td>
+<td>Multi-container Docker Compose</td>
+</tr>
+<tr>
+<td><strong>C5 Runtime Monitoring</strong></td>
+<td>Structured logs + event stream</td>
+<td>Docker logs + health checks</td>
+</tr>
+<tr>
+<td><strong>Core design patterns</strong></td>
+<td>DI + Builder + Plugin Lifecycle</td>
+<td>Builder (step-by-step main())</td>
+</tr>
+<tr>
+<td><strong>Assembly philosophy</strong></td>
+<td>Dynamic composition: decide at runtime what to enable</td>
+<td>Static composition: decided at compile time</td>
+</tr>
+</tbody>
+</table>
+<p>💡 <strong>Core Insight</strong>: OpenClaw needs DI because it has <strong>dynamic composition</strong> requirements (users choose which plugins to enable). NanoClaw gets by with simple imports because composition is <strong>decided at compile time</strong>. The assembly approach is a function of product complexity.</p>
+<hr />
+<h2 id="85-assembly-layer-code-panorama">8.5 Assembly Layer Code Panorama</h2>
+<h3 id="openclaw-assembly-module">OpenClaw Assembly Module</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>~Lines</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>index.ts</code></td>
+<td>94</td>
+<td>CLI entry + environment variable normalization</td>
+</tr>
+<tr>
+<td><code>gateway/boot.ts</code></td>
+<td>105</td>
+<td>Boot orchestration: buildBootPrompt + loadBootFile + runBootOnce</td>
+</tr>
+<tr>
+<td><code>daemon/service.ts</code></td>
+<td>155</td>
+<td>Cross-platform daemon (LaunchAgent/systemd/schtasks)</td>
+</tr>
+<tr>
+<td><code>config/</code></td>
+<td>~55k</td>
+<td>Config Schema + TypeBox validation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nanoclaw-assembly-module">NanoClaw Assembly Module</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>~Lines</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>index.ts (main)</code></td>
+<td>~50</td>
+<td>Main function: six-step initialization</td>
+</tr>
+<tr>
+<td><code>config.ts</code></td>
+<td>~25</td>
+<td>Paths + directories + container images</td>
+</tr>
+<tr>
+<td><code>group-queue.ts</code></td>
+<td>302</td>
+<td>Concurrency manager</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Figure 8-2: Boot Sequence Comparison" src="./images/ch08-fig2-boot-comparison-en.svg" /></p>
+<hr />
+<h2 id="86-lab-assemble-your-six-layer-agent">8.6 Lab: Assemble Your Six-Layer Agent</h2>
+<p>This is the climax of the entire book: building <code>mini_agent/main.py</code>, <strong>actually importing and assembling all modules from the previous six chapters</strong>. Not rewriting, just assembling.</p>
+<h3 id="environment-setup">Environment Setup</h3>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Environment Variable</th>
+<th>Cost Reference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OpenAI</td>
+<td><code>OPENAI_API_KEY</code></td>
+<td>~$0.01/call</td>
+</tr>
+<tr>
+<td>DeepSeek</td>
+<td><code>DEEPSEEK_API_KEY</code></td>
+<td>~¥0.01/call</td>
+</tr>
+<tr>
+<td>Ollama (local)</td>
+<td>No key needed</td>
+<td>Free</td>
+</tr>
+<tr>
+<td>No key</td>
+<td>Auto MockLLM</td>
+<td>Free (limited features)</td>
+</tr>
+</tbody>
+</table>
+<p>Make sure all <code>mini_agent/</code> modules from the previous six chapters are ready:</p>
+<pre><code>mini_agent/
+├── __init__.py    # Empty file, marks as Python package
+├── __main__.py    # python -m mini_agent entry point
+├── runtime.py     # Ch02: ReactRuntime + create_llm()
+├── memory.py      # Ch03: DualMemory
+├── channels.py    # Ch04: ChannelManager + CLIChannel + HTTPChannel
+├── security.py    # Ch05: Sandbox + ToolPolicy + AuditLog
+├── scheduler.py   # Ch06: Scheduler
+├── skills.py      # Ch07: SkillRegistry + create_builtin_skills()
+└── main.py        # Ch08: This Lab — Six-layer assembly
+</code></pre>
+<h3 id="prompt-1-assemble-mainpy-core">Prompt 1: Assemble main.py (Core)</h3>
+<blockquote>
+<p>Build <code>mini_agent/main.py</code>, assembling all modules from the previous six chapters:</p>
+<ol>
+<li><code>load_config()</code>: JSON file + environment variable override + code defaults (three-layer merge)</li>
+<li><code>Agent</code> class: six-layer boot sequence (immutable):
+   ① Memory → ② Sandbox → ③ Skills → ④ Runtime → ⑤ Scheduler → ⑥ Channel</li>
+<li><code>boot()</code>: initialize each layer in order, logging each layer's startup</li>
+<li><code>run()</code>: connect channels, listen for messages, forward to Runtime</li>
+<li><code>shutdown()</code>: release resources in reverse order</li>
+<li><code>main()</code>: signal handling + graceful shutdown</li>
+</ol>
+<p><strong>Key: must use <code>from mini_agent.xxx import ...</code> to import all six modules</strong></p>
+</blockquote>
+<p><strong>Verification Checklist:</strong>
+- [ ] <code>python -m mini_agent</code> starts up, six layers initialize in order
+- [ ] Agent replies after sending a message (MockLLM or real LLM)
+- [ ] Typing <code>exit</code> shuts down gracefully
+- [ ] Startup log shows each layer's status</p>
+<p><strong>Expected Output:</strong></p>
+<pre><code>00:00:01 [agent] ═══ Boot sequence ═══
+00:00:01 [agent] ① Memory initialized
+00:00:01 [agent] ② Sandbox initialized
+00:00:01 [agent] ③ Skills: ['system'] (2 tools)
+00:00:01 [agent] ④ Runtime initialized (Mock mode)
+00:00:01 [agent] ⑥ Channels registered
+00:00:01 [agent] ═══ All 6 layers assembled ═══
+
+You: 今天天气怎么样？
+[Mock] 让我查一下天气...
+Agent: 北京当前温度 15°C，晴
+
+You: exit
+Goodbye.
+</code></pre>
+<h3 id="prompt-2-add-config-file-support-hands-on-with-c2">Prompt 2: Add Config File Support (Hands-on with C2)</h3>
+<blockquote>
+<p>Create <code>agent_config.json</code> with configuration for the model, memory window, allowed/denied tool lists, etc.
+Verify that environment variables can override file configuration.</p>
+</blockquote>
+<h3 id="prompt-3-end-to-end-testing-hands-on-with-c5">Prompt 3: End-to-End Testing (Hands-on with C5)</h3>
+<blockquote>
+<p>Perform end-to-end testing on the assembled Agent:</p>
+<ul>
+<li>Send a weather query → observe runtime tool invocation → check the audit log</li>
+<li>Send a sensitive path → observe security interception → check the audit log for denial records</li>
+<li>View <code>audit.jsonl</code> statistics</li>
+</ul>
+</blockquote>
+<h3 id="reference-implementation">Reference Implementation</h3>
+<blockquote>
+<p>The complete reference implementation is in <code>mini_agent/main.py</code>.</p>
+</blockquote>
+<details>
+<summary>Reference Implementation: mini_agent/main.py (~170 lines)</summary>
+
+
+<pre><code class="language-python">&quot;&quot;&quot;mini_agent/main.py — Six-Layer Agent Assembly
+
+Chapter 8 Lab · Boot Sequence → Main Loop → Graceful Shutdown
+Actually imports and assembles all modules from the previous six chapters — not rewriting, assembling.
+
+Run: python -m mini_agent
+Dependencies: openai (optional), croniter (optional)
+&quot;&quot;&quot;
+from __future__ import annotations
+
+import asyncio, signal, json, os, logging
+
+from mini_agent.runtime import ReactRuntime, create_llm, MockLLM
+from mini_agent.memory import DualMemory
+from mini_agent.channels import ChannelManager, CLIChannel, HTTPChannel
+from mini_agent.security import Sandbox, ToolPolicy, AuditLog
+from mini_agent.scheduler import Scheduler
+from mini_agent.skills import SkillRegistry, create_builtin_skills
+
+logging.basicConfig(level=logging.INFO,
+                    format=&quot;%(asctime)s [%(name)s] %(message)s&quot;)
+log = logging.getLogger(&quot;agent&quot;)
+
+
+DEFAULT_CONFIG = {
+    &quot;model&quot;: &quot;gpt-4o-mini&quot;,
+    &quot;memory_db&quot;: &quot;:memory:&quot;,
+    &quot;memory_window&quot;: 20,
+    &quot;allowed_tools&quot;: [&quot;*&quot;],
+    &quot;denied_tools&quot;: [&quot;run_command&quot;, &quot;delete_file&quot;],
+    &quot;http_port&quot;: None,
+    &quot;scheduler_enabled&quot;: False,
+    &quot;skills_dir&quot;: &quot;./skills&quot;,
+}
+
+
+def load_config(path: str = &quot;agent_config.json&quot;) -&gt; dict:
+    cfg = dict(DEFAULT_CONFIG)
+    if os.path.exists(path):
+        cfg.update(json.loads(open(path, encoding=&quot;utf-8&quot;).read()))
+    for key in (&quot;OPENAI_API_KEY&quot;, &quot;DEEPSEEK_API_KEY&quot;, &quot;OPENAI_MODEL&quot;):
+        val = os.environ.get(key)
+        if val:
+            cfg[key.lower()] = val
+    return cfg
+
+
+class Agent:
+    &quot;&quot;&quot;Six-Layer Agent — imports and assembles all modules from the previous six chapters
+
+    Boot order (immutable):
+      ① Memory (Ch03) → ② Sandbox (Ch05) → ③ Skills (Ch07)
+      → ④ Runtime (Ch02) → ⑤ Scheduler (Ch06) → ⑥ Channel (Ch04)
+    &quot;&quot;&quot;
+
+    def __init__(self, config: dict | None = None):
+        self.config = config or load_config()
+        self.memory: DualMemory | None = None
+        self.sandbox: Sandbox | None = None
+        self.skills: SkillRegistry | None = None
+        self.runtime: ReactRuntime | None = None
+        self.scheduler: Scheduler | None = None
+        self.channels: ChannelManager | None = None
+
+    def boot(self) -&gt; &quot;Agent&quot;:
+        log.info(&quot;═══ Boot sequence ═══&quot;)
+
+        # ① Memory (Ch03)
+        self.memory = DualMemory(
+            db_path=self.config[&quot;memory_db&quot;],
+            window=self.config[&quot;memory_window&quot;])
+        log.info(&quot;① Memory initialized&quot;)
+
+        # ② Sandbox (Ch05)
+        self.sandbox = Sandbox(
+            policy=ToolPolicy(
+                allow=self.config[&quot;allowed_tools&quot;],
+                deny=self.config[&quot;denied_tools&quot;]),
+            audit=AuditLog(&quot;audit.jsonl&quot;))
+        log.info(&quot;② Sandbox initialized&quot;)
+
+        # ③ Skills → Tools (Ch07)
+        self.skills = SkillRegistry()
+        for skill in create_builtin_skills(self.memory):
+            self.skills.register(skill)
+        from mini_agent.skills import SkillLoader
+        for skill in SkillLoader.discover(self.config[&quot;skills_dir&quot;]):
+            self.skills.register(skill)
+        tools = self.skills.to_registry()
+        log.info(f&quot;③ Skills: {[s.name for s in self.skills.list_skills()]}&quot;
+                 f&quot; ({len(tools.names())} tools)&quot;)
+
+        # ④ Runtime (Ch02)
+        llm = create_llm(self.config)
+        self.runtime = ReactRuntime(
+            llm, tools,
+            memory=self.memory,
+            sandbox=self.sandbox)
+        mode = &quot;Mock&quot; if isinstance(llm, MockLLM) else &quot;LLM&quot;
+        log.info(f&quot;④ Runtime initialized ({mode} mode)&quot;)
+
+        # ⑤ Scheduler (Ch06)
+        if self.config.get(&quot;scheduler_enabled&quot;):
+            self.scheduler = Scheduler()
+            log.info(&quot;⑤ Scheduler initialized&quot;)
+
+        # ⑥ Channels (Ch04)
+        self.channels = ChannelManager()
+        self.channels.register(CLIChannel())
+        if self.config.get(&quot;http_port&quot;):
+            self.channels.register(
+                HTTPChannel(self.config[&quot;http_port&quot;]))
+        log.info(&quot;⑥ Channels registered&quot;)
+
+        log.info(&quot;═══ All 6 layers assembled ═══\n&quot;)
+        return self
+
+    async def run(self) -&gt; None:
+        assert self.channels and self.runtime
+        await self.channels.connect_all()
+
+        if self.scheduler:
+            asyncio.create_task(self.scheduler.start())
+
+        async for msg in self.channels.listen_all():
+            log.info(f&quot;[{msg.channel}] {msg.sender}: {msg.content}&quot;)
+
+            if msg.content.strip().lower() in (&quot;exit&quot;, &quot;quit&quot;, &quot;bye&quot;):
+                await self.channels.send(
+                    msg.channel, msg.sender, &quot;再见！&quot;)
+                break
+
+            answer = self.runtime.run(msg.content)
+            await self.channels.send(msg.channel, msg.sender, answer)
+
+    async def shutdown(self) -&gt; None:
+        log.info(&quot;Shutting down...&quot;)
+        if self.scheduler:
+            self.scheduler.stop()
+        if self.channels:
+            await self.channels.disconnect_all()
+        if self.memory:
+            self.memory.close()
+        log.info(&quot;Goodbye.&quot;)
+
+
+async def main():
+    agent = Agent().boot()
+    for sig in (signal.SIGINT, signal.SIGTERM):
+        try:
+            signal.signal(sig, lambda *_: None)
+        except (OSError, ValueError):
+            pass
+    try:
+        await agent.run()
+    except (KeyboardInterrupt, EOFError):
+        pass
+    finally:
+        await agent.shutdown()
+
+
+if __name__ == &quot;__main__&quot;:
+    asyncio.run(main())
+</code></pre>
+
+
+</details>
+
+<h3 id="evaluation-criteria-comparison">Evaluation Criteria Comparison</h3>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Lab Implementation</th>
+<th>Still Needed for Production</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C1 Dependency Resolution</strong></td>
+<td>Fixed six-step sequence</td>
+<td>Plugin lifecycle (Load → Validate → Register)</td>
+</tr>
+<tr>
+<td><strong>C2 Configuration Management</strong></td>
+<td>JSON + env + defaults</td>
+<td>TypeBox/Zod validation, startup log</td>
+</tr>
+<tr>
+<td><strong>C3 Graceful Startup/Shutdown</strong></td>
+<td>Reverse-order shutdown + signal handling</td>
+<td>Daemon, degradation strategy</td>
+</tr>
+<tr>
+<td><strong>C4 Deployment Strategy</strong></td>
+<td>Single script <code>python -m</code></td>
+<td>Docker Compose, launchd/systemd</td>
+</tr>
+<tr>
+<td><strong>C5 Runtime Monitoring</strong></td>
+<td>logging + audit.jsonl</td>
+<td>Event stream, structured logs, full recording</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="87-chapter-summary-book-summary">8.7 Chapter Summary &amp; Book Summary</h2>
+<h3 id="chapter-summary">Chapter Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Core Insight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C1 Dependency Resolution</strong></td>
+<td>Components &lt; 10 and composition is fixed → simple call order. Components &gt; 10 or dynamic composition → plugin framework / DI container.</td>
+</tr>
+<tr>
+<td><strong>C2 Configuration Management</strong></td>
+<td>Three-layer merge (env &gt; file &gt; defaults) + validate-and-print at startup, preventing config drift where "it works locally but breaks in production."</td>
+</tr>
+<tr>
+<td><strong>C3 Graceful Startup/Shutdown</strong></td>
+<td>Have container orchestration → strict startup + external restart. Running bare-metal → application-layer degradation. Reverse-order shutdown is a fundamental discipline.</td>
+</tr>
+<tr>
+<td><strong>C4 Deployment Strategy</strong></td>
+<td>Personal → single process (simple and sufficient). Team → containerized (isolated and scalable). Start simple, evolve later.</td>
+</tr>
+<tr>
+<td><strong>C5 Runtime Monitoring</strong></td>
+<td>Every LLM call must record the full prompt/response. This is the only way to trace back in a non-deterministic system.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="book-wide-design-pattern-overview">Book-Wide Design Pattern Overview</h3>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Ch</th>
+<th>Application</th>
+<th>Problem Solved</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ReAct Loop</td>
+<td>2</td>
+<td>Think → Act → Observe</td>
+<td>Agent decision control flow</td>
+</tr>
+<tr>
+<td>Strategy / Factory</td>
+<td>2</td>
+<td>LLM Provider switching</td>
+<td>Runtime algorithm selection</td>
+</tr>
+<tr>
+<td>Composite / Singleton / Fallback</td>
+<td>3</td>
+<td>Dual-layer memory + hybrid search</td>
+<td>Multi-level information management</td>
+</tr>
+<tr>
+<td>Adapter / Middleware</td>
+<td>4</td>
+<td>Unified Message interface</td>
+<td>Write once, connect everywhere</td>
+</tr>
+<tr>
+<td>Chain of Responsibility</td>
+<td>5</td>
+<td>9-layer policy chain</td>
+<td>Multi-level allow/block</td>
+</tr>
+<tr>
+<td>Proxy / Decorator</td>
+<td>5</td>
+<td>Auth Wall + Docker</td>
+<td>Transparent execution wrapping</td>
+</tr>
+<tr>
+<td>Command Lane</td>
+<td>6</td>
+<td>Session-level serialization</td>
+<td>Concurrency without conflict</td>
+</tr>
+<tr>
+<td>Checkpoint + Failover</td>
+<td>6</td>
+<td>runMissedJobs</td>
+<td>No work lost on crash</td>
+</tr>
+<tr>
+<td>Event-Driven + Heartbeat</td>
+<td>6</td>
+<td>Heartbeat continuation</td>
+<td>Balance between reactive and autonomous</td>
+</tr>
+<tr>
+<td>Registry</td>
+<td>7</td>
+<td>Plugin Registry</td>
+<td>Unified extension management</td>
+</tr>
+<tr>
+<td>Dynamic Loading</td>
+<td>7</td>
+<td>jiti / importlib</td>
+<td>New capabilities without recompilation</td>
+</tr>
+<tr>
+<td>Observer</td>
+<td>7</td>
+<td>Lifecycle hooks + IPC</td>
+<td>Loosely-coupled communication</td>
+</tr>
+<tr>
+<td>Dependency Injection</td>
+<td>8</td>
+<td>Plugin injection of tools/hooks</td>
+<td>Modules replaceable and testable</td>
+</tr>
+<tr>
+<td>Builder</td>
+<td>8</td>
+<td>Step-by-step config + initialization</td>
+<td>Complex objects assembled incrementally</td>
+</tr>
+</tbody>
+</table>
+<h3 id="one-line-chapter-recap">One-Line Chapter Recap</h3>
+<table>
+<thead>
+<tr>
+<th>Ch</th>
+<th>Module</th>
+<th>One-liner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>Runtime</td>
+<td>Control over the loop determines your control over Agent behavior</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Memory</td>
+<td>The shape of memory determines how much the Agent "remembers" and how much it "forgets"</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Channel</td>
+<td>The Adapter pattern is the key to "write once, connect everywhere"</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Security</td>
+<td>Security level is a function of product positioning</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Scheduler</td>
+<td>Autonomy is a spectrum. When you give the gas pedal, you must also give the brake</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Skills</td>
+<td>Every extension approach's advantage is built on what it gives up</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Assembly</td>
+<td>Assembly = dependency resolution; start with the simplest approach, let pain points drive upgrades</td>
+</tr>
+</tbody>
+</table>
+<h3 id="architecture-decision-flowchart">Architecture Decision Flowchart</h3>
+<p><img alt="Figure 8-3: Architecture Decision Flowchart" src="./images/ch08-fig3-architecture-decision-en.svg" /></p>
+<h3 id="where-to-go-next">Where to Go Next</h3>
+<p>This book covers the core skeleton of a single Agent. The following directions are out of scope but equally important:</p>
+<ul>
+<li><strong>Multimodal</strong>: Voice I/O (Whisper + TTS), image understanding (GPT-4o Vision)</li>
+<li><strong>Multi-Agent Collaboration</strong>: AutoGen / CrewAI / LangGraph</li>
+<li><strong>Evaluation &amp; Fine-tuning</strong>: LMSYS Chatbot Arena, OpenAI Evals</li>
+<li><strong>Production Deployment</strong>: LangSmith observability, vLLM self-hosting, Kubernetes</li>
+</ul>
+<p><strong>The book's core belief</strong>: An AI Agent's architecture reflects its architect's understanding of what makes a "good assistant." There is no best architecture, only the architecture that best matches your constraints. Start with a 50-line ReAct loop, and let pain points guide you to the next layer.</p>
+<p>Start building.</p>
+<hr />
+<h2 id="references">References</h2>
+<ol>
+<li>
+<p><strong>Martin, R.C.</strong> (2017). <em>Clean Architecture: A Craftsman's Guide to Software Structure and Design</em>. Prentice Hall. ISBN: 978-0134494166. Dependency inversion principle and component coupling management; directly influenced this chapter's § C1 dependency resolution DAG topology analysis.</p>
+</li>
+<li>
+<p><strong>Fowler, M.</strong> (2004). "Inversion of Control Containers and the Dependency Injection Pattern." martinfowler.com. https://martinfowler.com/articles/injection.html. Classic article on the dependency injection pattern; OpenClaw's Load → Validate → Register three-phase lifecycle is a simplified DI container implementation.</p>
+</li>
+<li>
+<p><strong>Newman, S.</strong> (2021). <em>Building Microservices</em>, 2nd Edition. O'Reilly. ISBN: 978-1492034025. Analysis of single-process vs. microservices deployment strategies; architectural reference for § C4 OpenClaw single-process vs. NanoClaw multi-container comparison.</p>
+</li>
+<li>
+<p><strong>Kleppmann, M.</strong> (2017). <em>Designing Data-Intensive Applications</em>. O'Reilly. ISBN: 978-1449373320. Framework for reliability, scalability, and maintainability of distributed systems; this chapter's "startup failure degradation" and "graceful shutdown" designs draw from it.</p>
+</li>
+<li>
+<p><strong>Nygard, M.</strong> (2018). <em>Release It! Design and Deploy Production-Ready Software</em>, 2nd Edition. Pragmatic Bookshelf. ISBN: 978-1680502398. Stability patterns in production (circuit breaker, timeout, degradation); corresponds to this chapter's § C3 graceful startup/shutdown and § C5 runtime monitoring.</p>
+</li>
+</ol>
+<hr />
+<h2 id="source-reference-index">Source Reference Index</h2>
+<table>
+<thead>
+<tr>
+<th>File Path</th>
+<th>Lines</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>openclaw/src/index.ts</code></td>
+<td>1-94</td>
+<td>CLI entry</td>
+</tr>
+<tr>
+<td><code>openclaw/src/index.ts</code></td>
+<td>36-38</td>
+<td>Environment variable normalization</td>
+</tr>
+<tr>
+<td><code>openclaw/src/gateway/boot.ts</code></td>
+<td>27-39</td>
+<td><code>buildBootPrompt()</code></td>
+</tr>
+<tr>
+<td><code>openclaw/src/gateway/boot.ts</code></td>
+<td>41-59</td>
+<td><code>loadBootFile()</code></td>
+</tr>
+<tr>
+<td><code>openclaw/src/gateway/boot.ts</code></td>
+<td>61-105</td>
+<td><code>runBootOnce()</code></td>
+</tr>
+<tr>
+<td><code>openclaw/src/daemon/service.ts</code></td>
+<td>66-155</td>
+<td>Cross-platform daemon</td>
+</tr>
+<tr>
+<td><code>nanoclaw/src/index.ts</code></td>
+<td>456-504</td>
+<td><code>main()</code></td>
+</tr>
+<tr>
+<td><code>nanoclaw/src/config.ts</code></td>
+<td>8-24</td>
+<td>Paths + directories + images</td>
+</tr>
+<tr>
+<td><code>nanoclaw/src/group-queue.ts</code></td>
+<td>27-302</td>
+<td>GroupQueue</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>End of book.</em></p></div>
+    </article>
+    <nav class="page-nav">
+      <a class="nav-btn prev" href="skills.html">← <span class="zh-text">第七章：技能扩展</span><span class="en-text">Ch7: Skills Extension</span></a>
+      <a class="nav-btn next" href="deployment.html"><span class="zh-text">附录 A：部署指南</span><span class="en-text">Appendix A: Deployment Guide</span> →</a>
+    </nav>
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({ startOnLoad: true, theme: document.body.classList.contains('light') ? 'default' : 'dark' });
+</script>
+<script src="js/main.js"></script>
+</body>
+</html>
