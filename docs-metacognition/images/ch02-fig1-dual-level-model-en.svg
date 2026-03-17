@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 320" width="860" height="320">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; }
+      .body { font-family: Arial, sans-serif; font-size: 14px; }
+      .small { font-family: Arial, sans-serif; font-size: 12px; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+    <marker id="arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+  <rect width="860" height="320" fill="white"/>
+
+  <g id="object-layer">
+    <rect x="20" y="40" width="380" height="260" rx="8" fill="#f0f0f0" stroke="#ccc" stroke-width="1"/>
+    <text x="210" y="68" text-anchor="middle" class="title" fill="#1a3a5c">Object Level</text>
+
+    <rect x="40" y="90" width="340" height="55" rx="8" fill="#f0f0f0" stroke="#999" stroke-width="1"/>
+    <text x="210" y="118" text-anchor="middle" class="body" fill="#333">Perception · Memory · Reasoning · Decision · Language</text>
+
+    <rect x="40" y="165" width="340" height="45" rx="8" fill="#f0f0f0" stroke="#999" stroke-width="1"/>
+    <text x="210" y="190" text-anchor="middle" class="body" fill="#333">Cognitive Learning — Improves every cognitive ability</text>
+  </g>
+
+  <g id="meta-layer">
+    <rect x="460" y="40" width="380" height="260" rx="8" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1"/>
+    <text x="650" y="68" text-anchor="middle" class="title" fill="white">Meta Level</text>
+
+    <rect x="480" y="90" width="340" height="55" rx="8" fill="#2d5a88" stroke="#2d5a88" stroke-width="1"/>
+    <text x="650" y="115" text-anchor="middle" class="body" fill="white">Monitoring + Control</text>
+    <text x="650" y="135" text-anchor="middle" class="small" fill="#e0e0e0">How am I doing? Should I adjust?</text>
+
+    <rect x="480" y="165" width="340" height="45" rx="8" fill="#2d5a88" stroke="#2d5a88" stroke-width="1"/>
+    <text x="650" y="190" text-anchor="middle" class="body" fill="white">Meta-learning</text>
+    <text x="650" y="205" text-anchor="middle" class="small" fill="#e0e0e0">Learning how to learn</text>
+  </g>
+
+  <path d="M 400 115 L 460 115" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="430" y="108" text-anchor="middle" class="small" fill="#333">Monitoring bottom-up</text>
+
+  <path d="M 460 130 L 400 130" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="430" y="143" text-anchor="middle" class="small" fill="#333">Control top-down</text>
+
+  <path d="M 380 187.5 L 480 187.5" stroke="#666" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arrowhead-dashed)"/>
+  <text x="430" y="180" text-anchor="middle" class="small" fill="#666">Experience upload</text>
+
+  <path d="M 480 202.5 L 380 202.5" stroke="#666" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arrowhead-dashed)"/>
+  <text x="430" y="218" text-anchor="middle" class="small" fill="#666">Strategy dispatch</text>
+
+  <path d="M 250 165 L 250 145" stroke="#666" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arrowhead-dashed)"/>
+  <text x="260" y="157" text-anchor="start" class="small" fill="#666">Permeates</text>
+</svg>

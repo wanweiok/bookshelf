@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 280" width="860" height="280">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="1" dy="1" stdDeviation="1" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  <rect width="860" height="280" fill="white"/>
+  
+  <!-- Left group -->
+  <text x="200" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#1a3a5c">&#20351;&#29992;AI&#21069;</text>
+  
+  <rect x="120" y="120" width="80" height="80" rx="8" fill="#2d5a88" filter="url(#shadow)"/>
+  <text x="160" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#333">&#23454;&#38469;&#34920;&#29616;</text>
+  
+  <rect x="220" y="125" width="80" height="75" rx="8" fill="#4a90d9" filter="url(#shadow)"/>
+  <text x="260" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#333">&#33258;&#35780;&#20934;&#30830;&#24230;</text>
+  
+  <path d="M 200 90 L 220 90" stroke="#2e7d32" stroke-width="2" fill="none"/>
+  <polygon points="200,90 208,85 208,95" fill="#2e7d32"/>
+  <polygon points="220,90 212,85 212,95" fill="#2e7d32"/>
+  <text x="210" y="78" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#2e7d32">&#8776; &#36148;&#36817;</text>
+  
+  <!-- Right group -->
+  <text x="550" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#1a3a5c">&#20351;&#29992;AI&#21518;</text>
+  
+  <rect x="450" y="80" width="80" height="120" rx="8" fill="#2d5a88" filter="url(#shadow)"/>
+  <text x="490" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#333">&#23454;&#38469;&#34920;&#29616;</text>
+  
+  <rect x="550" y="40" width="80" height="160" rx="8" fill="#e65100" filter="url(#shadow)"/>
+  <text x="590" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#333">&#33258;&#35780;&#32960;&#32960;</text>
+  
+  <path d="M 530 60 L 550 60" stroke="#c62828" stroke-width="2" fill="none"/>
+  <polygon points="530,60 538,55 538,65" fill="#c62828"/>
+  <polygon points="550,60 542,55 542,65" fill="#c62828"/>
+  <text x="540" y="48" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#c62828">&#27946;&#27807;&#25193;&#22823; &#8593;</text>
+  
+  <path d="M 320 140 L 430 140" stroke="#1a3a5c" stroke-width="2" fill="none"/>
+  <polygon points="430,140 420,135 420,145" fill="#1a3a5c"/>
+</svg>

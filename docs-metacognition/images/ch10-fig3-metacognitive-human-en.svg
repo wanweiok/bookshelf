@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 320" font-family="Arial, sans-serif">
+<defs><marker id="a" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#5b9bd5"/></marker></defs>
+<rect x="40" y="20" width="170" height="44" rx="8" fill="#1a3a5c"/>
+<text x="125" y="47" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">Knowing Unknowns</text>
+<rect x="245" y="20" width="170" height="44" rx="8" fill="#264e73"/>
+<text x="330" y="47" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">Precise Questioning</text>
+<rect x="450" y="20" width="175" height="44" rx="8" fill="#1a3a5c"/>
+<text x="537" y="47" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">Attention Regulation</text>
+<rect x="40" y="90" width="170" height="44" rx="8" fill="#264e73"/>
+<text x="125" y="117" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">Learning to Learn</text>
+<rect x="245" y="90" width="170" height="44" rx="8" fill="#1a3a5c"/>
+<text x="330" y="117" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">Value Judgment</text>
+<rect x="450" y="90" width="175" height="44" rx="8" fill="#264e73"/>
+<text x="537" y="117" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold">Cross-domain Connection</text>
+<rect x="195" y="200" width="225" height="55" rx="8" fill="#2d5a88"/>
+<text x="307" y="233" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">Metacognitive OS</text>
+<rect x="530" y="203" width="165" height="50" rx="8" fill="#5b9bd5"/>
+<text x="612" y="233" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">Cognitive Future</text>
+<line x1="125" y1="64" x2="248" y2="200" stroke="#5b9bd5" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="330" y1="64" x2="307" y2="198" stroke="#5b9bd5" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="537" y1="64" x2="370" y2="200" stroke="#5b9bd5" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="125" y1="134" x2="243" y2="200" stroke="#5b9bd5" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="330" y1="134" x2="307" y2="198" stroke="#5b9bd5" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="537" y1="134" x2="375" y2="200" stroke="#5b9bd5" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="420" y1="227" x2="528" y2="227" stroke="#5b9bd5" stroke-width="2" marker-end="url(#a)"/>
+</svg>

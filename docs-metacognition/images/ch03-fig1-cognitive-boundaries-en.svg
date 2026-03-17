@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 120" width="860" height="120">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1a3a5c"/>
+    </marker>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  <rect width="860" height="120" fill="white"/>
+
+  <rect x="20" y="30" width="180" height="60" rx="8" fill="#c8e6c9" stroke="#2e7d32" stroke-width="1" filter="url(#shadow)"/>
+  <text x="110" y="68" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#1b5e20">Know we know</text>
+
+  <path d="M 205 60 L 235 60" stroke="#1a3a5c" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+
+  <rect x="240" y="30" width="180" height="60" rx="8" fill="#fff9c4" stroke="#f9a825" stroke-width="1" filter="url(#shadow)"/>
+  <text x="330" y="68" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#f57f17">Know we don't know</text>
+
+  <path d="M 425 60 L 455 60" stroke="#1a3a5c" stroke-width="3" fill="none"/>
+  <polygon points="455,60 445,55 445,65" fill="#1a3a5c"/>
+
+  <rect x="460" y="30" width="180" height="60" rx="8" fill="#ffcc80" stroke="#e65100" stroke-width="1" filter="url(#shadow)"/>
+  <text x="550" y="68" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#bf360c">Don't know we don't know</text>
+
+  <path d="M 645 60 L 675 60" stroke="#b71c1c" stroke-width="4" fill="none"/>
+  <polygon points="675,60 663,54 663,66" fill="#b71c1c"/>
+
+  <rect x="680" y="30" width="160" height="60" rx="8" fill="#c62828" stroke="#b71c1c" stroke-width="2" filter="url(#shadow)"/>
+  <text x="760" y="68" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">Danger Zone</text>
+</svg>

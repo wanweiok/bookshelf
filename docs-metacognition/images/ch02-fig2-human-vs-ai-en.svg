@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 280" width="860" height="280">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; }
+      .body { font-family: Arial, sans-serif; font-size: 14px; }
+      .small { font-family: Arial, sans-serif; font-size: 12px; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+    <marker id="arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#888"/>
+    </marker>
+  </defs>
+  <rect width="860" height="280" fill="white"/>
+
+  <text x="210" y="32" text-anchor="middle" class="title" fill="#1a3a5c">Human</text>
+
+  <rect x="40" y="50" width="340" height="70" rx="8" fill="#f0f0f0" stroke="#999" stroke-width="1"/>
+  <text x="210" y="80" text-anchor="middle" class="body" fill="#333">Object Level</text>
+  <text x="210" y="100" text-anchor="middle" class="small" fill="#666">Limited by speed and capacity</text>
+
+  <rect x="40" y="140" width="340" height="70" rx="8" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1"/>
+  <text x="210" y="170" text-anchor="middle" class="body" fill="white">Meta Level &#10003;</text>
+  <text x="210" y="190" text-anchor="middle" class="small" fill="#e0e0e0">Monitoring · Calibration · Embodiment · Accountability</text>
+
+  <path d="M 170 120 L 170 140" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="140" y="132" text-anchor="middle" class="small" fill="#333">Monitoring</text>
+
+  <path d="M 250 140 L 250 120" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="280" y="132" text-anchor="middle" class="small" fill="#333">Control</text>
+
+  <text x="650" y="32" text-anchor="middle" class="title" fill="#1a3a5c">AI</text>
+
+  <rect x="480" y="50" width="340" height="70" rx="8" fill="#f0f0f0" stroke="#999" stroke-width="1"/>
+  <text x="650" y="80" text-anchor="middle" class="body" fill="#333">Object Level &#10003;&#10003;&#10003;</text>
+  <text x="650" y="100" text-anchor="middle" class="small" fill="#666">Pattern matching · Integration · Language</text>
+
+  <rect x="480" y="140" width="340" height="70" rx="8" fill="#555555" stroke="#555555" stroke-width="1"/>
+  <text x="650" y="170" text-anchor="middle" class="body" fill="white">Meta Level &#10007;</text>
+  <text x="650" y="190" text-anchor="middle" class="small" fill="#bbb">Nearly blank</text>
+
+  <path d="M 610 120 L 610 140" stroke="#888" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arrowhead-dashed)"/>
+  <path d="M 690 140 L 690 120" stroke="#888" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arrowhead-dashed)"/>
+  <text x="650" y="132" text-anchor="middle" class="small" fill="#888">Weak</text>
+</svg>

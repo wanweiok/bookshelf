@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 550 300" font-family="Arial, sans-serif">
+<defs><marker id="a" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#5b9bd5"/></marker></defs>
+<rect x="145" y="8" width="260" height="52" rx="8" fill="#1a3a5c"/>
+<text x="275" y="29" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">Socratic Questioner</text>
+<text x="275" y="47" text-anchor="middle" fill="#f0f0f0" font-size="10">Challenge assumptions</text>
+<rect x="360" y="122" width="185" height="56" rx="8" fill="#264e73"/>
+<text x="452" y="145" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">Calibration Tool</text>
+<text x="452" y="163" text-anchor="middle" fill="#f0f0f0" font-size="10">Test confidence</text>
+<rect x="160" y="240" width="230" height="52" rx="8" fill="#1a3a5c"/>
+<text x="275" y="261" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">Red Team</text>
+<text x="275" y="279" text-anchor="middle" fill="#f0f0f0" font-size="10">Find counterexamples</text>
+<rect x="5" y="122" width="185" height="56" rx="8" fill="#264e73"/>
+<text x="97" y="145" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">Reflection Prompt</text>
+<text x="97" y="163" text-anchor="middle" fill="#f0f0f0" font-size="10">Identify blind spots</text>
+<path d="M 380 55 Q 420 85,375 120" fill="none" stroke="#5b9bd5" stroke-width="2" marker-end="url(#a)"/>
+<path d="M 435 178 Q 410 218,372 238" fill="none" stroke="#5b9bd5" stroke-width="2" marker-end="url(#a)"/>
+<path d="M 180 245 Q 135 220,168 180" fill="none" stroke="#5b9bd5" stroke-width="2" marker-end="url(#a)"/>
+<path d="M 140 122 Q 155 80,178 58" fill="none" stroke="#5b9bd5" stroke-width="2" marker-end="url(#a)"/>
+</svg>

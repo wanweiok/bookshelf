@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 480" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <linearGradient id="coreGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a237e"/>
+      <stop offset="100%" stop-color="#283593"/>
+    </linearGradient>
+    <linearGradient id="appGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d47a1"/>
+      <stop offset="100%" stop-color="#1565c0"/>
+    </linearGradient>
+  </defs>
+  <rect width="720" height="480" rx="12" fill="#f5f5f5"/>
+  <text x="360" y="36" text-anchor="middle" font-size="18" font-weight="bold" fill="#212121">Dual-Layer Architecture: Core Metacognition &amp; Enabled Applications</text>
+
+  <!-- Core Layer -->
+  <rect x="40" y="60" width="640" height="160" rx="10" fill="url(#coreGrad)" opacity="0.95"/>
+  <text x="360" y="88" text-anchor="middle" font-size="16" font-weight="bold" fill="#fff">Core Layer — Metacognition Itself</text>
+
+  <rect x="60" y="100" width="190" height="100" rx="8" fill="#fff" opacity="0.15"/>
+  <text x="155" y="130" text-anchor="middle" font-size="13" font-weight="bold" fill="#e8eaf6">Boundary Awareness</text>
+  <text x="155" y="152" text-anchor="middle" font-size="11" fill="#c5cae9">Know what you know</text>
+  <text x="155" y="168" text-anchor="middle" font-size="11" fill="#c5cae9">and what you don't</text>
+  <text x="155" y="188" text-anchor="middle" font-size="10" fill="#9fa8da">Ch 3</text>
+
+  <rect x="265" y="100" width="190" height="100" rx="8" fill="#fff" opacity="0.15"/>
+  <text x="360" y="130" text-anchor="middle" font-size="13" font-weight="bold" fill="#e8eaf6">Cognitive Monitoring</text>
+  <text x="360" y="152" text-anchor="middle" font-size="11" fill="#c5cae9">Track your thinking</text>
+  <text x="360" y="168" text-anchor="middle" font-size="11" fill="#c5cae9">process in real time</text>
+  <text x="360" y="188" text-anchor="middle" font-size="10" fill="#9fa8da">Ch 3, 6</text>
+
+  <rect x="470" y="100" width="190" height="100" rx="8" fill="#fff" opacity="0.15"/>
+  <text x="565" y="130" text-anchor="middle" font-size="13" font-weight="bold" fill="#e8eaf6">Cognitive Regulation</text>
+  <text x="565" y="152" text-anchor="middle" font-size="11" fill="#c5cae9">Flexibly adjust</text>
+  <text x="565" y="168" text-anchor="middle" font-size="11" fill="#c5cae9">strategies on feedback</text>
+  <text x="565" y="188" text-anchor="middle" font-size="10" fill="#9fa8da">Ch 6, 9</text>
+
+  <!-- Arrow -->
+  <polygon points="340,228 360,248 380,228" fill="#455a64"/>
+  <text x="410" y="242" font-size="11" fill="#455a64" font-style="italic">enables</text>
+
+  <!-- Application Layer -->
+  <rect x="40" y="256" width="640" height="180" rx="10" fill="url(#appGrad)" opacity="0.9"/>
+  <text x="360" y="284" text-anchor="middle" font-size="16" font-weight="bold" fill="#fff">Application Layer — Metacognition-Enabled Capabilities</text>
+
+  <rect x="55" y="298" width="145" height="80" rx="8" fill="#fff" opacity="0.12"/>
+  <text x="127" y="322" text-anchor="middle" font-size="12" font-weight="bold" fill="#e3f2fd">Precise Questioning</text>
+  <text x="127" y="342" text-anchor="middle" font-size="10" fill="#bbdefb">Am I asking the</text>
+  <text x="127" y="356" text-anchor="middle" font-size="10" fill="#bbdefb">right question?</text>
+  <text x="127" y="372" text-anchor="middle" font-size="10" fill="#90caf9">Ch 4</text>
+
+  <rect x="212" y="298" width="145" height="80" rx="8" fill="#fff" opacity="0.12"/>
+  <text x="284" y="322" text-anchor="middle" font-size="12" font-weight="bold" fill="#e3f2fd">Attention Mgmt</text>
+  <text x="284" y="342" text-anchor="middle" font-size="10" fill="#bbdefb">What am I focusing</text>
+  <text x="284" y="356" text-anchor="middle" font-size="10" fill="#bbdefb">on vs ignoring?</text>
+  <text x="284" y="372" text-anchor="middle" font-size="10" fill="#90caf9">Ch 5</text>
+
+  <rect x="369" y="298" width="145" height="80" rx="8" fill="#fff" opacity="0.12"/>
+  <text x="441" y="322" text-anchor="middle" font-size="12" font-weight="bold" fill="#e3f2fd">Value Judgment</text>
+  <text x="441" y="342" text-anchor="middle" font-size="10" fill="#bbdefb">What is my judgment</text>
+  <text x="441" y="356" text-anchor="middle" font-size="10" fill="#bbdefb">based on?</text>
+  <text x="441" y="372" text-anchor="middle" font-size="10" fill="#90caf9">Ch 7</text>
+
+  <rect x="526" y="298" width="145" height="80" rx="8" fill="#fff" opacity="0.12"/>
+  <text x="598" y="322" text-anchor="middle" font-size="12" font-weight="bold" fill="#e3f2fd">Cross-Domain</text>
+  <text x="598" y="342" text-anchor="middle" font-size="10" fill="#bbdefb">Is this connection</text>
+  <text x="598" y="356" text-anchor="middle" font-size="10" fill="#bbdefb">worth pursuing?</text>
+  <text x="598" y="372" text-anchor="middle" font-size="10" fill="#90caf9">Ch 8</text>
+
+  <!-- Footer -->
+  <text x="360" y="460" text-anchor="middle" font-size="11" fill="#757575" font-style="italic">Core layer stays uniquely human — Application layer may be gradually shared with AI</text>
+</svg>

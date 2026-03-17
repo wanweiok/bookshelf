@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650 200" width="650" height="200">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1a3a5c"/>
+    </marker>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  <rect width="650" height="200" fill="white"/>
+
+  <rect x="225" y="10" width="200" height="44" rx="8" fill="#1a3a5c" filter="url(#shadow)"/>
+  <text x="325" y="38" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">More AI Tools</text>
+
+  <rect x="455" y="70" width="180" height="44" rx="8" fill="#2d5a88" filter="url(#shadow)"/>
+  <text x="545" y="98" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">More Content Output</text>
+
+  <rect x="210" y="145" width="230" height="44" rx="8" fill="#5b9bd5" filter="url(#shadow)"/>
+  <text x="325" y="173" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">More Attention Consumed</text>
+
+  <rect x="15" y="70" width="195" height="44" rx="8" fill="#264e73" filter="url(#shadow)"/>
+  <text x="112" y="98" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">Less Original Thinking</text>
+
+  <line x1="425" y1="32" x2="458" y2="72" stroke="#1a3a5c" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+  <line x1="545" y1="114" x2="440" y2="150" stroke="#1a3a5c" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+  <line x1="210" y1="167" x2="175" y2="114" stroke="#1a3a5c" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+  <line x1="112" y1="70" x2="227" y2="35" stroke="#1a3a5c" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+</svg>

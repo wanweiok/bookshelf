@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650 220" font-family="Arial, sans-serif">
+<defs><marker id="a" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#5b9bd5"/></marker></defs>
+<rect x="10" y="65" width="190" height="90" rx="8" fill="#2d5a88"/>
+<text x="105" y="105" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">Extension ≠</text>
+<text x="105" y="125" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">Replacement</text>
+<rect x="255" y="15" width="180" height="55" rx="8" fill="#1a3a5c"/>
+<text x="345" y="37" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">Execution Layer</text>
+<text x="345" y="56" text-anchor="middle" fill="#f0f0f0" font-size="10">Extendable</text>
+<rect x="490" y="18" width="150" height="50" rx="8" fill="#5b9bd5"/>
+<text x="565" y="48" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">AI Assistance</text>
+<rect x="255" y="150" width="180" height="55" rx="8" fill="#1a3a5c"/>
+<text x="345" y="172" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">Judgment Layer</text>
+<text x="345" y="191" text-anchor="middle" fill="#f0f0f0" font-size="10">Must Preserve</text>
+<rect x="490" y="152" width="150" height="50" rx="8" fill="#264e73"/>
+<text x="565" y="180" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">Metacognitive Core</text>
+<path d="M 200 90 L 253 45" fill="none" stroke="#5b9bd5" stroke-width="2" marker-end="url(#a)"/>
+<path d="M 200 130 L 253 175" fill="none" stroke="#5b9bd5" stroke-width="2" marker-end="url(#a)"/>
+<line x1="435" y1="42" x2="488" y2="42" stroke="#5b9bd5" stroke-width="2" marker-end="url(#a)"/>
+<line x1="435" y1="177" x2="488" y2="177" stroke="#5b9bd5" stroke-width="2" marker-end="url(#a)"/>
+</svg>

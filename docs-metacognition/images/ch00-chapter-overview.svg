@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 480" width="860" height="480">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2d5a88"/>
+    </marker>
+  </defs>
+
+  <!-- Row 1: ch10 顶部 -->
+  <rect x="260" y="10" width="340" height="60" rx="8" fill="#1a3a5c"/>
+  <text x="430" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">10 人类认知的未来</text>
+  <text x="430" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#ccc">元认知将我们带向何方</text>
+
+  <!-- 从 ch10 向下三条线 -->
+  <line x1="340" y1="70" x2="130" y2="110" stroke="#2d5a88" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="430" y1="70" x2="430" y2="110" stroke="#2d5a88" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="520" y1="70" x2="730" y2="110" stroke="#2d5a88" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Row 2: ch01, ch09, ch08 -->
+  <rect x="20" y="115" width="220" height="55" rx="8" fill="#264e73"/>
+  <text x="130" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">01 倒转</text>
+  <text x="130" y="158" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#ccc">还剩什么？</text>
+
+  <rect x="320" y="115" width="220" height="55" rx="8" fill="#1a3a5c"/>
+  <text x="430" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">09 元认知 OS</text>
+  <text x="430" y="158" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#ccc">从理念到实践</text>
+
+  <rect x="620" y="115" width="220" height="55" rx="8" fill="#264e73"/>
+  <text x="730" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">08 跨域连接</text>
+  <text x="730" y="158" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#ccc">连接引擎</text>
+
+  <!-- ch01 → ch09 -->
+  <line x1="240" y1="142" x2="315" y2="142" stroke="#2d5a88" stroke-width="1.5" marker-end="url(#arr)"/>
+  <!-- ch08 → ch09 -->
+  <line x1="620" y1="142" x2="545" y2="142" stroke="#2d5a88" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Row 2 → Row 3 -->
+  <line x1="130" y1="170" x2="130" y2="210" stroke="#2d5a88" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="730" y1="170" x2="730" y2="210" stroke="#2d5a88" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Row 3: ch02, ch07 -->
+  <rect x="20" y="215" width="220" height="55" rx="8" fill="#2d5a88"/>
+  <text x="130" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">02 认知与元认知</text>
+  <text x="130" y="258" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#e0e0e0">双层结构</text>
+
+  <rect x="620" y="215" width="220" height="55" rx="8" fill="#2d5a88"/>
+  <text x="730" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">07 判断力鸿沟</text>
+  <text x="730" y="258" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#e0e0e0">价值决策</text>
+
+  <!-- ch09 竖线延伸 -->
+  <line x1="430" y1="170" x2="430" y2="350" stroke="#2d5a88" stroke-width="1.2" stroke-dasharray="4,3"/>
+
+  <!-- Row 3 → Row 4 -->
+  <line x1="130" y1="270" x2="130" y2="310" stroke="#2d5a88" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="730" y1="270" x2="730" y2="350" stroke="#2d5a88" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Row 4: ch03 单独 -->
+  <rect x="20" y="315" width="220" height="55" rx="8" fill="#5b9bd5"/>
+  <text x="130" y="340" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">03 知道自己不知道什么</text>
+  <text x="130" y="358" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#e0e0e0">认知边界感知</text>
+
+  <!-- Row 5: ch04, ch05, ch06 底部条带 -->
+  <rect x="280" y="355" width="560" height="55" rx="8" fill="#f0f0f0" stroke="#2d5a88" stroke-width="1.5"/>
+
+  <!-- 分隔线 -->
+  <line x1="467" y1="360" x2="467" y2="405" stroke="#2d5a88" stroke-width="0.8" stroke-dasharray="3,2"/>
+  <line x1="653" y1="360" x2="653" y2="405" stroke="#2d5a88" stroke-width="0.8" stroke-dasharray="3,2"/>
+
+  <text x="373" y="378" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#1a3a5c">04 提问的艺术</text>
+  <text x="373" y="398" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#555">问题比答案重要</text>
+
+  <text x="560" y="378" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#1a3a5c">05 注意力即货币</text>
+  <text x="560" y="398" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#555">认知过载调节</text>
+
+  <text x="746" y="378" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#1a3a5c">06 学会学习</text>
+  <text x="746" y="398" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#555">自我调节学习</text>
+
+  <!-- ch03 → 底部条带 -->
+  <line x1="240" y1="355" x2="275" y2="375" stroke="#2d5a88" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- 图例说明 -->
+  <text x="430" y="450" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#888">深色 = 核心框架章 ｜ 浅色 = 实操方法章 ｜ 虚线 = 贯穿全书</text>
+</svg>

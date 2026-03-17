@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 550 300" font-family="Arial, sans-serif">
+<defs><marker id="a" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#5b9bd5"/></marker></defs>
+<rect x="175" y="8" width="200" height="52" rx="8" fill="#1a3a5c"/>
+<text x="275" y="29" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">觉察</text>
+<text x="275" y="47" text-anchor="middle" fill="#f0f0f0" font-size="11">实时观察思维</text>
+<rect x="370" y="122" width="170" height="56" rx="8" fill="#264e73"/>
+<text x="455" y="145" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">调节</text>
+<text x="455" y="163" text-anchor="middle" fill="#f0f0f0" font-size="11">中途调整策略</text>
+<rect x="175" y="240" width="200" height="52" rx="8" fill="#1a3a5c"/>
+<text x="275" y="261" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">评估</text>
+<text x="275" y="279" text-anchor="middle" fill="#f0f0f0" font-size="11">事后检视质量</text>
+<rect x="10" y="122" width="170" height="56" rx="8" fill="#264e73"/>
+<text x="95" y="145" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">规划</text>
+<text x="95" y="163" text-anchor="middle" fill="#f0f0f0" font-size="11">事前设计路径</text>
+<path d="M 355 60 Q 400 85,375 120" fill="none" stroke="#5b9bd5" stroke-width="2" marker-end="url(#a)"/>
+<path d="M 440 178 Q 415 218,360 238" fill="none" stroke="#5b9bd5" stroke-width="2" marker-end="url(#a)"/>
+<path d="M 195 240 Q 150 218,175 180" fill="none" stroke="#5b9bd5" stroke-width="2" marker-end="url(#a)"/>
+<path d="M 130 122 Q 150 80,195 60" fill="none" stroke="#5b9bd5" stroke-width="2" marker-end="url(#a)"/>
+</svg>

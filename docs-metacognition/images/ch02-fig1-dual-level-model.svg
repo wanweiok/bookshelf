@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 320" width="860" height="320">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; }
+      .body { font-family: Arial, sans-serif; font-size: 14px; }
+      .small { font-family: Arial, sans-serif; font-size: 12px; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+    <marker id="arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+  <rect width="860" height="320" fill="white"/>
+
+  <!-- Left container -->
+  <g id="object-layer">
+    <rect x="20" y="40" width="380" height="260" rx="8" fill="#f0f0f0" stroke="#ccc" stroke-width="1"/>
+    <text x="210" y="68" text-anchor="middle" class="title" fill="#1a3a5c">&#23545;&#35937;&#23618;</text>
+
+    <!-- Main box -->
+    <rect x="40" y="90" width="340" height="55" rx="8" fill="#f0f0f0" stroke="#999" stroke-width="1"/>
+    <text x="210" y="118" text-anchor="middle" class="body" fill="#333">&#24863;&#30693; &#183; &#35760;&#24518; &#183; &#25512;&#29702; &#183; &#20915;&#31574; &#183; &#35821;&#35328;&#29983;&#25104;</text>
+
+    <!-- Cognitive learning box -->
+    <rect x="40" y="165" width="340" height="45" rx="8" fill="#f0f0f0" stroke="#999" stroke-width="1"/>
+    <text x="210" y="190" text-anchor="middle" class="body" fill="#333">&#35748;&#30693;&#23398;&#20064; &#8212; &#25913;&#36827;&#27599;&#19968;&#31181;&#35748;&#30693;&#33021;&#21147;</text>
+  </g>
+
+  <!-- Right container -->
+  <g id="meta-layer">
+    <rect x="460" y="40" width="380" height="260" rx="8" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1"/>
+    <text x="650" y="68" text-anchor="middle" class="title" fill="white">&#20803;&#23618;</text>
+
+    <!-- Monitor + Control box -->
+    <rect x="480" y="90" width="340" height="55" rx="8" fill="#2d5a88" stroke="#2d5a88" stroke-width="1"/>
+    <text x="650" y="115" text-anchor="middle" class="body" fill="white">&#30417;&#25511; + &#25511;&#21046;</text>
+    <text x="650" y="135" text-anchor="middle" class="small" fill="#e0e0e0">&#25105;&#20570;&#24471;&#24590;&#20040;&#26679;&#65311;&#35813;&#35843;&#25972;&#21527;&#65311;</text>
+
+    <!-- Meta-learning box -->
+    <rect x="480" y="165" width="340" height="45" rx="8" fill="#2d5a88" stroke="#2d5a88" stroke-width="1"/>
+    <text x="650" y="190" text-anchor="middle" class="body" fill="white">&#20803;&#23398;&#20064;</text>
+    <text x="650" y="205" text-anchor="middle" class="small" fill="#e0e0e0">&#23398;&#20064;&#22914;&#20309;&#23398;&#20064;</text>
+  </g>
+
+  <!-- Solid arrows: object layer - meta layer -->
+  <path d="M 400 115 L 460 115" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="430" y="108" text-anchor="middle" class="small" fill="#333">&#30417;&#25511; &#33258;&#19979;&#32780;&#19978;</text>
+
+  <path d="M 460 130 L 400 130" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="430" y="143" text-anchor="middle" class="small" fill="#333">&#25511;&#21046; &#33258;&#19978;&#32780;&#19979;</text>
+
+  <!-- Dashed arrows: cognitive learning - meta learning -->
+  <path d="M 380 187.5 L 480 187.5" stroke="#666" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arrowhead-dashed)"/>
+  <text x="430" y="180" text-anchor="middle" class="small" fill="#666">&#32463;&#39564;&#19978;&#20256;</text>
+
+  <path d="M 480 202.5 L 380 202.5" stroke="#666" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arrowhead-dashed)"/>
+  <text x="430" y="218" text-anchor="middle" class="small" fill="#666">&#31574;&#30053;&#19979;&#36798;</text>
+
+  <!-- Dashed: cognitive learning - permeate - object layer main box -->
+  <path d="M 250 165 L 250 145" stroke="#666" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arrowhead-dashed)"/>
+  <text x="260" y="157" text-anchor="start" class="small" fill="#666">&#28183;&#36879;</text>
+</svg>

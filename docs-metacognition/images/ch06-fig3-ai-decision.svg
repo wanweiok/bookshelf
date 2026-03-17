@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 120" width="780" height="120">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2d5a88"/>
+    </marker>
+  </defs>
+  <rect x="10" y="20" width="165" height="80" rx="8" fill="#f0f0f0" stroke="#999" stroke-width="1.5"/>
+  <text x="92" y="65" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">需内化技能?</text>
+  <line x1="180" y1="60" x2="203" y2="60" stroke="#2d5a88" stroke-width="2.5" marker-end="url(#arr)"/>
+  <rect x="208" y="20" width="165" height="80" rx="8" fill="#5b9bd5"/>
+  <text x="290" y="65" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff">学习/产出?</text>
+  <line x1="378" y1="60" x2="401" y2="60" stroke="#2d5a88" stroke-width="2.5" marker-end="url(#arr)"/>
+  <rect x="406" y="20" width="165" height="80" rx="8" fill="#2d5a88"/>
+  <text x="488" y="65" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff">建构/侵蚀能力?</text>
+  <line x1="576" y1="60" x2="599" y2="60" stroke="#2d5a88" stroke-width="2.5" marker-end="url(#arr)"/>
+  <rect x="604" y="20" width="165" height="80" rx="8" fill="#1a3a5c"/>
+  <text x="686" y="65" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff">挣扎优先/AI优先</text>
+</svg>

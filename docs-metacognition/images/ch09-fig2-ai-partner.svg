@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 550 300" font-family="Arial, sans-serif">
+<defs><marker id="a" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#5b9bd5"/></marker></defs>
+<rect x="155" y="8" width="240" height="52" rx="8" fill="#1a3a5c"/>
+<text x="275" y="29" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">苏格拉底提问者</text>
+<text x="275" y="47" text-anchor="middle" fill="#f0f0f0" font-size="11">挑战假设</text>
+<rect x="370" y="122" width="170" height="56" rx="8" fill="#264e73"/>
+<text x="455" y="145" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">校准工具</text>
+<text x="455" y="163" text-anchor="middle" fill="#f0f0f0" font-size="11">检验信心</text>
+<rect x="165" y="240" width="220" height="52" rx="8" fill="#1a3a5c"/>
+<text x="275" y="261" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">红队对手</text>
+<text x="275" y="279" text-anchor="middle" fill="#f0f0f0" font-size="11">找反例</text>
+<rect x="10" y="122" width="170" height="56" rx="8" fill="#264e73"/>
+<text x="95" y="145" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">反思提示</text>
+<text x="95" y="163" text-anchor="middle" fill="#f0f0f0" font-size="11">识别盲区</text>
+<path d="M 370 55 Q 410 85,378 120" fill="none" stroke="#5b9bd5" stroke-width="2" marker-end="url(#a)"/>
+<path d="M 440 178 Q 415 218,370 238" fill="none" stroke="#5b9bd5" stroke-width="2" marker-end="url(#a)"/>
+<path d="M 185 245 Q 140 220,170 180" fill="none" stroke="#5b9bd5" stroke-width="2" marker-end="url(#a)"/>
+<path d="M 130 122 Q 150 80,185 60" fill="none" stroke="#5b9bd5" stroke-width="2" marker-end="url(#a)"/>
+</svg>

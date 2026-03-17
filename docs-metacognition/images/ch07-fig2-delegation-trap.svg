@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 550 280" width="550" height="280">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2d5a88"/>
+    </marker>
+  </defs>
+  <rect x="185" y="15" width="180" height="50" rx="8" fill="#5b9bd5"/>
+  <text x="275" y="46" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff">AI准确度高</text>
+  <rect x="355" y="115" width="180" height="50" rx="8" fill="#2d5a88"/>
+  <text x="445" y="146" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff">人类信任增强</text>
+  <rect x="185" y="215" width="180" height="50" rx="8" fill="#264e73"/>
+  <text x="275" y="246" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff">核查减弱</text>
+  <rect x="15" y="115" width="180" height="50" rx="8" fill="#1a3a5c"/>
+  <text x="105" y="146" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff">灾难性失误</text>
+  <line x1="352" y1="67" x2="372" y2="113" stroke="#2d5a88" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="432" y1="167" x2="362" y2="213" stroke="#2d5a88" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="198" y1="213" x2="178" y2="167" stroke="#2d5a88" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="118" y1="113" x2="198" y2="67" stroke="#2d5a88" stroke-width="2" marker-end="url(#arr)"/>
+</svg>

@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 480" width="860" height="480">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2d5a88"/>
+    </marker>
+  </defs>
+
+  <!-- Row 1: ch10 top -->
+  <rect x="260" y="10" width="340" height="60" rx="8" fill="#1a3a5c"/>
+  <text x="430" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">10 The Future of Human Cognition</text>
+  <text x="430" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#ccc">Where metacognition takes us</text>
+
+  <!-- Lines from ch10 down -->
+  <line x1="340" y1="70" x2="130" y2="110" stroke="#2d5a88" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="430" y1="70" x2="430" y2="110" stroke="#2d5a88" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="520" y1="70" x2="730" y2="110" stroke="#2d5a88" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Row 2: ch01, ch09, ch08 -->
+  <rect x="20" y="115" width="220" height="55" rx="8" fill="#264e73"/>
+  <text x="130" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">01 The Inversion</text>
+  <text x="130" y="158" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#ccc">What remains?</text>
+
+  <rect x="320" y="115" width="220" height="55" rx="8" fill="#1a3a5c"/>
+  <text x="430" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">09 Your Metacognitive OS</text>
+  <text x="430" y="158" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#ccc">From idea to practice</text>
+
+  <rect x="620" y="115" width="220" height="55" rx="8" fill="#264e73"/>
+  <text x="730" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">08 Cross-Domain Synthesis</text>
+  <text x="730" y="158" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#ccc">The connection engine</text>
+
+  <!-- ch01 -> ch09 -->
+  <line x1="240" y1="142" x2="315" y2="142" stroke="#2d5a88" stroke-width="1.5" marker-end="url(#arr)"/>
+  <!-- ch08 -> ch09 -->
+  <line x1="620" y1="142" x2="545" y2="142" stroke="#2d5a88" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Row 2 -> Row 3 -->
+  <line x1="130" y1="170" x2="130" y2="210" stroke="#2d5a88" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="730" y1="170" x2="730" y2="210" stroke="#2d5a88" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Row 3: ch02, ch07 -->
+  <rect x="20" y="215" width="220" height="55" rx="8" fill="#2d5a88"/>
+  <text x="130" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">02 Cognition &amp; Metacognition</text>
+  <text x="130" y="258" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#e0e0e0">The dual-level structure</text>
+
+  <rect x="620" y="215" width="220" height="55" rx="8" fill="#2d5a88"/>
+  <text x="730" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">07 The Judgment Gap</text>
+  <text x="730" y="258" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#e0e0e0">Value decisions</text>
+
+  <!-- ch09 dashed line -->
+  <line x1="430" y1="170" x2="430" y2="350" stroke="#2d5a88" stroke-width="1.2" stroke-dasharray="4,3"/>
+
+  <!-- Row 3 -> Row 4 -->
+  <line x1="130" y1="270" x2="130" y2="310" stroke="#2d5a88" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="730" y1="270" x2="730" y2="350" stroke="#2d5a88" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Row 4: ch03 -->
+  <rect x="20" y="315" width="220" height="55" rx="8" fill="#5b9bd5"/>
+  <text x="130" y="340" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#fff">03 Knowing Your Unknowns</text>
+  <text x="130" y="358" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#e0e0e0">Sensing cognitive boundaries</text>
+
+  <!-- Row 5: ch04, ch05, ch06 -->
+  <rect x="280" y="355" width="560" height="55" rx="8" fill="#f0f0f0" stroke="#2d5a88" stroke-width="1.5"/>
+  <line x1="467" y1="360" x2="467" y2="405" stroke="#2d5a88" stroke-width="0.8" stroke-dasharray="3,2"/>
+  <line x1="653" y1="360" x2="653" y2="405" stroke="#2d5a88" stroke-width="0.8" stroke-dasharray="3,2"/>
+
+  <text x="373" y="378" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#1a3a5c">04 The Art of Asking</text>
+  <text x="373" y="398" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#555">Questions &gt; answers</text>
+
+  <text x="560" y="378" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#1a3a5c">05 Attention as Currency</text>
+  <text x="560" y="398" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#555">Cognitive overload regulation</text>
+
+  <text x="746" y="378" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#1a3a5c">06 Learning to Learn</text>
+  <text x="746" y="398" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#555">Self-regulated learning</text>
+
+  <!-- ch03 -> bottom band -->
+  <line x1="240" y1="355" x2="275" y2="375" stroke="#2d5a88" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Legend -->
+  <text x="430" y="450" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#888">Dark = Core framework chapters | Light = Practical method chapters | Dashed = Runs through all</text>
+</svg>

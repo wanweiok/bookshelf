@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 280" width="860" height="280">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; }
+      .body { font-family: Arial, sans-serif; font-size: 14px; }
+      .small { font-family: Arial, sans-serif; font-size: 12px; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+    <marker id="arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#888"/>
+    </marker>
+  </defs>
+  <rect width="860" height="280" fill="white"/>
+
+  <!-- Left group: Human -->
+  <text x="210" y="32" text-anchor="middle" class="title" fill="#1a3a5c">&#20154;&#31867;</text>
+
+  <!-- Object layer box -->
+  <rect x="40" y="50" width="340" height="70" rx="8" fill="#f0f0f0" stroke="#999" stroke-width="1"/>
+  <text x="210" y="80" text-anchor="middle" class="body" fill="#333">&#23545;&#35937;&#23618;</text>
+  <text x="210" y="100" text-anchor="middle" class="small" fill="#666">&#21463;&#38480;&#20110;&#36895;&#24230;&#21644;&#23481;&#37327;</text>
+
+  <!-- Meta layer check box -->
+  <rect x="40" y="140" width="340" height="70" rx="8" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1"/>
+  <text x="210" y="170" text-anchor="middle" class="body" fill="white">&#20803;&#23618; &#10003;</text>
+  <text x="210" y="190" text-anchor="middle" class="small" fill="#e0e0e0">&#30417;&#25511; &#183; &#26657;&#20934; &#183; &#20855;&#36523;&#20307;&#39564; &#183; &#36131;&#20219;</text>
+
+  <!-- Solid arrows Human -->
+  <path d="M 170 120 L 170 140" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="140" y="132" text-anchor="middle" class="small" fill="#333">&#30417;&#25511;</text>
+
+  <path d="M 250 140 L 250 120" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="280" y="132" text-anchor="middle" class="small" fill="#333">&#25511;&#21046;</text>
+
+  <!-- Right group: AI -->
+  <text x="650" y="32" text-anchor="middle" class="title" fill="#1a3a5c">AI</text>
+
+  <!-- Object layer triple check box -->
+  <rect x="480" y="50" width="340" height="70" rx="8" fill="#f0f0f0" stroke="#999" stroke-width="1"/>
+  <text x="650" y="80" text-anchor="middle" class="body" fill="#333">&#23545;&#35937;&#23618; &#10003;&#10003;&#10003;</text>
+  <text x="650" y="100" text-anchor="middle" class="small" fill="#666">&#27169;&#24335;&#21305;&#37197; &#183; &#20449;&#24687;&#25972;&#21512; &#183; &#35821;&#35328;&#29983;&#25104;</text>
+
+  <!-- Meta layer X box -->
+  <rect x="480" y="140" width="340" height="70" rx="8" fill="#555555" stroke="#555555" stroke-width="1"/>
+  <text x="650" y="170" text-anchor="middle" class="body" fill="white">&#20803;&#23618; &#10007;</text>
+  <text x="650" y="190" text-anchor="middle" class="small" fill="#bbb">&#20960;&#20046;&#31354;&#30333;</text>
+
+  <!-- Dashed arrows AI -->
+  <path d="M 610 120 L 610 140" stroke="#888" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arrowhead-dashed)"/>
+  <path d="M 690 140 L 690 120" stroke="#888" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arrowhead-dashed)"/>
+  <text x="650" y="132" text-anchor="middle" class="small" fill="#888">&#24494;&#24369;</text>
+</svg>
