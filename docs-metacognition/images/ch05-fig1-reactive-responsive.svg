@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 280" width="800" height="280" font-family="Arial, sans-serif">
+  <defs>
+    <marker id="ah" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#5b9bd5"/>
+    </marker>
+    <marker id="ahw" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8b6b6b"/>
+    </marker>
+  </defs>
+  <text x="400" y="22" font-size="15" fill="#1a3a5c" text-anchor="middle" font-weight="bold">反应路径与回应路径</text>
+  <text x="30" y="70" font-size="13" fill="#7a5050" font-weight="bold">反应路径</text>
+  <text x="30" y="86" font-size="11" fill="#8a9bb0">Reactive</text>
+  <rect x="110" y="50" width="110" height="44" rx="8" fill="#6b4a4a"/>
+  <text x="165" y="77" font-size="14" fill="#fff" text-anchor="middle">刺激</text>
+  <rect x="295" y="50" width="180" height="44" rx="8" fill="#6b4a4a"/>
+  <text x="385" y="77" font-size="13" fill="#fff" text-anchor="middle">杏仁核自动反应</text>
+  <rect x="550" y="50" width="140" height="44" rx="8" fill="#6b4a4a"/>
+  <text x="620" y="77" font-size="14" fill="#fff" text-anchor="middle">反应行为</text>
+  <line x1="220" y1="72" x2="290" y2="72" stroke="#8b6b6b" stroke-width="2" marker-end="url(#ahw)"/>
+  <line x1="475" y1="72" x2="545" y2="72" stroke="#8b6b6b" stroke-width="2" marker-end="url(#ahw)"/>
+  <text x="400" y="110" font-size="11" fill="#8a9bb0" text-anchor="middle">快 · 无意识</text>
+  <line x1="60" y1="130" x2="740" y2="130" stroke="#dde5ed" stroke-width="1.2" stroke-dasharray="5,4"/>
+  <text x="30" y="190" font-size="13" fill="#2d5a88" font-weight="bold">回应路径</text>
+  <text x="30" y="206" font-size="11" fill="#8a9bb0">Responsive</text>
+  <rect x="90" y="170" width="100" height="44" rx="8" fill="#2d5a88"/>
+  <text x="140" y="197" font-size="14" fill="#fff" text-anchor="middle">刺激</text>
+  <rect x="240" y="170" width="140" height="44" rx="8" fill="#1a3a5c"/>
+  <text x="310" y="190" font-size="13" fill="#fff" text-anchor="middle">间隙</text>
+  <text x="310" y="206" font-size="11" fill="#a8cee0" text-anchor="middle">90 秒</text>
+  <rect x="430" y="170" width="170" height="44" rx="8" fill="#2d5a88"/>
+  <text x="515" y="197" font-size="13" fill="#fff" text-anchor="middle">前额叶认知重评</text>
+  <rect x="650" y="170" width="135" height="44" rx="8" fill="#2d5a88"/>
+  <text x="717" y="197" font-size="13" fill="#fff" text-anchor="middle">有意识回应</text>
+  <line x1="190" y1="192" x2="235" y2="192" stroke="#5b9bd5" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="380" y1="192" x2="425" y2="192" stroke="#5b9bd5" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="600" y1="192" x2="645" y2="192" stroke="#5b9bd5" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="400" y="235" font-size="11" fill="#5b9bd5" text-anchor="middle">慢 · 有觉察</text>
+</svg>

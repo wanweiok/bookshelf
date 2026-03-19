@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 380" width="800" height="380" font-family="Arial, sans-serif">
+  <defs>
+    <marker id="ah" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#5b9bd5"/>
+    </marker>
+    <marker id="ahr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#c75050"/>
+    </marker>
+  </defs>
+  <text x="280" y="25" font-size="15" fill="#1a3a5c" text-anchor="middle" font-weight="bold">恐惧驱动的正反馈循环</text>
+  <rect x="180" y="42" width="200" height="40" rx="8" fill="#2d5a88"/>
+  <text x="280" y="67" font-size="14" fill="#fff" text-anchor="middle">威胁感知</text>
+  <rect x="180" y="102" width="200" height="40" rx="8" fill="#2d5a88"/>
+  <text x="280" y="127" font-size="14" fill="#fff" text-anchor="middle">杏仁核激活</text>
+  <rect x="180" y="162" width="200" height="40" rx="8" fill="#2d5a88"/>
+  <text x="280" y="187" font-size="14" fill="#fff" text-anchor="middle">皮质醇升高</text>
+  <rect x="170" y="222" width="220" height="40" rx="8" fill="#264e73"/>
+  <text x="280" y="247" font-size="14" fill="#fff" text-anchor="middle">前额叶功能下降</text>
+  <rect x="170" y="282" width="220" height="40" rx="8" fill="#264e73"/>
+  <text x="280" y="307" font-size="14" fill="#fff" text-anchor="middle">判断与自控受损</text>
+  <rect x="180" y="342" width="200" height="40" rx="8" fill="#1a3a5c"/>
+  <text x="280" y="367" font-size="14" fill="#fff" text-anchor="middle">更多失误</text>
+  <line x1="280" y1="82" x2="280" y2="97" stroke="#5b9bd5" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="280" y1="142" x2="280" y2="157" stroke="#5b9bd5" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="280" y1="202" x2="280" y2="217" stroke="#5b9bd5" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="280" y1="262" x2="280" y2="277" stroke="#5b9bd5" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="280" y1="322" x2="280" y2="337" stroke="#5b9bd5" stroke-width="2" marker-end="url(#ah)"/>
+  <path d="M 395 362 C 580 362, 580 62, 395 62" fill="none" stroke="#c75050" stroke-width="2.5" stroke-dasharray="6,3" marker-end="url(#ahr)"/>
+  <text x="530" y="205" font-size="13" fill="#c75050" font-weight="bold">⟳ 正反馈</text>
+  <text x="530" y="225" font-size="12" fill="#c75050">自我加速循环</text>
+</svg>

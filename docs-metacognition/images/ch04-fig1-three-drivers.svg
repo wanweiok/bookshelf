@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 310" width="800" height="310" font-family="Arial, sans-serif">
+  <defs>
+    <marker id="ah" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#5b9bd5"/>
+    </marker>
+  </defs>
+  <text x="400" y="24" font-size="15" fill="#1a3a5c" text-anchor="middle" font-weight="bold">三种驱动力结构对比</text>
+  <line x1="267" y1="35" x2="267" y2="300" stroke="#dde5ed" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="533" y1="35" x2="533" y2="300" stroke="#dde5ed" stroke-width="1" stroke-dasharray="4,4"/>
+  <text x="133" y="52" font-size="14" fill="#7a5050" text-anchor="middle" font-weight="bold">恐惧驱动</text>
+  <text x="400" y="52" font-size="14" fill="#7a6b3a" text-anchor="middle" font-weight="bold">执念</text>
+  <text x="667" y="52" font-size="14" fill="#2d5a88" text-anchor="middle" font-weight="bold">愿力驱动</text>
+  <rect x="43" y="70" width="180" height="48" rx="8" fill="#6b4a4a"/>
+  <text x="133" y="99" font-size="13" fill="#fff" text-anchor="middle">触发：外部威胁</text>
+  <rect x="310" y="70" width="180" height="48" rx="8" fill="#7a6b3a"/>
+  <text x="400" y="99" font-size="13" fill="#fff" text-anchor="middle">触发：强烈渴望</text>
+  <rect x="577" y="70" width="180" height="48" rx="8" fill="#2d5a88"/>
+  <text x="667" y="99" font-size="13" fill="#fff" text-anchor="middle">触发：内在意义</text>
+  <line x1="133" y1="118" x2="133" y2="148" stroke="#5b9bd5" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="400" y1="118" x2="400" y2="148" stroke="#5b9bd5" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="667" y1="118" x2="667" y2="148" stroke="#5b9bd5" stroke-width="2" marker-end="url(#ah)"/>
+  <rect x="43" y="155" width="180" height="48" rx="8" fill="#6b4a4a"/>
+  <text x="133" y="184" font-size="13" fill="#fff" text-anchor="middle">效果：注意力窄化</text>
+  <rect x="310" y="155" width="180" height="48" rx="8" fill="#7a6b3a"/>
+  <text x="400" y="184" font-size="13" fill="#fff" text-anchor="middle">效果：焦虑执著</text>
+  <rect x="577" y="155" width="180" height="48" rx="8" fill="#2d5a88"/>
+  <text x="667" y="184" font-size="13" fill="#fff" text-anchor="middle">效果：注意力拓展</text>
+  <line x1="133" y1="203" x2="133" y2="233" stroke="#5b9bd5" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="400" y1="203" x2="400" y2="233" stroke="#5b9bd5" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="667" y1="203" x2="667" y2="233" stroke="#5b9bd5" stroke-width="2" marker-end="url(#ah)"/>
+  <rect x="43" y="240" width="180" height="48" rx="8" fill="#6b4a4a"/>
+  <text x="133" y="269" font-size="13" fill="#fff" text-anchor="middle">结果：消耗 · 耗竭</text>
+  <rect x="310" y="240" width="180" height="48" rx="8" fill="#7a6b3a"/>
+  <text x="400" y="269" font-size="13" fill="#fff" text-anchor="middle">结果：挫败 · 耗竭</text>
+  <rect x="577" y="240" width="180" height="48" rx="8" fill="#1a3a5c"/>
+  <text x="667" y="269" font-size="13" fill="#fff" text-anchor="middle">结果：充盈 · 成长</text>
+  <text x="267" y="303" font-size="12" fill="#7a5050" text-anchor="middle">↓ 收窄 · 消耗</text>
+  <text x="667" y="303" font-size="12" fill="#2d5a88" text-anchor="middle" font-weight="bold">↑ 拓展 · 积累</text>
+</svg>
