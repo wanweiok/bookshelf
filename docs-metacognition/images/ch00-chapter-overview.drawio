@@ -1,0 +1,208 @@
+<mxfile host="draw.io" modified="2026-03-19" agent="Cursor" version="24.0">
+  <diagram name="章节总览 Chapter Overview" id="chapter-overview">
+    <mxGraphModel dx="1422" dy="820" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1050" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- ========== TITLE ========== -->
+        <mxCell id="2" value="&lt;font style=&quot;font-size:22px;&quot;&gt;&lt;b&gt;元认知：AI 时代的人类认知操作系统&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:13px; color:#7f8c8d;&quot;&gt;Metacognition — The Cognitive OS for the AI Era&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="350" y="10" width="500" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- ========== SECTION 1: 起点·认知觉醒 ========== -->
+        <mxCell id="10" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDEDEC;strokeColor=#E6B0AA;arcSize=6;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="1320" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="11" value="&lt;b&gt;起点 · 认知觉醒&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=top;fillColor=none;strokeColor=none;fontColor=#C0392B;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="55" y="85" width="140" height="25" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="101" value="&lt;b style=&quot;font-size:15px;&quot;&gt;01 倒转&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size:10px; color:#fce4ec;&quot;&gt;The Inversion&lt;/i&gt;&lt;hr size=&quot;1&quot; color=&quot;#e57373&quot;&gt;&lt;span style=&quot;font-size:9px; color:#ffcdd2;&quot;&gt;当 AI 比你懂得更多，还剩什么？&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E74C3C;strokeColor=#C0392B;fontColor=#FFFFFF;arcSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="560" y="100" width="280" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- ========== SECTION 2: 理论基础 ========== -->
+        <mxCell id="20" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF5E7;strokeColor=#F5CBA7;arcSize=6;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="40" y="230" width="1320" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="21" value="&lt;b&gt;理论基础&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=top;fillColor=none;strokeColor=none;fontColor=#E67E22;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="55" y="235" width="100" height="25" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="102" value="&lt;b style=&quot;font-size:15px;&quot;&gt;02 认知与元认知&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size:10px; color:#fde3cf;&quot;&gt;Cognition &amp;amp; Metacognition&lt;/i&gt;&lt;hr size=&quot;1&quot; color=&quot;#e0a86e&quot;&gt;&lt;span style=&quot;font-size:9px; color:#fde3cf;&quot;&gt;「想」和「看着自己在想」为什么是两件事？&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E67E22;strokeColor=#CA6F1E;fontColor=#FFFFFF;arcSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="250" width="280" height="90" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="103" value="&lt;b style=&quot;font-size:15px;&quot;&gt;03 知道自己不知道什么&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size:10px; color:#fef9e7;&quot;&gt;Knowing Your Unknowns&lt;/i&gt;&lt;hr size=&quot;1&quot; color=&quot;#d4ac0d&quot;&gt;&lt;span style=&quot;font-size:9px; color:#fef9e7;&quot;&gt;AI 最缺的能力：认知边界感知&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F39C12;strokeColor=#D4AC0D;fontColor=#FFFFFF;arcSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="250" width="280" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- ========== SECTION 3: 核心技能 ========== -->
+        <mxCell id="30" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAFAF1;strokeColor=#ABEBC6;arcSize=6;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="40" y="380" width="1320" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="31" value="&lt;b&gt;核心技能&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=top;fillColor=none;strokeColor=none;fontColor=#27AE60;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="55" y="385" width="100" height="25" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="104" value="&lt;b style=&quot;font-size:15px;&quot;&gt;04 提问的艺术&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size:10px; color:#d5f5e3;&quot;&gt;The Art of Asking&lt;/i&gt;&lt;hr size=&quot;1&quot; color=&quot;#58d68d&quot;&gt;&lt;span style=&quot;font-size:9px; color:#d5f5e3;&quot;&gt;为什么问题比答案更重要&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#27AE60;strokeColor=#1E8449;fontColor=#FFFFFF;arcSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="400" width="280" height="90" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="105" value="&lt;b style=&quot;font-size:15px;&quot;&gt;05 注意力即货币&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size:10px; color:#d5f5e3;&quot;&gt;Attention as Currency&lt;/i&gt;&lt;hr size=&quot;1&quot; color=&quot;#58d68d&quot;&gt;&lt;span style=&quot;font-size:9px; color:#d5f5e3;&quot;&gt;认知过载时代的元认知调节&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2ECC71;strokeColor=#27AE60;fontColor=#FFFFFF;arcSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="560" y="400" width="280" height="90" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="106" value="&lt;b style=&quot;font-size:15px;&quot;&gt;06 学会学习&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size:10px; color:#d1f2eb;&quot;&gt;Learning to Learn&lt;/i&gt;&lt;hr size=&quot;1&quot; color=&quot;#48c9b0&quot;&gt;&lt;span style=&quot;font-size:9px; color:#d1f2eb;&quot;&gt;AI 时代的自我调节学习策略&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ABC9C;strokeColor=#17A589;fontColor=#FFFFFF;arcSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="960" y="400" width="280" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- ========== SECTION 4: 深度应用 ========== -->
+        <mxCell id="40" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EBF5FB;strokeColor=#AED6F1;arcSize=6;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="40" y="530" width="1320" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="41" value="&lt;b&gt;深度应用&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=top;fillColor=none;strokeColor=none;fontColor=#2980B9;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="55" y="535" width="100" height="25" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="107" value="&lt;b style=&quot;font-size:15px;&quot;&gt;07 判断力鸿沟&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size:10px; color:#d6eaf8;&quot;&gt;The Judgment Gap&lt;/i&gt;&lt;hr size=&quot;1&quot; color=&quot;#5dade2&quot;&gt;&lt;span style=&quot;font-size:9px; color:#d6eaf8;&quot;&gt;AI 做不了的价值决策&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#3498DB;strokeColor=#2E86C1;fontColor=#FFFFFF;arcSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="550" width="280" height="90" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="108" value="&lt;b style=&quot;font-size:15px;&quot;&gt;08 跨域连接&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size:10px; color:#d6eaf8;&quot;&gt;Cross-Domain Synthesis&lt;/i&gt;&lt;hr size=&quot;1&quot; color=&quot;#3498db&quot;&gt;&lt;span style=&quot;font-size:9px; color:#d6eaf8;&quot;&gt;谁来判断哪个连接真正有价值？&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2980B9;strokeColor=#21618C;fontColor=#FFFFFF;arcSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="550" width="280" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- ========== SECTION 5: 整合与展望 ========== -->
+        <mxCell id="50" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5EEF8;strokeColor=#D2B4DE;arcSize=6;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="40" y="680" width="1320" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="51" value="&lt;b&gt;整合与展望&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=top;fillColor=none;strokeColor=none;fontColor=#8E44AD;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="55" y="685" width="100" height="25" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="109" value="&lt;b style=&quot;font-size:15px;&quot;&gt;09 构建你的元认知操作系统&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size:10px; color:#f5eef8;&quot;&gt;Your Metacognitive OS&lt;/i&gt;&lt;hr size=&quot;1&quot; color=&quot;#af7ac5&quot;&gt;&lt;span style=&quot;font-size:9px; color:#f5eef8;&quot;&gt;从理念到日常实践的框架&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#8E44AD;strokeColor=#7D3C98;fontColor=#FFFFFF;arcSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="700" width="280" height="90" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="110" value="&lt;b style=&quot;font-size:15px;&quot;&gt;10 人类认知的未来&lt;/b&gt;&lt;br&gt;&lt;i style=&quot;font-size:10px; color:#f5eef8;&quot;&gt;The Future of Human Cognition&lt;/i&gt;&lt;hr size=&quot;1&quot; color=&quot;#af7ac5&quot;&gt;&lt;span style=&quot;font-size:9px; color:#f5eef8;&quot;&gt;元认知将我们带向何方&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9B59B6;strokeColor=#7D3C98;fontColor=#FFFFFF;arcSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="700" width="280" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- ========== SEQUENTIAL FLOW (Path C): thin gray arrows ========== -->
+        <mxCell id="201" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;html=1;strokeColor=#BDC3C7;strokeWidth=1.5;endArrow=blockThin;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="101" target="102" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="202" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;html=1;strokeColor=#BDC3C7;strokeWidth=1.5;endArrow=blockThin;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="102" target="103" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="203" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;html=1;strokeColor=#BDC3C7;strokeWidth=1.5;endArrow=blockThin;endFill=1;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="103" target="104" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="204" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;html=1;strokeColor=#BDC3C7;strokeWidth=1.5;endArrow=blockThin;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="104" target="105" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="205" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;html=1;strokeColor=#BDC3C7;strokeWidth=1.5;endArrow=blockThin;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="105" target="106" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="206" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;html=1;strokeColor=#BDC3C7;strokeWidth=1.5;endArrow=blockThin;endFill=1;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="106" target="107" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="207" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;html=1;strokeColor=#BDC3C7;strokeWidth=1.5;endArrow=blockThin;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="107" target="108" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="208" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;html=1;strokeColor=#BDC3C7;strokeWidth=1.5;endArrow=blockThin;endFill=1;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="108" target="109" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="209" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;html=1;strokeColor=#BDC3C7;strokeWidth=1.5;endArrow=blockThin;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="109" target="110" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ========== PATH A: 务实派 (Green dashed) 01→04→05→09 ========== -->
+        <mxCell id="301" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#27AE60;strokeWidth=3;dashed=1;dashPattern=10 5;endArrow=blockThin;endFill=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="101" target="104" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="302" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#27AE60;strokeWidth=3;dashed=1;dashPattern=10 5;endArrow=blockThin;endFill=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" source="104" target="105" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="303" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#27AE60;strokeWidth=3;dashed=1;dashPattern=10 5;endArrow=blockThin;endFill=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="105" target="109" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="630" y="520"/>
+              <mxPoint x="500" y="520"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ========== PATH B: 理解优先 (Blue dashed) 01→02→03→07→10 ========== -->
+        <mxCell id="311" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#2980B9;strokeWidth=3;dashed=1;dashPattern=10 5;endArrow=blockThin;endFill=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="101" target="102" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="312" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#2980B9;strokeWidth=3;dashed=1;dashPattern=10 5;endArrow=blockThin;endFill=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" source="102" target="103" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="313" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#2980B9;strokeWidth=3;dashed=1;dashPattern=10 5;endArrow=blockThin;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" edge="1" source="103" target="107" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="900" y="370"/>
+              <mxPoint x="1310" y="370"/>
+              <mxPoint x="1310" y="540"/>
+              <mxPoint x="570" y="540"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="314" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#2980B9;strokeWidth=3;dashed=1;dashPattern=10 5;endArrow=blockThin;endFill=1;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="107" target="110" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ========== LEGEND ========== -->
+        <mxCell id="400" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#E0E0E0;arcSize=8;shadow=0;" vertex="1" parent="1">
+          <mxGeometry x="200" y="840" width="1000" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="401" value="&lt;b style=&quot;font-size:13px;&quot;&gt;三种阅读路径&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;fillColor=none;strokeColor=none;fontColor=#34495E;" vertex="1" parent="1">
+          <mxGeometry x="220" y="845" width="120" height="25" as="geometry"/>
+        </mxCell>
+
+        <!-- Path A legend -->
+        <mxCell id="402" value="" style="endArrow=blockThin;endFill=1;html=1;strokeColor=#27AE60;strokeWidth=3;dashed=1;dashPattern=10 5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="230" y="885" as="sourcePoint"/>
+            <mxPoint x="310" y="885" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="403" value="&lt;b style=&quot;color:#27AE60;&quot;&gt;路径 A 务实派&lt;/b&gt;&lt;span style=&quot;color:#666;&quot;&gt;：01 → 04 → 05 → 09&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="320" y="873" width="250" height="24" as="geometry"/>
+        </mxCell>
+
+        <!-- Path B legend -->
+        <mxCell id="404" value="" style="endArrow=blockThin;endFill=1;html=1;strokeColor=#2980B9;strokeWidth=3;dashed=1;dashPattern=10 5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590" y="885" as="sourcePoint"/>
+            <mxPoint x="670" y="885" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="405" value="&lt;b style=&quot;color:#2980B9;&quot;&gt;路径 B 理解优先&lt;/b&gt;&lt;span style=&quot;color:#666;&quot;&gt;：01 → 02 → 03 → 07 → 10&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="680" y="873" width="280" height="24" as="geometry"/>
+        </mxCell>
+
+        <!-- Path C legend -->
+        <mxCell id="406" value="" style="endArrow=blockThin;endFill=1;html=1;strokeColor=#BDC3C7;strokeWidth=1.5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="980" y="885" as="sourcePoint"/>
+            <mxPoint x="1060" y="885" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="407" value="&lt;b style=&quot;color:#95A5A6;&quot;&gt;路径 C 完整通读&lt;/b&gt;&lt;span style=&quot;color:#666;&quot;&gt;：01 → 02 → … → 10&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1070" y="873" width="250" height="24" as="geometry"/>
+        </mxCell>
+
+        <!-- Section flow indicator (left side vertical) -->
+        <mxCell id="500" value="&lt;span style=&quot;font-size:10px; color:#95A5A6;&quot;&gt;▼ 认知深度递进&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;fillColor=none;strokeColor=none;rotation=-90;" vertex="1" parent="1">
+          <mxGeometry x="-30" y="430" width="120" height="20" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
