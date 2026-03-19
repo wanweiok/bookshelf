@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 260" width="860" height="260">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1a3a5c"/>
+    </marker>
+  </defs>
+  <rect width="860" height="260" fill="#f0f0f0" rx="6"/>
+  <text x="430" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#1a3a5c">翻译路径 vs 直连路径的身体感知</text>
+  <rect x="25" y="40" width="810" height="90" rx="6" fill="none" stroke="#e05555" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="45" y="58" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#e05555">翻译路径</text>
+  <rect x="55" y="65" width="160" height="46" rx="6" fill="#5b9bd5"/>
+  <text x="135" y="93" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#ffffff">English 输入</text>
+  <line x1="215" y1="88" x2="298" y2="88" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="308" y="65" width="150" height="46" rx="6" fill="#e8a838"/>
+  <text x="383" y="93" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#ffffff">中文翻译</text>
+  <line x1="458" y1="88" x2="538" y2="88" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="548" y="65" width="200" height="46" rx="6" fill="#1a3a5c"/>
+  <text x="648" y="93" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#ffffff">身体感知 / 意</text>
+  <rect x="25" y="155" width="810" height="90" rx="6" fill="none" stroke="#50b87a" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="45" y="173" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#50b87a">直连路径</text>
+  <rect x="130" y="180" width="160" height="46" rx="6" fill="#5b9bd5"/>
+  <text x="210" y="208" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#ffffff">English 输入</text>
+  <line x1="290" y1="203" x2="478" y2="203" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="488" y="180" width="200" height="46" rx="6" fill="#1a3a5c"/>
+  <text x="588" y="208" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#ffffff">身体感知 / 意</text>
+</svg>

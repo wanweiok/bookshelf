@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 820" width="860" height="820">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2d5a88"/></marker>
+  </defs>
+  <rect width="860" height="820" rx="12" fill="#f0f0f0"/>
+  <text x="430" y="38" text-anchor="middle" font-family="Arial, sans-serif" font-size="17" font-weight="bold" fill="#1a3a5c">Book Argument Arc</text>
+  <!-- Ch1 Red -->
+  <rect x="260" y="60" width="340" height="52" rx="6" fill="#e05555" stroke="#1a3a5c" stroke-width="1"/>
+  <text x="430" y="82" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#ffffff" font-weight="bold">Ch1 The Translation Wall</text>
+  <text x="430" y="100" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" opacity="0.85">Diagnose the Problem</text>
+  <line x1="430" y1="112" x2="430" y2="132" stroke="#2d5a88" stroke-width="2" marker-end="url(#arr)"/>
+  <!-- Ch2 Yellow -->
+  <rect x="260" y="132" width="340" height="52" rx="6" fill="#e8a838" stroke="#1a3a5c" stroke-width="1"/>
+  <text x="430" y="154" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#ffffff" font-weight="bold">Ch2 Meaning Before Language</text>
+  <text x="430" y="172" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" opacity="0.85">Reveal the Principle</text>
+  <line x1="430" y1="184" x2="430" y2="204" stroke="#2d5a88" stroke-width="2" marker-end="url(#arr)"/>
+  <!-- Ch3 Yellow -->
+  <rect x="260" y="204" width="340" height="52" rx="6" fill="#e8a838" stroke="#1a3a5c" stroke-width="1"/>
+  <text x="430" y="226" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#ffffff" font-weight="bold">Ch3 The Direct Pathway</text>
+  <text x="430" y="244" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" opacity="0.85">Build the Connection</text>
+  <line x1="430" y1="256" x2="430" y2="276" stroke="#2d5a88" stroke-width="2" marker-end="url(#arr)"/>
+  <!-- Ch4 Green -->
+  <rect x="260" y="276" width="340" height="52" rx="6" fill="#50b87a" stroke="#1a3a5c" stroke-width="1"/>
+  <text x="430" y="298" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#ffffff" font-weight="bold">Ch4 The Cultural Skeleton</text>
+  <text x="430" y="316" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" opacity="0.85">Root in the Soil</text>
+  <line x1="430" y1="328" x2="430" y2="348" stroke="#2d5a88" stroke-width="2" marker-end="url(#arr)"/>
+  <!-- Ch5 Blue -->
+  <rect x="260" y="348" width="340" height="52" rx="6" fill="#5b9bd5" stroke="#1a3a5c" stroke-width="1"/>
+  <text x="430" y="370" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#ffffff" font-weight="bold">Ch5 Listening and Reading</text>
+  <text x="430" y="388" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" opacity="0.85">Input Strategy</text>
+  <line x1="430" y1="400" x2="430" y2="420" stroke="#2d5a88" stroke-width="2" marker-end="url(#arr)"/>
+  <!-- Ch6 Blue -->
+  <rect x="260" y="420" width="340" height="52" rx="6" fill="#5b9bd5" stroke="#1a3a5c" stroke-width="1"/>
+  <text x="430" y="442" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#ffffff" font-weight="bold">Ch6 Speaking and Writing</text>
+  <text x="430" y="460" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" opacity="0.85">Output Strategy</text>
+  <line x1="430" y1="472" x2="430" y2="492" stroke="#2d5a88" stroke-width="2" marker-end="url(#arr)"/>
+  <!-- Ch7 Purple -->
+  <rect x="260" y="492" width="340" height="52" rx="6" fill="#7b68a8" stroke="#1a3a5c" stroke-width="1"/>
+  <text x="430" y="514" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#ffffff" font-weight="bold">Ch7 The Role of L1</text>
+  <text x="430" y="532" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" opacity="0.85">Handle the Tension</text>
+  <line x1="430" y1="544" x2="430" y2="564" stroke="#2d5a88" stroke-width="2" marker-end="url(#arr)"/>
+  <!-- Ch8 Purple -->
+  <rect x="260" y="564" width="340" height="52" rx="6" fill="#7b68a8" stroke="#1a3a5c" stroke-width="1"/>
+  <text x="430" y="586" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#ffffff" font-weight="bold">Ch8 Living in the Language</text>
+  <text x="430" y="604" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" opacity="0.85">Build the Ecosystem</text>
+  <line x1="430" y1="616" x2="430" y2="636" stroke="#2d5a88" stroke-width="2" marker-end="url(#arr)"/>
+  <!-- Ch9 Dark Gray -->
+  <rect x="260" y="636" width="340" height="52" rx="6" fill="#1a3a5c" stroke="#1a3a5c" stroke-width="1"/>
+  <text x="430" y="658" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#ffffff" font-weight="bold">Ch9 A Lifelong Journey</text>
+  <text x="430" y="676" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" opacity="0.85">The Ultimate Vision</text>
+  <!-- Side labels -->
+  <rect x="40" y="60" width="90" height="52" rx="6" fill="#e05555" opacity="0.15" stroke="#e05555" stroke-width="1"/>
+  <text x="85" y="91" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#e05555" font-weight="bold">Diagnose</text>
+  <rect x="40" y="132" width="90" height="124" rx="6" fill="#e8a838" opacity="0.15" stroke="#e8a838" stroke-width="1"/>
+  <text x="85" y="198" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#e8a838" font-weight="bold">Principle</text>
+  <rect x="40" y="276" width="90" height="52" rx="6" fill="#50b87a" opacity="0.15" stroke="#50b87a" stroke-width="1"/>
+  <text x="85" y="307" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#50b87a" font-weight="bold">Soil</text>
+  <rect x="40" y="348" width="90" height="124" rx="6" fill="#5b9bd5" opacity="0.15" stroke="#5b9bd5" stroke-width="1"/>
+  <text x="85" y="415" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#5b9bd5" font-weight="bold">Strategy</text>
+  <rect x="40" y="492" width="90" height="124" rx="6" fill="#7b68a8" opacity="0.15" stroke="#7b68a8" stroke-width="1"/>
+  <text x="85" y="559" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#7b68a8" font-weight="bold">Integrate</text>
+  <rect x="40" y="636" width="90" height="52" rx="6" fill="#1a3a5c" opacity="0.15" stroke="#1a3a5c" stroke-width="1"/>
+  <text x="85" y="667" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#1a3a5c" font-weight="bold">Transcend</text>
+  <!-- Right side: progression arrow -->
+  <line x1="740" y1="70" x2="740" y2="686" stroke="#2d5a88" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arr)"/>
+  <text x="780" y="380" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#2d5a88" transform="rotate(90,780,380)">From Diagnosis to Practice to Transcendence</text>
+</svg>

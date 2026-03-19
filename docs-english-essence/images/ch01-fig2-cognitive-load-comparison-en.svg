@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 280" width="860" height="280">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1a3a5c"/>
+    </marker>
+  </defs>
+  <rect width="860" height="280" fill="#f0f0f0" rx="6"/>
+  <text x="430" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#1a3a5c">Cognitive Load: Direct Path vs Translation Path</text>
+  <rect x="25" y="40" width="810" height="90" rx="6" fill="none" stroke="#50b87a" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="45" y="58" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#50b87a">Direct Path</text>
+  <rect x="100" y="65" width="130" height="46" rx="6" fill="#5b9bd5"/>
+  <text x="165" y="93" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#ffffff">Meaning</text>
+  <line x1="230" y1="88" x2="530" y2="88" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="380" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#2d5a88">~200ms</text>
+  <rect x="540" y="65" width="160" height="46" rx="6" fill="#50b87a"/>
+  <text x="620" y="93" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#ffffff">English Output</text>
+  <rect x="25" y="155" width="810" height="100" rx="6" fill="none" stroke="#e05555" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="45" y="173" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#e05555">Translation Path</text>
+  <rect x="40" y="185" width="100" height="46" rx="6" fill="#5b9bd5"/>
+  <text x="90" y="213" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#ffffff">Meaning</text>
+  <line x1="140" y1="208" x2="198" y2="208" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="170" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#2d5a88">~150ms</text>
+  <rect x="208" y="185" width="130" height="46" rx="6" fill="#e8a838"/>
+  <text x="273" y="213" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#ffffff">Chinese Encoding</text>
+  <line x1="338" y1="208" x2="393" y2="208" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="365" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#2d5a88">~250ms</text>
+  <rect x="403" y="185" width="140" height="46" rx="6" fill="#e05555"/>
+  <text x="473" y="213" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#ffffff">Translation Retrieval</text>
+  <line x1="543" y1="208" x2="598" y2="208" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="570" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#2d5a88">~200ms</text>
+  <rect x="608" y="185" width="150" height="46" rx="6" fill="#50b87a"/>
+  <text x="683" y="213" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#ffffff">English Output</text>
+</svg>

@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 310" width="860" height="310">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1a3a5c"/>
+    </marker>
+  </defs>
+  <rect width="860" height="310" fill="#f0f0f0" rx="6"/>
+  <text x="430" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#1a3a5c">组块化输出 vs 逐词拼装</text>
+  <rect x="15" y="40" width="830" height="100" rx="6" fill="none" stroke="#50b87a" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="35" y="57" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#50b87a">直连通路（组块化）</text>
+  <rect x="35" y="68" width="155" height="46" rx="6" fill="#5b9bd5"/>
+  <text x="112" y="96" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#ffffff">意：请求许可</text>
+  <line x1="190" y1="91" x2="268" y2="91" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="278" y="68" width="260" height="46" rx="6" fill="#50b87a"/>
+  <text x="408" y="96" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#ffffff">Would you mind if I...</text>
+  <line x1="538" y1="91" x2="608" y2="91" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="618" y="68" width="200" height="46" rx="6" fill="#50b87a"/>
+  <text x="718" y="90" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#ffffff">✓ 完整 · 自然 · 流畅</text>
+  <rect x="15" y="165" width="830" height="130" rx="6" fill="none" stroke="#e05555" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="35" y="183" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#e05555">翻译通路（逐词拼装）</text>
+  <rect x="20" y="198" width="120" height="44" rx="6" fill="#5b9bd5"/>
+  <text x="80" y="224" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#ffffff">意：请求许可</text>
+  <line x1="140" y1="220" x2="158" y2="220" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="168" y="198" width="70" height="44" rx="6" fill="#e8a838"/>
+  <text x="203" y="224" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#ffffff">中文</text>
+  <line x1="238" y1="220" x2="258" y2="220" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="268" y="198" width="160" height="44" rx="6" fill="#e05555"/>
+  <text x="348" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#ffffff">散词</text>
+  <text x="348" y="234" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#ffcccc">you · mind · if · I</text>
+  <line x1="428" y1="220" x2="448" y2="220" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="458" y="198" width="105" height="44" rx="6" fill="#e8a838"/>
+  <text x="510" y="224" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#ffffff">语法排列</text>
+  <line x1="563" y1="220" x2="583" y2="220" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="593" y="198" width="160" height="44" rx="6" fill="#e05555"/>
+  <text x="673" y="224" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#ffffff">✗ 缓慢 · 僵硬</text>
+</svg>
