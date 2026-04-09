@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>盖洛普优势识别器 · 专业版 | CliftonStrengths Professional</title>
+  <style>
+    :root {
+      --bg: #0a0e1a;
+      --bg2: #111827;
+      --bg3: #1f2937;
+      --bg4: #374151;
+      --text: #f1f5f9;
+      --text2: #94a3b8;
+      --text3: #64748b;
+      --accent: #6366f1;
+      --accent2: #818cf8;
+      --accent3: #a5b4fc;
+      --border: #1e293b;
+      --border2: #334155;
+      --gold: #f59e0b;
+      --gold2: #fbbf24;
+      --silver: #94a3b8;
+      --bronze: #b45309;
+      --green: #10b981;
+      --green2: #34d399;
+      --red: #ef4444;
+      --red2: #f87171;
+      --cyan: #06b6d4;
+      --pink: #ec4899;
+      --radius: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --shadow: 0 4px 24px rgba(0, 0, 0, .3);
+      --shadow-lg: 0 12px 48px rgba(0, 0, 0, .4);
+      --font: -apple-system, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh
+    }
+
+    /* ── Splash ── */
+    .splash {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0a0e1a 0%, #1e1b4b 50%, #0a0e1a 100%);
+      position: relative;
+      overflow: hidden
+    }
+
+    .splash::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(99, 102, 241, .15), transparent 70%);
+      top: -200px;
+      right: -200px;
+      border-radius: 50%
+    }
+
+    .splash::after {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(236, 72, 153, .1), transparent 70%);
+      bottom: -100px;
+      left: -100px;
+      border-radius: 50%
+    }
+
+    .splash-content {
+      text-align: center;
+      z-index: 1;
+      max-width: 700px;
+      padding: 40px
+    }
+
+    .splash-logo {
+      font-size: 5rem;
+      margin-bottom: 24px;
+      filter: drop-shadow(0 0 40px rgba(99, 102, 241, .5))
+    }
+
+    .splash-title {
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #818cf8, #c084fc, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+      letter-spacing: -1px
+    }
+
+    .splash-sub {
+      font-size: 1.1rem;
+      color: var(--text2);
+      margin-bottom: 32px;
+      line-height: 1.7
+    }
+
+    .splash-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 36px
+    }
+
+    .splash-stat {
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 16px 12px
+    }
+
+    .splash-stat .num {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent2)
+    }
+
+    .splash-stat .lbl {
+      font-size: .75rem;
+      color: var(--text3);
+      margin-top: 2px
+    }
+
+    .splash-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 48px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border: none;
+      border-radius: 999px;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .3s;
+      box-shadow: 0 4px 24px rgba(99, 102, 241, .4)
+    }
+
+    .splash-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(99, 102, 241, .5)
+    }
+
+    .splash-features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 32px;
+      text-align: left
+    }
+
+    .splash-feat {
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px
+    }
+
+    .splash-feat .icon {
+      font-size: 1.5rem;
+      margin-bottom: 8px
+    }
+
+    .splash-feat .title {
+      font-size: .9rem;
+      font-weight: 600;
+      margin-bottom: 4px
+    }
+
+    .splash-feat .desc {
+      font-size: .75rem;
+      color: var(--text3);
+      line-height: 1.5
+    }
+
+    /* ── App ── */
+    .app {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 20px 60px
+    }
+
+    .app-header {
+      text-align: center;
+      padding: 32px 0 24px
+    }
+
+    .app-header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent2), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent
+    }
+
+    .app-header p {
+      color: var(--text3);
+      font-size: .85rem;
+      margin-top: 4px
+    }
+
+    .progress-section {
+      margin-bottom: 24px
+    }
+
+    .progress-bar-track {
+      width: 100%;
+      height: 4px;
+      background: var(--bg3);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 8px
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--pink));
+      border-radius: 2px;
+      transition: width .4s ease
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: .75rem;
+      color: var(--text3)
+    }
+
+    /* ── Question Card ── */
+    .q-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 20px;
+      animation: fadeUp .4s ease
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .q-section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(99, 102, 241, .1);
+      border: 1px solid rgba(99, 102, 241, .2);
+      border-radius: 99px;
+      font-size: .7rem;
+      font-weight: 600;
+      color: var(--accent2);
+      margin-bottom: 16px
+    }
+
+    .q-text {
+      font-size: 1.15rem;
+      font-weight: 600;
+      line-height: 1.6;
+      margin-bottom: 24px
+    }
+
+    .likert {
+      display: flex;
+      flex-direction: column;
+      gap: 8px
+    }
+
+    .likert-opt {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: var(--bg3);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all .2s
+    }
+
+    .likert-opt:hover {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, .05)
+    }
+
+    .likert-opt.selected {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, .1);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, .15)
+    }
+
+    .likert-radio {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all .2s
+    }
+
+    .likert-opt.selected .likert-radio {
+      border-color: var(--accent);
+      background: var(--accent)
+    }
+
+    .likert-opt.selected .likert-radio::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: #fff;
+      border-radius: 50%
+    }
+
+    .likert-label {
+      font-size: .9rem
+    }
+
+    .likert-label strong {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 2px
+    }
+
+    .likert-label span {
+      font-size: .75rem;
+      color: var(--text3)
+    }
+
+    /* ── Nav ── */
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 20px
+    }
+
+    .nav-btn {
+      padding: 12px 28px;
+      border: none;
+      border-radius: var(--radius);
+      font-size: .9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s
+    }
+
+    .nav-btn-prev {
+      background: var(--bg3);
+      color: var(--text2);
+      border: 1px solid var(--border2)
+    }
+
+    .nav-btn-prev:hover {
+      border-color: var(--accent);
+      color: var(--accent)
+    }
+
+    .nav-btn-prev:disabled {
+      opacity: .3;
+      cursor: not-allowed
+    }
+
+    .nav-btn-next {
+      background: linear-gradient(135deg, var(--accent), var(--pink));
+      color: #fff
+    }
+
+    .nav-btn-next:hover {
+      opacity: .9;
+      transform: translateY(-1px)
+    }
+
+    /* ── Results ── */
+    .results {
+      animation: fadeUp .5s ease
+    }
+
+    .rpt-section {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      margin-bottom: 20px
+    }
+
+    .rpt-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px
+    }
+
+    .rpt-header .icon {
+      font-size: 1.5rem
+    }
+
+    .rpt-header h2 {
+      font-size: 1.2rem;
+      font-weight: 700
+    }
+
+    /* Top 5 */
+    .top5-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px
+    }
+
+    .top5-card {
+      text-align: center;
+      padding: 20px 10px;
+      border-radius: var(--radius);
+      border: 2px solid;
+      position: relative;
+      overflow: hidden
+    }
+
+    .top5-card:nth-child(1) {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, rgba(245, 158, 11, .08), rgba(251, 191, 36, .04))
+    }
+
+    .top5-card:nth-child(2) {
+      border-color: var(--silver);
+      background: linear-gradient(135deg, rgba(148, 163, 184, .08), rgba(226, 232, 240, .04))
+    }
+
+    .top5-card:nth-child(3) {
+      border-color: var(--bronze);
+      background: linear-gradient(135deg, rgba(180, 83, 9, .08), rgba(251, 146, 60, .04))
+    }
+
+    .top5-card:nth-child(n+4) {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(99, 102, 241, .06), rgba(139, 92, 246, .04))
+    }
+
+    .top5-rank {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 6px
+    }
+
+    .top5-card:nth-child(1) .top5-rank {
+      color: var(--gold)
+    }
+
+    .top5-card:nth-child(2) .top5-rank {
+      color: var(--silver)
+    }
+
+    .top5-card:nth-child(3) .top5-rank {
+      color: var(--bronze)
+    }
+
+    .top5-card:nth-child(n+4) .top5-rank {
+      color: var(--accent2)
+    }
+
+    .top5-name {
+      font-size: .95rem;
+      font-weight: 700;
+      margin-bottom: 2px
+    }
+
+    .top5-domain {
+      font-size: .7rem;
+      color: var(--text3);
+      margin-bottom: 8px
+    }
+
+    .top5-score {
+      font-size: 1.6rem;
+      font-weight: 800
+    }
+
+    .top5-card:nth-child(1) .top5-score {
+      color: var(--gold)
+    }
+
+    .top5-card:nth-child(2) .top5-score {
+      color: var(--silver)
+    }
+
+    .top5-card:nth-child(3) .top5-score {
+      color: var(--bronze)
+    }
+
+    .top5-card:nth-child(n+4) .top5-score {
+      color: var(--accent2)
+    }
+
+    /* Bar chart */
+    .bar-chart {
+      display: flex;
+      flex-direction: column;
+      gap: 8px
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .bar-label {
+      min-width: 60px;
+      font-size: .8rem;
+      font-weight: 500;
+      text-align: right
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 20px;
+      background: var(--bg3);
+      border-radius: 10px;
+      overflow: hidden
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width .6s ease
+    }
+
+    .bar-val {
+      min-width: 36px;
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--text2)
+    }
+
+    /* Radar */
+    .radar-wrap {
+      text-align: center;
+      margin: 16px 0
+    }
+
+    .radar-wrap canvas {
+      max-width: 100%;
+      height: auto
+    }
+
+    /* Domain table */
+    .dom-tbl {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    .dom-tbl th,
+    .dom-tbl td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: .85rem
+    }
+
+    .dom-tbl th {
+      background: var(--bg3);
+      color: var(--text3);
+      font-weight: 600;
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .5px
+    }
+
+    .stars {
+      color: var(--gold);
+      letter-spacing: 1px
+    }
+
+    /* Synergy */
+    .synergy-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px
+    }
+
+    .synergy-card {
+      background: var(--bg3);
+      border-radius: var(--radius);
+      padding: 16px
+    }
+
+    .synergy-card h4 {
+      font-size: .9rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--accent2)
+    }
+
+    .synergy-card p {
+      font-size: .8rem;
+      color: var(--text3);
+      line-height: 1.5
+    }
+
+    /* Full rankings */
+    .full-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 8px
+    }
+
+    .full-item {
+      padding: 10px;
+      background: var(--bg3);
+      border-radius: 8px;
+      text-align: center
+    }
+
+    .full-item .fi-rank {
+      font-size: .7rem;
+      font-weight: 700;
+      color: var(--text3)
+    }
+
+    .full-item .fi-name {
+      font-size: .85rem;
+      font-weight: 600;
+      margin: 2px 0
+    }
+
+    .full-item .fi-score {
+      font-size: .7rem;
+      color: var(--text3)
+    }
+
+    .full-item .fi-domain {
+      font-size: .65rem;
+      margin-top: 2px
+    }
+
+    /* Development plan */
+    .dev-plan {
+      display: flex;
+      flex-direction: column;
+      gap: 12px
+    }
+
+    .dev-item {
+      background: var(--bg3);
+      border-radius: var(--radius);
+      padding: 16px;
+      border-left: 3px solid var(--accent)
+    }
+
+    .dev-item h4 {
+      font-size: .9rem;
+      font-weight: 600;
+      margin-bottom: 6px
+    }
+
+    .dev-item>p {
+      font-size: .8rem;
+      color: var(--text3);
+      line-height: 1.6
+    }
+
+    .dev-item ul {
+      padding-left: 16px;
+      margin-top: 6px
+    }
+
+    .dev-item li {
+      font-size: .8rem;
+      color: var(--text2);
+      margin-bottom: 3px
+    }
+
+    /* Summary */
+    .summary-box {
+      text-align: center;
+      padding: 32px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, .1), rgba(236, 72, 153, .1));
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border2)
+    }
+
+    .summary-box h3 {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      color: var(--accent2)
+    }
+
+    .summary-box p {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--text)
+    }
+
+    /* Actions */
+    .action-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap
+    }
+
+    .action-btn {
+      padding: 12px 28px;
+      border: none;
+      border-radius: var(--radius);
+      font-size: .9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s
+    }
+
+    .action-btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--pink));
+      color: #fff
+    }
+
+    .action-btn-primary:hover {
+      opacity: .9;
+      transform: translateY(-1px)
+    }
+
+    .action-btn-secondary {
+      background: var(--bg3);
+      color: var(--text);
+      border: 1px solid var(--border2)
+    }
+
+    .action-btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent)
+    }
+
+    .hidden {
+      display: none !important
+    }
+
+    @media(max-width:768px) {
+      .splash-stats {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .splash-features {
+        grid-template-columns: 1fr
+      }
+
+      .splash-title {
+        font-size: 2rem
+      }
+
+      .top5-row {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .synergy-grid {
+        grid-template-columns: 1fr
+      }
+
+      .q-card {
+        padding: 20px
+      }
+
+      .full-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr))
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        color: #000
+      }
+
+      .splash,
+      .nav-row,
+      .action-row,
+      .progress-section {
+        display: none !important
+      }
+
+      .rpt-section {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ddd
+      }
+
+      .app {
+        max-width: 100%
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══════════ SPLASH ═══════════ -->
+  <div class="splash" id="splash">
+    <div class="splash-content">
+      <div class="splash-logo">🎯</div>
+      <div class="splash-title">CliftonStrengths 34</div>
+      <div class="splash-sub">盖洛普优势识别器 · 专业版<br>基于积极心理学研究，通过多维度评估发现你的核心天赋</div>
+      <div class="splash-stats">
+        <div class="splash-stat">
+          <div class="num">90</div>
+          <div class="lbl">评估题目</div>
+        </div>
+        <div class="splash-stat">
+          <div class="num">34</div>
+          <div class="lbl">天赋主题</div>
+        </div>
+        <div class="splash-stat">
+          <div class="num">4</div>
+          <div class="lbl">执行领域</div>
+        </div>
+        <div class="splash-stat">
+          <div class="num">5pt</div>
+          <div class="lbl">Likert 量表</div>
+        </div>
+      </div>
+      <button class="splash-btn" onclick="startAssessment()">开始专业评估 →</button>
+      <div class="splash-features">
+        <div class="splash-feat">
+          <div class="icon">📊</div>
+          <div class="title">多维度评估</div>
+          <div class="desc">每个天赋主题由 2-3 道题目测量，加权计分确保结果可靠性</div>
+        </div>
+        <div class="splash-feat">
+          <div class="icon">🧬</div>
+          <div class="title">协同分析</div>
+          <div class="desc">识别天赋之间的协同效应，揭示独特的优势组合模式</div>
+        </div>
+        <div class="splash-feat">
+          <div class="icon">📋</div>
+          <div class="title">发展计划</div>
+          <div class="desc">基于评估结果生成个性化的天赋发展行动建议</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ APP ═══════════ -->
+  <div class="app hidden" id="app">
+    <div class="app-header">
+      <h1>🎯 盖洛普优势识别器 · 专业版</h1>
+      <p>CliftonStrengths 34 Talents Assessment — Professional Edition</p>
+    </div>
+    <div class="progress-section" id="progress-section">
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+      <div class="progress-info"><span id="progress-text">第 1 题 / 共 90 题</span><span id="progress-pct">0%</span></div>
+    </div>
+    <div id="question-area"></div>
+    <div id="results-area" class="hidden results"></div>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════
+    //  34 Themes
+    // ═══════════════════════════════════════════════════════════
+    const THEMES = [
+      { id: "analytical", name: "分析", domain: "战略思维", desc: "追求数据和事实，用客观分析揭示事物本质和规律。", dev: "多收集数据再决策；学习基础统计分析；用事实而非感觉说服他人。" },
+      { id: "context", name: "回顾", domain: "战略思维", desc: "喜欢回顾过去，相信历史经验能帮助做出更好的决策。", dev: "研究行业历史案例；建立经验数据库；用历史数据预测趋势。" },
+      { id: "intellection", name: "思维", domain: "战略思维", desc: "喜欢独立思考，享受深度反思和脑力活动的过程。", dev: "每天留出独处思考时间；写思考日记；阅读哲学和深度文章。" },
+      { id: "learner", name: "学习", domain: "战略思维", desc: "热爱学习过程，从无知到精通的旅程让你兴奋。", dev: "持续报名课程；设定学习目标；分享所学以加深理解。" },
+      { id: "futuristic", name: "未来", domain: "战略思维", desc: "能描绘未来愿景，并用它来激励自己和他人。", dev: "练习愿景描绘；制定3-5年规划；用未来视角指导当下决策。" },
+      { id: "ideation", name: "理念", domain: "战略思维", desc: "充满创意，善于发现不同现象之间的有趣联系。", dev: "保持创意笔记本；参加头脑风暴；将想法可视化呈现。" },
+      { id: "input", name: "搜集", domain: "战略思维", desc: "渴望获取更多信息，相信知识储备终会派上用场。", dev: "建立知识管理系统；定期阅读；创建专题资料库。" },
+      { id: "strategic", name: "战略", domain: "战略思维", desc: "能洞察全局，善于在复杂情境中识别最佳路径。", dev: "练习情景规划；学习博弈论；多问'如果…会怎样'。" },
+      { id: "focus", name: "专注", domain: "执行力", desc: "能保持目标导向，善于优先排序并坚定执行。", dev: "设定清晰的优先事项；消除干扰源；定期回顾目标进度。" },
+      { id: "deliberative", name: "审慎", domain: "执行力", desc: "谨慎小心，能预见潜在风险，并提前做好充分准备。", dev: "做风险评估清单；预留缓冲时间；关键决策前寻求第二意见。" },
+      { id: "arranger", name: "统筹", domain: "执行力", desc: "擅长组织和调度，能在复杂环境中找到最优资源配置。", dev: "学习项目管理；练习资源分配；建立灵活的调度系统。" },
+      { id: "responsibility", name: "责任", domain: "执行力", desc: "对承诺高度负责，忠于自己的价值观，说到做到。", dev: "谨慎做出承诺；建立承诺追踪表；定期审查未完成的承诺。" },
+      { id: "achiever", name: "成就", domain: "执行力", desc: "精力充沛，能长时间保持高效工作，从完成任务中获得满足感。", dev: "设定每日里程碑；使用任务清单；庆祝小胜利以保持动力。" },
+      { id: "restorative", name: "排难", domain: "执行力", desc: "善于发现问题并解决它们，享受将混乱恢复秩序的过程。", dev: "学习问题解决方法论；建立故障排查流程；享受修复挑战。" },
+      { id: "discipline", name: "纪律", domain: "执行力", desc: "热爱结构和秩序，善于创建系统和流程，按部就班。", dev: "建立日常例行程序；使用模板和清单；创建可重复的工作流。" },
+      { id: "consistency", name: "公平", domain: "执行力", desc: "追求公平和一致，相信明确的规则能创造稳定环境。", dev: "制定标准化流程；确保规则透明；用一致性建立信任。" },
+      { id: "activator", name: "行动", domain: "执行力", desc: "能将想法迅速转化为行动，相信行动比空谈更有价值。", dev: "设定行动截止时间；先做原型再完善；用迭代代替完美主义。" },
+      { id: "belief", name: "信念", domain: "关系建立", desc: "有坚定的核心价值观，工作必须与内在信念保持一致。", dev: "明确核心价值观清单；定期审查工作是否与价值观一致；找到使命感。" },
+      { id: "relator", name: "交往", domain: "关系建立", desc: "享受与密友的深入关系，相信真诚比泛泛之交更有价值。", dev: "投入时间经营核心关系；安排定期深度交流；珍视小圈子质量。" },
+      { id: "harmony", name: "和谐", domain: "关系建立", desc: "寻求共识，避免冲突，相信合作比竞争更有价值。", dev: "学习调解技巧；寻找共同立场；营造协作而非对抗的氛围。" },
+      { id: "individualization", name: "个别", domain: "关系建立", desc: "能看到每个人的独特性，善于因人施教、因人而异。", dev: "记录每个人的特点；定制化管理；避免一刀切的方法。" },
+      { id: "connection", name: "关联", domain: "关系建立", desc: "相信万事万物皆有联系，善于在看似无关的事件中找到规律。", dev: "练习跨领域思考；建立概念地图；分享你的洞察帮助他人看到联系。" },
+      { id: "developer", name: "发展", domain: "关系建立", desc: "能看到他人的潜力，并热衷于帮助他人成长和进步。", dev: "做导师；关注小进步并庆祝；用成长型思维看待他人。" },
+      { id: "empathy", name: "体谅", domain: "关系建立", desc: "能感知他人的情绪，善于从他人的角度思考问题和感受。", dev: "练习积极倾听；关注非语言信号；创造安全的情感表达空间。" },
+      { id: "includer", name: "包容", domain: "关系建立", desc: "乐于接纳他人，善于营造让每个人都有归属感的氛围。", dev: "主动邀请边缘化的人；创造包容性语言；建立开放的团队文化。" },
+      { id: "maximizer", name: "完美", domain: "影响力", desc: "追求卓越，善于将优秀转化为卓越，而非修补缺陷。", dev: "关注优势而非弱点；向顶尖人才学习；追求精益求精。" },
+      { id: "competition", name: "竞争", domain: "影响力", desc: "以他人为参照，通过比较来衡量自己的进步和成功。", dev: "找到合适的竞争对标；设定可衡量的目标；从竞争中获取动力。" },
+      { id: "positivity", name: "积极", domain: "影响力", desc: "乐观向上，善于传播正能量，让他人感到振奋和鼓舞。", dev: "练习感恩；分享积极故事；用乐观视角重新框架挑战。" },
+      { id: "communication", name: "沟通", domain: "影响力", desc: "善于表达，能将抽象概念具象化，让信息易于理解和传播。", dev: "练习讲故事；学习公开演讲；用比喻和类比简化复杂概念。" },
+      { id: "adaptability", name: "适应", domain: "影响力", desc: "活在当下，能灵活应对变化，善于处理突发状况。", dev: "保持日程灵活性；练习正念当下；把变化视为机会而非威胁。" },
+      { id: "command", name: "统率", domain: "影响力", desc: "能掌控局面，敢于发声，并能推动他人做出决定。", dev: "练习果断表达；在危机中承担责任；学习影响力领导力。" },
+      { id: "selfassurance", name: "自信", domain: "影响力", desc: "对自己的能力有信心，相信内在的罗盘能指引正确方向。", dev: "信任自己的判断；设定挑战性目标；用自信感染他人。" },
+      { id: "significance", name: "追求", domain: "影响力", desc: "渴望被认可，希望独立且重要，并为此不断努力突破。", dev: "设定有可见度的目标；寻求能脱颖而出的机会；追求有意义的影响。" },
+      { id: "woo", name: "取悦", domain: "影响力", desc: "善于结识陌生人，享受打破僵局并建立新联系的过程。", dev: "参加社交活动；练习破冰技巧；建立广泛的人脉网络。" }
+    ];
+    const DOMAIN_NAMES = ["战略思维", "执行力", "关系建立", "影响力"];
+    const DOMAIN_COLORS = { "战略思维": "#a78bfa", "执行力": "#f778ba", "关系建立": "#34d399", "影响力": "#06b6d4" };
+
+    // ═══════════════════════════════════════════════════════════
+    //  90 Questions — 5-point Likert
+    // ═══════════════════════════════════════════════════════════
+    const Q = [
+      // 战略思维 (24)
+      { section: "战略思维", text: "面对一个复杂问题时，我首先会收集所有相关的数据和事实。", theme: "analytical", w: 3 },
+      { section: "战略思维", text: "在做决定之前，我会仔细分析各种可能性和潜在风险。", theme: "analytical", w: 2 },
+      { section: "战略思维", text: "面对新信息时，我的第一反应是质疑和验证，而非直接接受。", theme: "analytical", w: 1 },
+      { section: "战略思维", text: "我经常回顾过去的经验，从中寻找可以借鉴的教训。", theme: "context", w: 3 },
+      { section: "战略思维", text: "了解事物的历史和背景对我来说非常重要。", theme: "context", w: 2 },
+      { section: "战略思维", text: "做长期规划时，我会参考大量历史数据和过往案例。", theme: "context", w: 1 },
+      { section: "战略思维", text: "我享受独自深度思考的时刻，这能给我带来满足感。", theme: "intellection", w: 3 },
+      { section: "战略思维", text: "我经常陷入沉思，思考一些抽象和深层的问题。", theme: "intellection", w: 2 },
+      { section: "战略思维", text: "即使没有外部压力，我也会主动深入思考复杂问题。", theme: "intellection", w: 1 },
+      { section: "战略思维", text: "学习新知识让我感到兴奋和充满活力。", theme: "learner", w: 3 },
+      { section: "战略思维", text: "从不会到学会的过程，比从熟练到精通更让我享受。", theme: "learner", w: 2 },
+      { section: "战略思维", text: "我会主动寻找学习机会，而不是被动等待培训安排。", theme: "learner", w: 1 },
+      { section: "战略思维", text: "我经常想象未来会是什么样子，并能描绘出清晰的愿景。", theme: "futuristic", w: 3 },
+      { section: "战略思维", text: "我喜欢和他人分享我对未来的憧憬，并激励他们一起追求。", theme: "futuristic", w: 2 },
+      { section: "战略思维", text: "比起解决眼前的问题，我更关注长远的方向和目标。", theme: "futuristic", w: 1 },
+      { section: "战略思维", text: "我经常冒出新的想法，并且乐于探索这些可能性。", theme: "ideation", w: 3 },
+      { section: "战略思维", text: "我善于在看似无关的事物之间发现有趣的联系。", theme: "ideation", w: 2 },
+      { section: "战略思维", text: "我经常同时产生多个想法，并且乐于探索每一个的可能性。", theme: "ideation", w: 1 },
+      { section: "战略思维", text: "我热衷于收集信息和资料，即使暂时用不上。", theme: "input", w: 3 },
+      { section: "战略思维", text: "我的书架、浏览器收藏夹或笔记里通常存满了各种资料。", theme: "input", w: 2 },
+      { section: "战略思维", text: "我有系统化的知识收集和整理习惯。", theme: "input", w: 1 },
+      { section: "战略思维", text: "面对多条路径时，我能快速识别出最优方案。", theme: "strategic", w: 3 },
+      { section: "战略思维", text: "我擅长在复杂情况下看清全局和关键突破口。", theme: "strategic", w: 2 },
+      { section: "战略思维", text: "我能迅速识别出哪些路径行不通，从而节省时间。", theme: "strategic", w: 1 },
+      // 执行力 (27)
+      { section: "执行力", text: "我能保持高度专注，排除干扰直到完成任务。", theme: "focus", w: 3 },
+      { section: "执行力", text: "当目标明确时，我的执行效率会大幅提升。", theme: "focus", w: 2 },
+      { section: "执行力", text: "即使被中途打断，我也能很快回到核心目标上。", theme: "focus", w: 1 },
+      { section: "执行力", text: "做决定之前，我会仔细考虑所有可能的后果和风险。", theme: "deliberative", w: 3 },
+      { section: "执行力", text: "我天生谨慎，不会轻易冒险或做出冲动的决定。", theme: "deliberative", w: 2 },
+      { section: "执行力", text: "我会提前为最坏的情况做好准备。", theme: "deliberative", w: 1 },
+      { section: "执行力", text: "我擅长协调各种资源和人员，找到最优的配置方案。", theme: "arranger", w: 3 },
+      { section: "执行力", text: "多个任务同时进行时，我能灵活调配优先级。", theme: "arranger", w: 2 },
+      { section: "执行力", text: "我喜欢同时管理多个项目，并能灵活切换。", theme: "arranger", w: 1 },
+      { section: "执行力", text: "当我做出承诺后，无论如何都会兑现。", theme: "responsibility", w: 3 },
+      { section: "执行力", text: "我对自己的承诺非常认真，说到做到是我的基本准则。", theme: "responsibility", w: 2 },
+      { section: "执行力", text: "如果我没有完成承诺的事，我会寝食难安。", theme: "responsibility", w: 1 },
+      { section: "执行力", text: "我每天都能保持很高的工作产出，精力充沛。", theme: "achiever", w: 3 },
+      { section: "执行力", text: "完成一项任务后立刻想要开始下一项，这让我有成就感。", theme: "achiever", w: 2 },
+      { section: "执行力", text: "即使周末休息，我也需要做一些有产出的事情才舒服。", theme: "achiever", w: 1 },
+      { section: "执行力", text: "我善于发现问题，并享受找出解决方案的过程。", theme: "restorative", w: 3 },
+      { section: "执行力", text: "面对故障或混乱，我的第一反应是兴奋地找出问题所在。", theme: "restorative", w: 2 },
+      { section: "执行力", text: "我能从一堆问题中快速定位最关键的那个。", theme: "restorative", w: 1 },
+      { section: "执行力", text: "我喜欢有结构和秩序，按部就班是我的工作方式。", theme: "discipline", w: 3 },
+      { section: "执行力", text: "我会创建例行程序和清单来确保事情有序进行。", theme: "discipline", w: 2 },
+      { section: "执行力", text: "我会为每天的工作设定固定的流程和时间表。", theme: "discipline", w: 1 },
+      { section: "执行力", text: "我相信每个人都应该遵守相同的规则和标准。", theme: "consistency", w: 3 },
+      { section: "执行力", text: "我追求公平，对特殊待遇或不一致的处理方式感到不满。", theme: "consistency", w: 2 },
+      { section: "执行力", text: "我对偏袒和不一致的处理方式非常敏感。", theme: "consistency", w: 1 },
+      { section: "执行力", text: "相比反复思考，我更喜欢先行动起来，在实践中调整。", theme: "activator", w: 3 },
+      { section: "执行力", text: "我相信'先做起来，再逐步完善'比'想好了再做'更有效。", theme: "activator", w: 2 },
+      { section: "执行力", text: "等待所有条件成熟会让我失去耐心和动力。", theme: "activator", w: 1 },
+      // 关系建立 (24)
+      { section: "关系建立", text: "我有非常明确的核心价值观，并以此指导我的生活和工作。", theme: "belief", w: 3 },
+      { section: "关系建立", text: "如果一份工作与我的价值观冲突，我会感到极度不适。", theme: "belief", w: 2 },
+      { section: "关系建立", text: "如果工作违背了我的核心信念，我很难全力以赴。", theme: "belief", w: 1 },
+      { section: "关系建立", text: "我更喜欢与少数几个知心朋友建立深厚的关系。", theme: "relator", w: 3 },
+      { section: "关系建立", text: "我不擅长泛泛之交，但在深度关系中非常投入。", theme: "relator", w: 2 },
+      { section: "关系建立", text: "我愿意花大量时间和密友深度交流，即使很忙。", theme: "relator", w: 1 },
+      { section: "关系建立", text: "我倾向于寻求共识，避免不必要的冲突和对立。", theme: "harmony", w: 3 },
+      { section: "关系建立", text: "比起竞争，我更相信合作能创造更好的结果。", theme: "harmony", w: 2 },
+      { section: "关系建立", text: "当团队出现分歧时，我会努力找到大家的共同点。", theme: "harmony", w: 1 },
+      { section: "关系建立", text: "我能看到每个人的独特之处，并据此调整我的方式。", theme: "individualization", w: 3 },
+      { section: "关系建立", text: "我相信没有两个相同的人，所以不能用统一标准要求所有人。", theme: "individualization", w: 2 },
+      { section: "关系建立", text: "我善于根据每个人的特点量身定制方案。", theme: "individualization", w: 1 },
+      { section: "关系建立", text: "我相信万事万物之间都存在某种联系。", theme: "connection", w: 3 },
+      { section: "关系建立", text: "我善于在看似无关的事件中发现规律和关联。", theme: "connection", w: 2 },
+      { section: "关系建立", text: "我经常能预感到某些事件之间的因果联系。", theme: "connection", w: 1 },
+      { section: "关系建立", text: "看到他人的成长和进步是我最有成就感的事。", theme: "developer", w: 3 },
+      { section: "关系建立", text: "我善于发现他人的潜力，并热衷于帮助他们发挥出来。", theme: "developer", w: 2 },
+      { section: "关系建立", text: "我会为他人的每一个小进步感到由衷高兴。", theme: "developer", w: 1 },
+      { section: "关系建立", text: "我能敏锐地感知他人的情绪变化，即使他们没有说出来。", theme: "empathy", w: 3 },
+      { section: "关系建立", text: "当朋友心情不好时，我能自然地感受到他的情绪状态。", theme: "empathy", w: 2 },
+      { section: "关系建立", text: "即使对方没有表达，我也能感受到他的情绪变化。", theme: "empathy", w: 1 },
+      { section: "关系建立", text: "我会主动关照那些被边缘化或沉默寡言的人。", theme: "includer", w: 3 },
+      { section: "关系建立", text: "我不喜欢看到任何人被排除在外或被忽视。", theme: "includer", w: 2 },
+      { section: "关系建立", text: "我会特意邀请那些平时不太发言的人参与讨论。", theme: "includer", w: 1 },
+      // 影响力 (18)
+      { section: "影响力", text: "我追求卓越，不满足于'足够好'，总想做到最好。", theme: "maximizer", w: 3 },
+      { section: "影响力", text: "我更喜欢将优秀提升到卓越，而不是修补缺陷。", theme: "maximizer", w: 2 },
+      { section: "影响力", text: "我对品质有很高的标准，不达标准绝不罢休。", theme: "maximizer", w: 1 },
+      { section: "影响力", text: "我喜欢和别人比较，竞争能激发我最好的表现。", theme: "competition", w: 3 },
+      { section: "影响力", text: "没有参照标准（比如排名、对手）我会失去一些动力。", theme: "competition", w: 2 },
+      { section: "影响力", text: "我会主动寻找竞争环境来激发自己的最佳状态。", theme: "competition", w: 1 },
+      { section: "影响力", text: "我通常能看到事情好的一面，并自然地传播正能量。", theme: "positivity", w: 3 },
+      { section: "影响力", text: "我的乐观态度常常能感染和鼓舞身边的人。", theme: "positivity", w: 2 },
+      { section: "影响力", text: "我自然地成为团队中传递正能量和乐观情绪的人。", theme: "positivity", w: 1 },
+      { section: "影响力", text: "我善于用生动的语言和故事来表达想法，让别人容易理解。", theme: "communication", w: 3 },
+      { section: "影响力", text: "演讲、写作或公开发言对我来说是自然且享受的事。", theme: "communication", w: 2 },
+      { section: "影响力", text: "我经常被要求代表团队做公开发言或汇报。", theme: "communication", w: 1 },
+      { section: "影响力", text: "我能轻松适应变化，计划打乱了我也不会太焦虑。", theme: "adaptability", w: 3 },
+      { section: "影响力", text: "我活在当下，灵活应变是我的本能反应。", theme: "adaptability", w: 2 },
+      { section: "影响力", text: "计划外的事件对我来说是常态，我能轻松应对。", theme: "adaptability", w: 1 },
+      { section: "影响力", text: "在危机或混乱中，我会主动站出来掌控局面。", theme: "command", w: 3 },
+      { section: "影响力", text: "我不害怕表达不同意见，即使这意味着与他人对立。", theme: "command", w: 2 },
+      { section: "影响力", text: "当众人意见分散时，我会果断拍板推动决策。", theme: "command", w: 1 },
+      { section: "影响力", text: "我对自己判断力有很强的信心，不太需要他人的确认。", theme: "selfassurance", w: 3 },
+      { section: "影响力", text: "我相信自己有能力做出正确的选择和行动。", theme: "selfassurance", w: 2 },
+      { section: "影响力", text: "我做决定时不太需要他人的认可或建议。", theme: "selfassurance", w: 1 },
+      { section: "影响力", text: "我渴望被认可，希望自己的工作能产生重要的影响。", theme: "significance", w: 3 },
+      { section: "影响力", text: "我希望被视为一个独立且有价值的人。", theme: "significance", w: 2 },
+      { section: "影响力", text: "我希望我的工作能产生可见的、被广泛认可的影响。", theme: "significance", w: 1 },
+      { section: "影响力", text: "我能在社交场合轻松与陌生人建立对话和联系。", theme: "woo", w: 3 },
+      { section: "影响力", text: "我享受结识新朋友的过程，并且很快能叫出他们的名字。", theme: "woo", w: 2 },
+      { section: "影响力", text: "我有广泛的人脉网络，并且乐于维护和扩展它。", theme: "woo", w: 1 }
+    ];
+
+    // ═══════════════════════════════════════════════════════════
+    //  STATE
+    // ═══════════════════════════════════════════════════════════
+    let cur = 0, answers = new Array(Q.length).fill(0), testResults = null;
+
+    // ═══════════════════════════════════════════════════════════
+    //  HELPERS
+    // ═══════════════════════════════════════════════════════════
+    const $ = id => document.getElementById(id);
+    function themeById(id) { return THEMES.find(t => t.id === id); }
+
+    // ═══════════════════════════════════════════════════════════
+    //  SCORING
+    // ═══════════════════════════════════════════════════════════
+    function calcScores() {
+      const raw = {};
+      THEMES.forEach(t => raw[t.id] = { raw: 0, max: 0 });
+      Q.forEach((q, i) => {
+        const v = answers[i] || 0;
+        raw[q.id].raw += v * q.w;
+        raw[q.id].max += 5 * q.w;
+      });
+      const entries = Object.entries(raw).map(([id, d]) => {
+        const pct = d.max > 0 ? (d.raw / d.max) * 100 : 0;
+        return { id, pct, raw: d.raw, max: d.max };
+      });
+      entries.sort((a, b) => b.pct - a.pct);
+      entries.forEach((e, i) => { e.rank = i + 1; e.theme = themeById(e.id); });
+      const domainStats = {};
+      DOMAIN_NAMES.forEach(dn => {
+        const dt = entries.filter(e => e.theme.domain === dn);
+        const avg = dt.reduce((s, e) => s + e.pct, 0) / dt.length;
+        domainStats[dn] = { avgPct: Math.round(avg), themes: dt };
+      });
+      testResults = { entries, domainStats };
+      return testResults;
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    //  SYNERGY
+    // ═══════════════════════════════════════════════════════════
+    function detectSynergies(entries) {
+      const top10 = entries.slice(0, 10).map(e => e.id);
+      const map = [
+        { p: ["analytical", "focus"], t: "深度分析的执行者", e: "🎯", d: "先用理性分析看清本质，再用专注力执行到底。既有方向感，又有执行力。" },
+        { p: ["analytical", "deliberative"], t: "理性决策者", e: "🧠", d: "用数据分析支撑审慎判断。不冲动、不盲动，每一步都有据可依。" },
+        { p: ["analytical", "strategic"], t: "战略分析家", e: "♟️", d: "既能深入分析细节，又能洞察全局路径。理性思维的最高组合。" },
+        { p: ["focus", "achiever"], t: "目标驱动者", e: "🏃", d: "高度聚焦目标，持续高效产出。一旦锁定方向就全力推进。" },
+        { p: ["focus", "discipline"], t: "系统化执行者", e: "📐", d: "用纪律保障专注，用专注提升产出。建立可重复的高效工作系统。" },
+        { p: ["deliberative", "responsibility"], t: "可靠的守护者", e: "🛡️", d: "先评估风险再承诺，承诺后全力以赴。让人极度安心和信任。" },
+        { p: ["deliberative", "consistency"], t: "稳健的流程管理者", e: "⚖️", d: "用审慎设计流程，用公平确保一致。建立稳健可靠的工作体系。" },
+        { p: ["relator", "harmony"], t: "深度关系维护者", e: "🤝", d: "在深度关系中营造和谐。不求广泛但求深入，在信任中建立协作。" },
+        { p: ["relator", "individualization"], t: "个性化关系建立者", e: "💎", d: "看到每个人的独特性并建立深度连接。一对一关系的高手。" },
+        { p: ["relator", "empathy"], t: "情感共鸣者", e: "💜", d: "在深度关系中感知他人情绪。既能建立信任，又能感知需求。" },
+        { p: ["harmony", "empathy"], t: "团队粘合剂", e: "🕊️", d: "感知情绪并化解冲突。在团队中营造安全、和谐的氛围。" },
+        { p: ["individualization", "developer"], t: "潜力发掘者", e: "🌱", d: "看到每个人的独特性并帮助其成长。因材施教的天然导师。" },
+        { p: ["arranger", "responsibility"], t: "可靠的项目管理者", e: "📋", d: "协调资源并兑现承诺。既灵活调度，又对结果高度负责。" },
+        { p: ["achiever", "restorative"], t: "问题解决引擎", e: "🔧", d: "持续高效地发现问题并解决。用强大的产出推动问题解决。" },
+        { p: ["maximizer", "competition"], t: "卓越追求者", e: "🏆", d: "不仅要做到最好，还要超越他人。追求极致的竞争心态。" },
+        { p: ["maximizer", "significance"], t: "影响力塑造者", e: "✨", d: "追求卓越同时渴望被认可。用高质量产出建立个人品牌。" },
+        { p: ["communication", "command"], t: "权威表达者", e: "📢", d: "既能清晰表达观点，又敢于做出决断。有影响力的领导者。" },
+        { p: ["communication", "positivity"], t: "正能量传播者", e: "☀️", d: "用积极的语言感染他人。既是表达者，也是鼓舞者。" },
+        { p: ["adaptability", "activator"], t: "敏捷行动者", e: "⚡", d: "边做边调整，灵活迭代。不执着于计划，在行动中找方向。" },
+        { p: ["futuristic", "ideation"], t: "未来创意者", e: "🚀", d: "既有未来愿景又有创意火花。用想象力描绘未来可能性。" },
+        { p: ["input", "learner"], t: "知识收集者", e: "📚", d: "持续搜集信息并享受学习过程。知识驱动型终身学习者。" },
+        { p: ["input", "analytical"], t: "数据驱动者", e: "📊", d: "广泛收集信息并用数据说话。信息充分支撑理性决策。" },
+        { p: ["connection", "strategic"], t: "全局连接者", e: "🌐", d: "在万物联系中识别最佳路径。系统思维的典型代表。" },
+        { p: ["belief", "responsibility"], t: "价值观守护者", e: "🙏", d: "忠于核心价值观并信守承诺。言行一致，内外统一。" },
+        { p: ["includer", "harmony"], t: "包容协作者", e: "🤗", d: "营造包容氛围并化解冲突。让每个人都能安全地参与。" },
+        { p: ["woo", "communication"], t: "社交达人", e: "🎤", d: "善于结交新人并清晰表达。社交场合的自然焦点。" },
+        { p: ["selfassurance", "command"], t: "自信领导者", e: "👑", d: "相信内在判断并敢于拍板。天生的决策者和带头人。" },
+        { p: ["intellection", "strategic"], t: "深度战略家", e: "🧩", d: "在深度思考中识别最佳路径。谋定而后动的智者。" },
+        { p: ["context", "input"], t: "历史研究员", e: "📜", d: "从历史中收集经验和信息。用过去的智慧照亮当下决策。" },
+        { p: ["focus", "strategic"], t: "聚焦战略家", e: "🎯", d: "锁定关键路径并全力以赴。不分散精力，集中突破。" }
+      ];
+      return map.filter(s => top10.includes(s.p[0]) && top10.includes(s.p[1])).slice(0, 6);
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    //  RADAR
+    // ═══════════════════════════════════════════════════════════
+    function drawRadar(top8) {
+      const c = $('radar-c'); if (!c) return;
+      const ctx = c.getContext('2d'), cx = c.width / 2, cy = c.height / 2, r = 150, n = top8.length, st = Math.PI * 2 / n;
+      ctx.clearRect(0, 0, c.width, c.height);
+      for (let ring = 1; ring <= 5; ring++) {
+        const rr = r / 5 * ring; ctx.beginPath();
+        for (let i = 0; i <= n; i++) { const a = i * st - Math.PI / 2, x = cx + rr * Math.cos(a), y = cy + rr * Math.sin(a); i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+        ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1; ctx.stroke();
+      }
+      for (let i = 0; i < n; i++) { const a = i * st - Math.PI / 2; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a)); ctx.strokeStyle = '#1e293b'; ctx.stroke(); }
+      const mx = top8[0].pct || 1;
+      ctx.beginPath();
+      for (let i = 0; i <= n; i++) { const idx = i % n, a = idx * st - Math.PI / 2, v = (top8[idx].pct / mx) * r, x = cx + v * Math.cos(a), y = cy + v * Math.sin(a); i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+      ctx.fillStyle = 'rgba(99,102,241,.2)'; ctx.fill(); ctx.strokeStyle = '#6366f1'; ctx.lineWidth = 2; ctx.stroke();
+      for (let i = 0; i < n; i++) { const a = i * st - Math.PI / 2, v = (top8[i].pct / mx) * r; ctx.beginPath(); ctx.arc(cx + v * Math.cos(a), cy + v * Math.sin(a), 5, 0, Math.PI * 2); ctx.fillStyle = '#6366f1'; ctx.fill(); }
+      ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#e2e8f0';
+      for (let i = 0; i < n; i++) { const a = i * st - Math.PI / 2, x = cx + (r + 28) * Math.cos(a), y = cy + (r + 28) * Math.sin(a); ctx.fillText(top8[i].theme?.name || '', x, y); }
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    //  UI
+    // ═══════════════════════════════════════════════════════════
+    function startAssessment() {
+      $('splash').classList.add('hidden'); $('app').classList.remove('hidden');
+      cur = 0; answers = new Array(Q.length).fill(0); testResults = null;
+      $('results-area').classList.add('hidden'); $('results-area').innerHTML = '';
+      $('question-area').classList.remove('hidden'); $('progress-section').classList.remove('hidden');
+      renderQ();
+    }
+
+    function renderQ() {
+      const q = Q[cur], pct = (cur / Q.length) * 100;
+      $('progress-fill').style.width = pct + '%';
+      $('progress-text').textContent = `第 ${cur + 1} 题 / 共 ${Q.length} 题`;
+      $('progress-pct').textContent = Math.round(pct) + '%';
+      const th = themeById(q.theme), col = DOMAIN_COLORS[th.domain] || '#6366f1';
+      const labels = [
+        { v: 1, l: "非常不同意", s: "完全不描述我" },
+        { v: 2, l: "不同意", s: "不太描述我" },
+        { v: 3, l: "中立", s: "部分描述我" },
+        { v: 4, l: "同意", s: "比较描述我" },
+        { v: 5, l: "非常同意", s: "完全描述我" }
+      ];
+      $('question-area').innerHTML = `<div class="q-card">
+    <div class="q-section-label" style="color:${col};border-color:${col}33;background:${col}11"><span>${q.section}</span><span> · </span><span>测量: ${th.name}</span></div>
+    <div class="q-text">${q.text}</div>
+    <div class="likert">${labels.map(l => `<div class="likert-opt${answers[cur] === l.v ? ' selected' : ''}" onclick="pick(${l.v})"><div class="likert-radio"></div><div class="likert-label"><strong>${l.l}</strong><span>${l.s}</span></div></div>`).join('')}</div>
+  </div><div class="nav-row">
+    <button class="nav-btn nav-btn-prev" onclick="prev()"${cur === 0 ? ' disabled' : ''}>← 上一题</button>
+    <button class="nav-btn nav-btn-next" onclick="next()">${cur === Q.length - 1 ? '生成报告 📊' : '下一题 →'}</button>
+  </div>`;
+      $('question-area').querySelector('.q-card').style.animation = 'none';
+      void $('question-area').offsetHeight;
+      $('question-area').querySelector('.q-card').style.animation = 'fadeUp .4s ease';
+    }
+
+    function pick(v) { answers[cur] = v; document.querySelectorAll('.likert-opt').forEach((el, i) => el.classList.toggle('selected', i + 1 === v)); }
+    function next() { if (cur < Q.length - 1) { cur++; renderQ(); window.scrollTo({ top: 0, behavior: 'smooth' }); } else genReport(); }
+    function prev() { if (cur > 0) { cur--; renderQ(); window.scrollTo({ top: 0, behavior: 'smooth' }); } }
+
+    // ═══════════════════════════════════════════════════════════
+    //  REPORT
+    // ═══════════════════════════════════════════════════════════
+    function genReport() {
+      calcScores();
+      const { entries, domainStats } = testResults;
+      const syn = detectSynergies(entries);
+      const top5 = entries.slice(0, 5);
+      $('question-area').classList.add('hidden');
+      $('progress-section').classList.add('hidden');
+
+      let h = '';
+
+      // Top 5
+      h += `<div class="rpt-section"><div class="rpt-header"><span class="icon">🏆</span><h2>Top 5 核心优势</h2></div>
+  <div class="top5-row">${top5.map((e, i) => `<div class="top5-card"><div class="top5-rank">#${i + 1}</div><div class="top5-name">${e.theme.name}</div><div class="top5-domain">${e.theme.domain}</div><div class="top5-score">${e.pct.toFixed(0)}%</div></div>`).join('')}</div></div>`;
+
+      // Bar chart all 34
+      h += `<div class="rpt-section"><div class="rpt-header"><span class="icon">📊</span><h2>34项天赋得分总览</h2></div>
+  <div class="bar-chart">${entries.map(e => {
+        const c = DOMAIN_COLORS[e.theme.domain], w = Math.max(e.pct, 3);
+        return `<div class="bar-row"><div class="bar-label">#${e.rank} ${e.theme.name}</div><div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${c}"></div></div><div class="bar-val">${e.pct.toFixed(0)}%</div></div>`;
+      }).join('')}</div></div>`;
+
+      // Radar
+      h += `<div class="rpt-section"><div class="rpt-header"><span class="icon">🧬</span><h2>Top 8 优势雷达图</h2></div>
+  <div class="radar-wrap"><canvas id="radar-c" width="400" height="400"></canvas></div></div>`;
+
+      // Domain
+      h += `<div class="rpt-section"><div class="rpt-header"><span class="icon">📈</span><h2>四大领域分布</h2></div>
+  <table class="dom-tbl"><thead><tr><th>领域</th><th>平均分</th><th>强度</th></tr></thead><tbody>${DOMAIN_NAMES.map(dn => {
+        const ds = domainStats[dn], stars = ds.avgPct >= 75 ? '⭐⭐⭐⭐⭐' : ds.avgPct >= 60 ? '⭐⭐⭐⭐' : ds.avgPct >= 45 ? '⭐⭐⭐' : ds.avgPct >= 30 ? '⭐⭐' : '⭐', col = DOMAIN_COLORS[dn];
+        return `<tr><td><strong style="color:${col}">${dn}</strong></td><td>${ds.avgPct}%</td><td><span class="stars">${stars}</span></td></tr>`;
+      }).join('')}</tbody></table></div>`;
+
+      // Synergy
+      h += `<div class="rpt-section"><div class="rpt-header"><span class="icon">🔗</span><h2>天赋协同分析</h2></div>`;
+      h += syn.length ? `<div class="synergy-grid">${syn.map(s => `<div class="synergy-card"><h4>${s.e} ${s.t}</h4><p>${s.d}</p></div>`).join('')}</div>`
+        : '<p style="color:var(--text3);font-size:.85rem">你的前10天赋中没有检测到典型的协同组合。这通常意味着你的优势分布比较分散。</p>';
+      h += '</div>';
+
+      // Full rankings
+      h += `<div class="rpt-section"><div class="rpt-header"><span class="icon">📋</span><h2>完整排名（34项）</h2></div>
+  <div class="full-grid">${entries.map(e => `<div class="full-item"><div class="fi-rank">#${e.rank}</div><div class="fi-name">${e.theme.name}</div><div class="fi-score">${e.pct.toFixed(0)}%</div><div class="fi-domain" style="color:${DOMAIN_COLORS[e.theme.domain]}">${e.theme.domain}</div></div>`).join('')}</div></div>`;
+
+      // Dev plan
+      h += `<div class="rpt-section"><div class="rpt-header"><span class="icon">🚀</span><h2>Top 5 天赋发展计划</h2></div>
+  <div class="dev-plan">${top5.map(e => `<div class="dev-item" style="border-left-color:${DOMAIN_COLORS[e.theme.domain]}"><h4>${e.theme.name}（${e.theme.domain} · ${e.pct.toFixed(0)}%）</h4><p>${e.theme.desc}</p><ul><li><strong>发展建议：</strong>${e.theme.dev}</li></ul></div>`).join('')}</div></div>`;
+
+      // Blind spots
+      const bot5 = entries.slice(-5);
+      h += `<div class="rpt-section"><div class="rpt-header"><span class="icon">⚠️</span><h2>待发展领域（Bottom 5）</h2></div>
+  <div class="dev-plan">${bot5.map(e => `<div class="dev-item" style="border-left-color:var(--red)"><h4>${e.theme.name}（${e.theme.domain} · ${e.pct.toFixed(0)}% · 排名 #${e.rank}）</h4><p>这是你的相对弱项。建议：与Top 5天赋拥有者协作互补，或用系统和工具辅助。</p></div>`).join('')}</div></div>`;
+
+      // Summary
+      const t1 = top5[0].theme, t2 = top5[1].theme, td = Object.entries(domainStats).sort((a, b) => b[1].avgPct - a[1].avgPct)[0][0];
+      h += `<div class="summary-box"><h3>🎁 你的优势画像</h3><p>
+    你是一个以「<strong>${t1.name}</strong>」和「<strong>${t2.name}</strong>」为核心驱动的人<br>
+    最突出的领域是「<strong>${td}</strong>」<br>
+    在适合的环境中，你能将独特的天赋组合转化为不可替代的价值<br><br>
+    不需要弥补所有短板 —— 发挥你的Top 5，就够了
+  </p></div>`;
+
+      // Actions
+      h += `<div class="action-row">
+    <button class="action-btn action-btn-secondary" onclick="restart()">🔄 重新测试</button>
+    <button class="action-btn action-btn-primary" onclick="window.print()">🖨️ 打印报告</button>
+    <button class="action-btn action-btn-primary" onclick="saveHist()">💾 保存记录</button>
+  </div>`;
+
+      $('results-area').innerHTML = h;
+      $('results-area').classList.remove('hidden');
+      setTimeout(() => drawRadar(entries.slice(0, 8)), 100);
+      saveHist();
+    }
+
+    function restart() { cur = 0; answers = new Array(Q.length).fill(0); testResults = null; $('results-area').classList.add('hidden'); $('results-area').innerHTML = ''; $('question-area').classList.remove('hidden'); $('progress-section').classList.remove('hidden'); renderQ(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+    // ═══════════════════════════════════════════════════════════
+    //  HISTORY
+    // ═══════════════════════════════════════════════════════════
+    function saveHist() {
+      if (!testResults) return;
+      const hist = JSON.parse(localStorage.getItem('gallup_pro_history') || '[]');
+      hist.push({ date: new Date().toISOString(), top5: testResults.entries.slice(0, 5).map(e => ({ name: e.theme.name, score: e.pct.toFixed(0), rank: e.rank, domain: e.theme.domain })) });
+      if (hist.length > 20) hist.splice(0, hist.length - 20);
+      localStorage.setItem('gallup_pro_history', JSON.stringify(hist));
+    }
+  </script>
+</body>
+
+</html>
