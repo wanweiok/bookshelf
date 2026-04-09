@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
@@ -766,6 +766,17 @@
       color: var(--accent)
     }
 
+
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto
+    }
+    @keyframes spin { to { transform: rotate(360deg) } }
+
     .hidden {
       display: none !important
     }
@@ -887,6 +898,8 @@
     </div>
     <div id="question-area"></div>
     <div id="results-area" class="hidden results"></div>
+    <div id="loading-view" class="hidden" style="text-align:center;padding:60px 20px"><div class="spinner"></div><p style="color:var(--text2);margin-top:14px">Qwen AI 正在深度分析你的优势模式...</p><p style="color:var(--text3);font-size:.8rem;margin-top:6px">通常需要 15-30 秒</p></div>
+    <div id="ai-report-view" class="hidden results"></div>
   </div>
 
   <script>
@@ -1252,7 +1265,8 @@
       h += `<div class="action-row">
     <button class="action-btn action-btn-secondary" onclick="restart()">🔄 重新测试</button>
     <button class="action-btn action-btn-primary" onclick="window.print()">🖨️ 打印报告</button>
-    <button class="action-btn action-btn-primary" onclick="saveHist()">💾 保存记录</button>
+<button class="action-btn action-btn-primary" onclick="saveHist()">💾 保存记录</button>
+    <button class="action-btn action-btn-primary" onclick="sendToAI()">🤖 AI 深度分析</button>
   </div>`;
 
       $('results-area').innerHTML = h;
@@ -1272,6 +1286,74 @@
       hist.push({ date: new Date().toISOString(), top5: testResults.entries.slice(0, 5).map(e => ({ name: e.theme.name, score: e.pct.toFixed(0), rank: e.rank, domain: e.theme.domain })) });
       if (hist.length > 20) hist.splice(0, hist.length - 20);
       localStorage.setItem('gallup_pro_history', JSON.stringify(hist));
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    //  QWEN AI ANALYSIS
+    // ═══════════════════════════════════════════════════════════
+    function getApiKey() { return localStorage.getItem('gallup_pro_api_key') || ''; }
+    function setApiKey(k) { localStorage.setItem('gallup_pro_api_key', k); }
+
+    function sendToAI() {
+      const key = getApiKey();
+      if (!key) {
+        const input = prompt('请输入 Qwen API Key（阿里云百炼）：\n\n获取地址：https://bailian.console.aliyun.com/\n\n密钥仅保存在浏览器本地。');
+        if (!input || !input.trim()) return;
+        setApiKey(input.trim());
+      }
+      if (!testResults) return;
+      $('results-area').classList.add('hidden');
+      $('loading-view').classList.remove('hidden');
+      callQwen(getApiKey()).catch(e => {
+        $('loading-view').classList.add('hidden');
+        $('ai-report-view').classList.remove('hidden');
+        $('ai-report-view').innerHTML = '<div class="rpt-section" style="text-align:center;padding:40px"><h3>❌ 分析失败</h3><p style="color:var(--text3);margin-top:12px">' + e.message + '</p><div class="action-row" style="margin-top:20px"><button class="action-btn action-btn-secondary" onclick="backToReport()">← 返回报告</button></div></div>';
+      });
+    }
+
+    async function callQwen(apiKey) {
+      const topN = testResults.entries.map((e, i) => '#' + e.rank + ' ' + e.theme.name + '（' + e.pct.toFixed(0) + '% · ' + e.theme.domain + '）').join('\n');
+      const prompt = '你是一位资深的盖洛普优势分析师。请根据以下数据生成深度分析报告。\n\n## 用户数据\n34项天赋完整排名（百分比制）：\n' + topN + '\n\n## 分析要求\n请严格按以下JSON格式返回（仅返回JSON，不要其他文字）：\n\n{"patterns": [{"title": "\\"天赋A + 天赋B\\" = 模式名 表情", "desc": ["特点1","特点2","特点3"]},3个],"careers_good": [{"role":"职业","reason":"理由"},5个],"careers_caution": [{"role":"职业","reason":"理由"},4个],"energy_title": "能量来源公式","energy_points": ["✅ 特质1","✅ 特质2","✅ 特质3","✅ 特质4","✅ 特质5"],"blind_spots": [{"name":"天赋","score":"百分比","impact":"影响","advice":"建议"},4个],"summary": "一句话总结（诗意、3-4行）"}';
+      const resp = await fetch('https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+        body: JSON.stringify({ model: 'qwen-plus', messages: [{ role: 'user', content: prompt }], temperature: 0.7, max_tokens: 4000 })
+      });
+      if (!resp.ok) { const e = await resp.text(); throw new Error('API 请求失败 (' + resp.status + '): ' + e); }
+      const data = await resp.json();
+      let c = data.choices[0].message.content;
+      const m = c.match(/```(?:json)?\s*\n?([\s\S]*?)\n?\s*```/);
+      if (m) c = m[1];
+      const a = JSON.parse(c.trim());
+      $('loading-view').classList.add('hidden');
+      $('ai-report-view').classList.remove('hidden');
+      renderAIReport(a);
+    }
+
+    function renderAIReport(a) {
+      const entries = testResults.entries;
+      const top5 = entries.slice(0, 5);
+      let h = '';
+      h += '<div class="rpt-section"><div class="rpt-header"><span class="icon">🏆</span><h2>Top 5 核心优势</h2></div><div class="top5-row">' + top5.map((e, i) => '<div class="top5-card"><div class="top5-rank">#' + (i+1) + '</div><div class="top5-name">' + e.theme.name + '</div><div class="top5-domain">' + e.theme.domain + '</div><div class="top5-score">' + e.pct.toFixed(0) + '%</div></div>').join('') + '</div></div>';
+      h += '<div class="rpt-section"><div class="rpt-header"><span class="icon">🔑</span><h2>你的独特模式（AI 分析）</h2></div>';
+      (a.patterns || []).forEach(p => { h += '<div class="pattern-item" style="margin-bottom:10px"><h4 style="font-size:.95rem;color:var(--accent2);margin-bottom:6px">' + p.title + '</h4><ul>' + (p.desc || []).map(d => '<li style="font-size:.8rem;color:var(--text3);margin-bottom:2px">' + d + '</li>').join('') + '</ul></div>'; });
+      h += '</div>';
+      h += '<div class="rpt-section"><div class="rpt-header"><span class="icon">💡</span><h2>职业发展建议（AI 推荐）</h2></div><div class="synergy-grid"><div><h4 style="font-size:.95rem;margin-bottom:10px;color:var(--green)">✅ 高度匹配</h4>' + (a.careers_good || []).map(c => '<div style="background:var(--bg3);border-radius:8px;padding:12px;margin-bottom:8px"><strong style="font-size:.85rem">' + c.role + '</strong><p style="font-size:.75rem;color:var(--text3);margin-top:4px">' + c.reason + '</p></div>').join('') + '</div><div><h4 style="font-size:.95rem;margin-bottom:10px;color:var(--red)">⚠️ 需要谨慎</h4>' + (a.careers_caution || []).map(c => '<div style="background:var(--bg3);border-radius:8px;padding:12px;margin-bottom:8px"><strong style="font-size:.85rem">' + c.role + '</strong><p style="font-size:.75rem;color:var(--text3);margin-top:4px">' + c.reason + '</p></div>').join('') + '</div></div></div>';
+      h += '<div class="rpt-section"><div class="rpt-header"><span class="icon">🧭</span><h2>你的能量来源</h2></div><div class="pattern-item" style="border-left-color:var(--green)"><h4 style="text-align:center;font-size:.95rem;color:var(--accent2)">' + (a.energy_title || '') + '</h4><ul>' + (a.energy_points || []).map(e => '<li style="font-size:.8rem;color:var(--text2);margin-bottom:3px">' + e + '</li>').join('') + '</ul></div></div>';
+      h += '<div class="rpt-section"><div class="rpt-header"><span class="icon">⚡</span><h2>盲区提醒（AI 分析）</h2></div><table class="dom-tbl"><thead><tr><th>低分天赋</th><th>分数</th><th>影响</th><th>建议</th></tr></thead><tbody>' + (a.blind_spots || []).map(b => '<tr><td><strong>' + b.name + '</strong></td><td><span style="display:inline-block;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:#f85149;font-weight:600;font-size:.75rem">' + b.score + '</span></td><td style="font-size:.8rem">' + b.impact + '</td><td style="font-size:.8rem">' + b.advice + '</td></tr>').join('') + '</tbody></table></div>';
+      h += '<div class="rpt-section"><div class="rpt-header"><span class="icon">📋</span><h2>完整排名（34项）</h2></div><div class="full-grid">' + entries.map(e => '<div class="full-item"><div class="fi-rank">#' + e.rank + '</div><div class="fi-name">' + e.theme.name + '</div><div class="fi-score">' + e.pct.toFixed(0) + '%</div><div class="fi-domain" style="color:' + DOMAIN_COLORS[e.theme.domain] + '">' + e.theme.domain + '</div></div>').join('') + '</div></div>';
+      h += '<div class="summary-box"><h3 style="font-size:1.1rem;margin-bottom:12px;color:var(--accent2)">🎁 AI 一句话总结</h3><p>' + (a.summary || '').replace(/\n/g, '<br>') + '</p></div>';
+      h += '<div class="action-row"><button class="action-btn action-btn-secondary" onclick="backToReport()">← 返回原始报告</button><button class="action-btn action-btn-secondary" onclick="changeApiKey()">🔑 更换 API Key</button><button class="action-btn action-btn-primary" onclick="downloadAIReport()">💾 下载 HTML 报告</button></div>';
+      $('ai-report-view').innerHTML = h;
+    }
+
+    function backToReport() { $('ai-report-view').classList.add('hidden'); $('ai-report-view').innerHTML = ''; $('results-area').classList.remove('hidden'); }
+    function changeApiKey() { const key = prompt('当前 API Key：' + getApiKey().substring(0, 10) + '...\n\n请输入新的 API Key：'); if (key && key.trim()) { setApiKey(key.trim()); alert('✅ 已更新'); } }
+    function downloadAIReport() {
+      const html = $('ai-report-view').innerHTML;
+      const full = '<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>盖洛普专业版分析报告（AI）</title><style>*{margin:0;padding:0;box-sizing:border-box}:root{--bg:#f8fafc;--card:#fff;--text:#1e293b;--text2:#64748b;--accent:#667eea;--border:#e2e8f0;--gold:#f59e0b;--silver:#94a3b8;--bronze:#b45309;--red:#ef4444;--green:#16a34a}body{font-family:-apple-system,"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;padding:40px 20px}.c{max-width:900px;margin:0 auto}.rpt-section{background:var(--card);border-radius:14px;padding:24px;margin-bottom:16px;box-shadow:0 8px 24px rgba(0,0,0,.15)}.rpt-header{display:flex;align-items:center;gap:8px;margin-bottom:16px}.rpt-header h2{font-size:1.1rem;font-weight:700}.top5-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.top5-card{text-align:center;padding:14px 6px;border-radius:8px;border:2px solid}.top5-card:nth-child(1){border-color:var(--gold);background:linear-gradient(135deg,#fef3c7,#fde68a)}.top5-card:nth-child(2){border-color:var(--silver);background:linear-gradient(135deg,#f1f5f9,#e2e8f0)}.top5-card:nth-child(3){border-color:var(--bronze);background:linear-gradient(135deg,#fed7aa,#fdba74)}.top5-card:nth-child(n+4){border-color:var(--accent);background:linear-gradient(135deg,#eff6ff,#e0e7ff)}.top5-rank{font-size:1rem;font-weight:700;margin-bottom:4px}.top5-name{font-size:.9rem;font-weight:600;margin-bottom:2px}.top5-domain{font-size:.65rem;color:var(--text2)}.top5-score{font-size:1.2rem;font-weight:700}.pattern-item{padding:12px;background:var(--bg);border-radius:8px;border-left:3px solid var(--accent);margin-bottom:8px}.pattern-item h4{font-size:.9rem;color:var(--accent);margin-bottom:4px}.pattern-item li{font-size:.8rem;color:var(--text2);margin-bottom:2px}.dom-tbl{width:100%;border-collapse:collapse}.dom-tbl th,.dom-tbl td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);font-size:.8rem}.dom-tbl th{background:var(--bg);color:var(--text2);font-weight:600}.synergy-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px}.full-item{padding:6px;background:var(--bg);border-radius:5px;text-align:center;font-size:.75rem}.summary-box{text-align:center;padding:24px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-radius:12px}.summary-box p{font-size:1rem;line-height:1.8}@media(max-width:600px){.top5-row{grid-template-columns:repeat(2,1fr)}.synergy-grid{grid-template-columns:1fr}}</style></head><body><div class="c">' + html + '</div></body></html>';
+      const blob = new Blob([full], { type: 'text/html' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'gallup_pro_ai_report.html'; a.click();
     }
   </script>
 </body>
