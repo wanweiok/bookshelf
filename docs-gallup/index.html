@@ -1,482 +1,1156 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>盖洛普优势测试 · Gallup Strengths</title>
-<meta http-equiv="cache-control" content="no-cache">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#0d1117;--bg2:#161b22;--bg3:#1c2433;
-  --text:#e6edf3;--text2:#8b949e;
-  --accent:#58a6ff;--accent2:#79b8ff;
-  --border:#30363d;--card-shadow:rgba(0,0,0,.4);
-  --green:#3fb950;--purple:#a78bfa;--orange:#d29922;--pink:#f778ba;--cyan:#56d4dd;
-  --gold:#f59e0b;--silver:#94a3b8;--bronze:#b45309;
-}
-[data-theme="light"]{
-  --bg:#f5f7fa;--bg2:#ffffff;--bg3:#e8ecf1;
-  --text:#1e293b;--text2:#64748b;
-  --accent:#2563eb;--accent2:#3b82f6;
-  --border:#d1d5db;--card-shadow:rgba(0,0,0,.08);
-  --green:#16a34a;--purple:#7c3aed;--orange:#ca8a04;--pink:#db2777;--cyan:#0891b2;
-}
-html{scroll-behavior:smooth}
-body{font-family:-apple-system,"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;transition:background .3s,color .3s}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>盖洛普优势测试 · Gallup Strengths</title>
+  <meta http-equiv="cache-control" content="no-cache">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
 
-/* ── Header ── */
-#theme-toggle{position:fixed;top:16px;right:16px;z-index:300;background:var(--bg2);border:1px solid var(--border);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem;color:var(--text);transition:all .2s;box-shadow:0 2px 8px var(--card-shadow)}
-#theme-toggle:hover{border-color:var(--accent);color:var(--accent);transform:scale(1.1)}
-header{text-align:center;padding:60px 20px 30px;background:linear-gradient(180deg,var(--bg3) 0%,var(--bg) 100%)}
-header h1{font-size:2.2rem;margin-bottom:8px;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-header p{color:var(--text2);font-size:1.05rem;max-width:600px;margin:0 auto}
+    :root {
+      --bg: #0d1117;
+      --bg2: #161b22;
+      --bg3: #1c2433;
+      --text: #e6edf3;
+      --text2: #8b949e;
+      --accent: #58a6ff;
+      --accent2: #79b8ff;
+      --border: #30363d;
+      --card-shadow: rgba(0, 0, 0, .4);
+      --green: #3fb950;
+      --purple: #a78bfa;
+      --orange: #d29922;
+      --pink: #f778ba;
+      --cyan: #56d4dd;
+      --gold: #f59e0b;
+      --silver: #94a3b8;
+      --bronze: #b45309;
+    }
 
-/* ── Tabs ── */
-.tabs{display:flex;justify-content:center;gap:12px;margin:24px 0;flex-wrap:wrap;padding:0 20px}
-.tab-btn{padding:10px 24px;border:1px solid var(--border);border-radius:10px;background:var(--bg2);color:var(--text2);cursor:pointer;font-size:.95rem;font-weight:500;transition:all .2s}
-.tab-btn:hover{border-color:var(--accent);color:var(--accent)}
-.tab-btn.active{background:linear-gradient(135deg,var(--accent),var(--purple));color:#fff;border-color:transparent}
+    [data-theme="light"] {
+      --bg: #f5f7fa;
+      --bg2: #ffffff;
+      --bg3: #e8ecf1;
+      --text: #1e293b;
+      --text2: #64748b;
+      --accent: #2563eb;
+      --accent2: #3b82f6;
+      --border: #d1d5db;
+      --card-shadow: rgba(0, 0, 0, .08);
+      --green: #16a34a;
+      --purple: #7c3aed;
+      --orange: #ca8a04;
+      --pink: #db2777;
+      --cyan: #0891b2;
+    }
 
-/* ── Steps ── */
-.step{display:none;max-width:900px;margin:0 auto;padding:20px 24px 60px}
-.step.active{display:block}
-.step-title{font-size:1.4rem;font-weight:700;margin-bottom:8px;text-align:center}
-.step-desc{color:var(--text2);text-align:center;margin-bottom:24px;font-size:.95rem}
+    html {
+      scroll-behavior: smooth
+    }
 
-/* ── Talent Cards (Input) ── */
-.talent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:24px}
-.talent-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 10px;text-align:center;cursor:pointer;transition:all .2s;user-select:none;position:relative}
-.talent-card:hover{border-color:var(--accent);transform:translateY(-2px)}
-.talent-card.selected{border-color:var(--accent);background:linear-gradient(135deg,rgba(88,166,255,.1),rgba(167,139,250,.1))}
-.talent-card .rank-badge{position:absolute;top:-6px;right:-6px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center}
-.talent-card .name{font-size:.9rem;font-weight:600;margin-bottom:2px}
-.talent-card .domain{font-size:.7rem;color:var(--text2)}
+    body {
+      font-family: -apple-system, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      transition: background .3s, color .3s
+    }
 
-/* Domain colors */
-.domain-战略思维{--dc:var(--purple)}
-.domain-执行力{--dc:var(--pink)}
-.domain-关系建立{--dc:var(--green)}
-.domain-影响力{--dc:var(--cyan)}
-.talent-card.selected{border-color:var(--dc,var(--accent))}
-.talent-card.selected .rank-badge{background:var(--dc,var(--accent))}
+    #theme-toggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 300;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+      color: var(--text);
+      transition: all .2s;
+      box-shadow: 0 2px 8px var(--card-shadow)
+    }
 
-/* ── Score Slider ── */
-.score-section{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:16px}
-.score-section h3{margin-bottom:16px;font-size:1.1rem}
-.score-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.score-row label{min-width:80px;font-size:.9rem;font-weight:500}
-.score-row input[type=range]{flex:1;height:6px;-webkit-appearance:none;appearance:none;background:var(--bg3);border-radius:3px;outline:none}
-.score-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg2)}
-.score-val{min-width:36px;text-align:center;font-weight:700;color:var(--accent);font-size:1.1rem}
+    #theme-toggle:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: scale(1.1)
+    }
 
-/* ── Buttons ── */
-.btn-row{display:flex;justify-content:center;gap:12px;margin-top:24px;flex-wrap:wrap}
-.btn{padding:12px 32px;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;transition:all .2s}
-.btn-primary{background:linear-gradient(135deg,var(--accent),var(--purple));color:#fff}
-.btn-primary:hover{opacity:.88;transform:translateY(-1px)}
-.btn-secondary{background:var(--bg3);color:var(--text);border:1px solid var(--border)}
-.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
-.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    header {
+      text-align: center;
+      padding: 60px 20px 30px;
+      background: linear-gradient(180deg, var(--bg3) 0%, var(--bg) 100%)
+    }
 
-/* ── API Key ── */
-.api-box{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:32px;max-width:500px;margin:0 auto;text-align:center}
-.api-box input{width:100%;padding:12px 16px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.9rem;outline:none;margin:12px 0}
-.api-box input:focus{border-color:var(--accent)}
-.api-box .hint{font-size:.8rem;color:var(--text2);margin-top:8px}
-.api-box .hint a{color:var(--accent)}
+    header h1 {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent
+    }
 
-/* ── Report (inline, same style as gallup_analysis_report.html) ── */
-#report-view{display:none;max-width:900px;margin:0 auto;padding:20px 24px 60px}
-.rpt-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:28px;margin-bottom:20px}
-.rpt-title{font-size:1.4rem;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+    header p {
+      color: var(--text2);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto
+    }
 
-/* Top 5 */
-.top5-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
-.top5-item{text-align:center;padding:16px 8px;border-radius:10px;border:2px solid}
-.top5-item:nth-child(1){border-color:var(--gold);background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(253,230,138,.08))}
-.top5-item:nth-child(2){border-color:var(--silver);background:linear-gradient(135deg,rgba(148,163,184,.12),rgba(226,232,240,.08))}
-.top5-item:nth-child(3){border-color:var(--bronze);background:linear-gradient(135deg,rgba(180,83,9,.12),rgba(253,186,116,.08))}
-.top5-item:nth-child(n+4){border-color:var(--accent);background:linear-gradient(135deg,rgba(88,166,255,.08),rgba(167,139,250,.08))}
-.top5-rank{font-size:1.1rem;font-weight:700;margin-bottom:4px}
-.top5-name{font-size:1rem;font-weight:600;margin-bottom:2px}
-.top5-cat{font-size:.7rem;color:var(--text2)}
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin: 24px 0;
+      flex-wrap: wrap;
+      padding: 0 20px
+    }
 
-/* Pattern */
-.pattern-item{padding:16px;background:var(--bg3);border-radius:10px;border-left:3px solid var(--accent);margin-bottom:12px}
-.pattern-item h4{font-size:1rem;color:var(--accent2);margin-bottom:8px}
-.pattern-item ul{padding-left:18px;color:var(--text2);font-size:.9rem}
-.pattern-item li{margin-bottom:3px}
+    .tab-btn {
+      padding: 10px 24px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg2);
+      color: var(--text2);
+      cursor: pointer;
+      font-size: .95rem;
+      font-weight: 500;
+      transition: all .2s
+    }
 
-/* Domain table */
-.dom-table{width:100%;border-collapse:collapse}
-.dom-table th,.dom-table td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);font-size:.9rem}
-.dom-table th{background:var(--bg3);color:var(--text2);font-weight:600;font-size:.8rem}
-.stars{color:var(--gold);letter-spacing:1px}
+    .tab-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent)
+    }
 
-/* Career */
-.career-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.career-col h4{font-size:1rem;margin-bottom:12px}
-.career-item{padding:12px;background:var(--bg3);border-radius:8px;margin-bottom:8px;font-size:.85rem;line-height:1.5}
-.career-item strong{display:block;margin-bottom:3px;font-size:.9rem}
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      color: #fff;
+      border-color: transparent
+    }
 
-/* Blind */
-.blind-table{width:100%;border-collapse:collapse}
-.blind-table th,.blind-table td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
-.blind-table th{background:var(--bg3);color:var(--text2);font-weight:600}
-.badge-low{display:inline-block;padding:2px 10px;border-radius:99px;background:rgba(239,68,68,.1);color:#f85149;font-weight:600;font-size:.8rem}
+    .step {
+      display: none;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px 24px 60px
+    }
 
-/* Summary */
-.rpt-summary{text-align:center;padding:28px;background:linear-gradient(135deg,rgba(88,166,255,.15),rgba(167,139,250,.15));border-radius:14px}
-.rpt-summary p{font-size:1.1rem;line-height:1.8;color:var(--text)}
+    .step.active {
+      display: block
+    }
 
-/* Full rankings */
-.rank-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
-.rank-item{padding:8px;background:var(--bg3);border-radius:6px;text-align:center;font-size:.8rem}
-.rank-item .rn{font-weight:700;color:var(--text2);font-size:.75rem}
-.rank-item .rname{font-weight:600;margin:2px 0}
-.rank-item .rscore{color:var(--text2);font-size:.7rem}
+    /* ── Test Card ── */
+    .test-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 32px;
+      margin-bottom: 20px
+    }
 
-/* Loading */
-.loading{text-align:center;padding:60px 20px}
-.spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loading p{color:var(--text2)}
+    .test-intro-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 20px 0
+    }
 
-@media(max-width:768px){
-  header h1{font-size:1.6rem}
-  .top5-grid{grid-template-columns:repeat(2,1fr)}
-  .career-grid{grid-template-columns:1fr}
-  .talent-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
-}
-</style>
+    .test-stat {
+      text-align: center;
+      padding: 14px;
+      background: var(--bg3);
+      border-radius: 10px
+    }
+
+    .test-stat .num {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--accent)
+    }
+
+    .test-stat .lbl {
+      font-size: .75rem;
+      color: var(--text2);
+      margin-top: 2px
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 10px;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      color: #fff
+    }
+
+    .btn-primary:hover {
+      opacity: .88;
+      transform: translateY(-1px)
+    }
+
+    .btn-primary:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+      transform: none
+    }
+
+    .btn-secondary {
+      background: var(--bg3);
+      color: var(--text);
+      border: 1px solid var(--border)
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent)
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: var(--bg3);
+      border-radius: 3px;
+      overflow: hidden;
+      margin: 16px 0
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--purple));
+      border-radius: 3px;
+      transition: width .3s
+    }
+
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      font-size: .8rem;
+      color: var(--text2);
+      margin-bottom: 6px
+    }
+
+    .q-card {
+      background: var(--bg3);
+      padding: 28px;
+      border-radius: 10px;
+      margin-bottom: 20px
+    }
+
+    .q-num {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      color: #fff;
+      padding: 4px 14px;
+      border-radius: 99px;
+      font-size: .75rem;
+      font-weight: 600;
+      margin-bottom: 14px
+    }
+
+    .q-text {
+      font-size: 1.15rem;
+      font-weight: 600;
+      line-height: 1.5;
+      margin-bottom: 20px
+    }
+
+    .opt {
+      display: flex;
+      align-items: center;
+      padding: 14px 18px;
+      background: var(--bg2);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all .2s;
+      margin-bottom: 10px
+    }
+
+    .opt:hover {
+      border-color: var(--accent)
+    }
+
+    .opt.selected {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(88, 166, 255, .1), rgba(167, 139, 250, .1))
+    }
+
+    .opt-icon {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      margin-right: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0
+    }
+
+    .opt.selected .opt-icon {
+      border-color: var(--accent);
+      background: var(--accent)
+    }
+
+    .opt.selected .opt-icon::after {
+      content: '✓';
+      color: #fff;
+      font-size: 12px
+    }
+
+    .opt-text {
+      font-size: .95rem
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 20px
+    }
+
+    /* ── Results ── */
+    .top5-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin: 20px 0
+    }
+
+    .top5-item {
+      text-align: center;
+      padding: 16px 8px;
+      border-radius: 10px;
+      border: 2px solid
+    }
+
+    .top5-item:nth-child(1) {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, rgba(245, 158, 11, .12), rgba(253, 230, 138, .08))
+    }
+
+    .top5-item:nth-child(2) {
+      border-color: var(--silver);
+      background: linear-gradient(135deg, rgba(148, 163, 184, .12), rgba(226, 232, 240, .08))
+    }
+
+    .top5-item:nth-child(3) {
+      border-color: var(--bronze);
+      background: linear-gradient(135deg, rgba(180, 83, 9, .12), rgba(253, 186, 116, .08))
+    }
+
+    .top5-item:nth-child(n+4) {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(88, 166, 255, .08), rgba(167, 139, 250, .08))
+    }
+
+    .top5-rank {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 4px
+    }
+
+    .top5-name {
+      font-size: .95rem;
+      font-weight: 600;
+      margin-bottom: 2px
+    }
+
+    .top5-cat {
+      font-size: .7rem;
+      color: var(--text2)
+    }
+
+    .top5-score {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-top: 4px
+    }
+
+    .radar-container {
+      margin: 20px 0;
+      text-align: center
+    }
+
+    .radar-container h3 {
+      margin-bottom: 12px;
+      font-size: 1.1rem
+    }
+
+    canvas {
+      max-width: 100%;
+      height: auto
+    }
+
+    .rank-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 8px
+    }
+
+    .rank-item {
+      padding: 8px;
+      background: var(--bg3);
+      border-radius: 6px;
+      text-align: center;
+      font-size: .8rem
+    }
+
+    .rank-item .rn {
+      font-weight: 700;
+      color: var(--text2);
+      font-size: .7rem
+    }
+
+    .rank-item .rname {
+      font-weight: 600;
+      margin: 2px 0
+    }
+
+    .rank-item .rscore {
+      color: var(--text2);
+      font-size: .65rem
+    }
+
+    /* ── API ── */
+    .api-box {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      max-width: 500px;
+      margin: 0 auto;
+      text-align: center
+    }
+
+    .api-box input {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: .9rem;
+      outline: none;
+      margin: 10px 0
+    }
+
+    .api-box input:focus {
+      border-color: var(--accent)
+    }
+
+    .api-box .hint {
+      font-size: .75rem;
+      color: var(--text2);
+      margin-top: 6px
+    }
+
+    .api-box .hint a {
+      color: var(--accent)
+    }
+
+    /* ── Report ── */
+    .rpt-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      margin-bottom: 20px
+    }
+
+    .rpt-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .pattern-item {
+      padding: 14px;
+      background: var(--bg3);
+      border-radius: 8px;
+      border-left: 3px solid var(--accent);
+      margin-bottom: 10px
+    }
+
+    .pattern-item h4 {
+      font-size: .95rem;
+      color: var(--accent2);
+      margin-bottom: 6px
+    }
+
+    .pattern-item ul {
+      padding-left: 16px;
+      color: var(--text2);
+      font-size: .85rem
+    }
+
+    .pattern-item li {
+      margin-bottom: 2px
+    }
+
+    .dom-table {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    .dom-table th,
+    .dom-table td {
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: .85rem
+    }
+
+    .dom-table th {
+      background: var(--bg3);
+      color: var(--text2);
+      font-weight: 600;
+      font-size: .75rem
+    }
+
+    .stars {
+      color: var(--gold);
+      letter-spacing: 1px
+    }
+
+    .career-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px
+    }
+
+    .career-col h4 {
+      font-size: .95rem;
+      margin-bottom: 10px
+    }
+
+    .career-item {
+      padding: 10px;
+      background: var(--bg3);
+      border-radius: 6px;
+      margin-bottom: 6px;
+      font-size: .8rem;
+      line-height: 1.5
+    }
+
+    .career-item strong {
+      display: block;
+      margin-bottom: 2px;
+      font-size: .85rem
+    }
+
+    .blind-table {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    .blind-table th,
+    .blind-table td {
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: .8rem
+    }
+
+    .blind-table th {
+      background: var(--bg3);
+      color: var(--text2);
+      font-weight: 600
+    }
+
+    .badge-low {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 99px;
+      background: rgba(239, 68, 68, .1);
+      color: #f85149;
+      font-weight: 600;
+      font-size: .75rem
+    }
+
+    .rpt-summary {
+      text-align: center;
+      padding: 24px;
+      background: linear-gradient(135deg, rgba(88, 166, 255, .15), rgba(167, 139, 250, .15));
+      border-radius: 12px
+    }
+
+    .rpt-summary p {
+      font-size: 1rem;
+      line-height: 1.8
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px 20px
+    }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto 14px
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    .loading p {
+      color: var(--text2)
+    }
+
+    .hidden {
+      display: none !important
+    }
+
+    @media(max-width:768px) {
+      header h1 {
+        font-size: 1.5rem
+      }
+
+      .top5-grid {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .career-grid {
+        grid-template-columns: 1fr
+      }
+
+      .test-intro-stats {
+        grid-template-columns: 1fr
+      }
+
+      .actions {
+        flex-direction: column
+      }
+    }
+  </style>
 </head>
+
 <body>
-<script>
-(function(){var t=localStorage.getItem('bookshelf-theme')||'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();
-</script>
+  <script>
+    (function () { var t = localStorage.getItem('bookshelf-theme') || 'dark'; if (t === 'light') document.documentElement.setAttribute('data-theme', 'light'); })();
+  </script>
 
-<button id="theme-toggle" onclick="toggleTheme()" title="切换主题">🌙</button>
+  <button id="theme-toggle" onclick="toggleTheme()" title="切换主题">🌙</button>
 
-<header>
-  <h1>🎯 盖洛普优势测试</h1>
-  <p>CliftonStrengths 34 Talents Assessment · 输入你的天赋排名，AI 深度分析</p>
-</header>
+  <header>
+    <h1>🎯 盖洛普优势测试</h1>
+    <p>CliftonStrengths 34 Talents Assessment · 60道配对选择题 + Qwen AI 深度分析</p>
+  </header>
 
-<!-- Tabs -->
-<div class="tabs">
-  <button class="tab-btn active" data-tab="input" onclick="switchTab('input')">📝 输入数据</button>
-  <button class="tab-btn" data-tab="api" onclick="switchTab('api')">🔑 API 设置</button>
-  <button class="tab-btn" data-tab="report" onclick="switchTab('report')">📊 分析报告</button>
-</div>
-
-<!-- Step 1: Input -->
-<div class="step active" id="step-input">
-  <div class="step-title">选择你的 Top 10 天赋</div>
-  <div class="step-desc">点击天赋卡片，按排名顺序选择（先点第1名，再点第2名，以此类推）</div>
-
-  <div class="talent-grid" id="talent-grid"></div>
-
-  <div style="text-align:center;margin-top:16px">
-    <span style="color:var(--text2);font-size:.9rem">已选: <strong id="sel-count">0</strong> / 10</span>
-    <button class="btn btn-secondary" style="margin-left:16px;padding:6px 16px;font-size:.85rem" onclick="clearSelection()">清空重选</button>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="test" onclick="switchTab('test')">📝 开始测试</button>
+    <button class="tab-btn" data-tab="api" onclick="switchTab('api')">🔑 API 设置</button>
+    <button class="tab-btn" data-tab="report" onclick="switchTab('report')">📊 分析报告</button>
   </div>
 
-  <!-- Score inputs for selected talents -->
-  <div id="score-section" style="display:none">
-    <div class="step-title" style="margin-top:32px">为每个天赋打分 (0-9)</div>
-    <div class="step-desc">分数反映该天赋在你身上的强度</div>
-    <div id="score-container"></div>
-  </div>
-
-  <div class="btn-row">
-    <button class="btn btn-primary" id="analyze-btn" onclick="startAnalysis()" disabled>🚀 开始分析</button>
-  </div>
-</div>
-
-<!-- Step 2: API -->
-<div class="step" id="step-api">
-  <div class="api-box">
-    <h3 style="margin-bottom:8px">🔑 Qwen API 密钥</h3>
-    <p style="color:var(--text2);font-size:.9rem">分析报告需要调用 Qwen 大模型进行深度解读</p>
-    <input type="password" id="api-key-input" placeholder="sk-xxxxxxxxxxxxxxxx" autocomplete="off">
-    <button class="btn btn-primary" style="width:100%" onclick="saveApiKey()">保存密钥</button>
-    <div class="hint">
-      获取密钥 → <a href="https://bailian.console.aliyun.com/" target="_blank">阿里云百炼控制台</a><br>
-      密钥仅保存在浏览器本地，不会上传到任何服务器
-    </div>
-  </div>
-</div>
-
-<!-- Step 3: Report -->
-<div class="step" id="step-report">
-  <div id="report-placeholder" style="text-align:center;padding:60px 20px">
-    <div style="font-size:3rem;margin-bottom:16px">📊</div>
-    <p style="color:var(--text2);font-size:1.1rem">尚未生成分析报告</p>
-    <p style="color:var(--text2);font-size:.9rem;margin-top:8px">请先在「输入数据」页完成天赋选择</p>
-  </div>
-
-  <div id="loading-view" class="loading" style="display:none">
-    <div class="spinner"></div>
-    <p>Qwen AI 正在深度分析你的优势模式...</p>
-    <p style="font-size:.8rem;margin-top:8px">通常需要 15-30 秒</p>
-  </div>
-
-  <div id="report-view"></div>
-
-  <div class="btn-row" id="report-actions" style="display:none">
-    <button class="btn btn-secondary" onclick="switchTab('input')">📝 重新测试</button>
-    <button class="btn btn-primary" onclick="downloadReport()">💾 下载HTML报告</button>
-  </div>
-</div>
-
-<footer style="text-align:center;padding:30px;color:var(--text2);font-size:.82rem;border-top:1px solid var(--border);margin-top:40px">
-  © 2026 Personal Bookshelf · <a href="../" style="color:var(--accent);text-decoration:none">返回书架</a>
-</footer>
-
-<script>
-// ── Theme ──
-function toggleTheme(){
-  var html=document.documentElement;
-  var btn=document.getElementById('theme-toggle');
-  if(html.getAttribute('data-theme')==='light'){
-    html.removeAttribute('data-theme');btn.textContent='🌙';
-    localStorage.setItem('bookshelf-theme','dark');
-  }else{
-    html.setAttribute('data-theme','light');btn.textContent='☀️';
-    localStorage.setItem('bookshelf-theme','light');
-  }
-}
-(function(){if(localStorage.getItem('bookshelf-theme')==='light')document.getElementById('theme-toggle').textContent='☀️';})();
-
-// ── Tabs ──
-function switchTab(name){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
-  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
-  document.getElementById('step-'+name).classList.add('active');
-}
-
-// ── Talent Data ──
-const TALENTS=[
-  {name:"分析",domain:"战略思维"},{name:"回顾",domain:"战略思维"},{name:"思维",domain:"战略思维"},{name:"学习",domain:"战略思维"},
-  {name:"未来",domain:"战略思维"},{name:"理念",domain:"战略思维"},{name:"搜集",domain:"战略思维"},{name:"战略",domain:"战略思维"},
-  {name:"专注",domain:"执行力"},{name:"审慎",domain:"执行力"},{name:"统筹",domain:"执行力"},{name:"责任",domain:"执行力"},
-  {name:"成就",domain:"执行力"},{name:"排难",domain:"执行力"},{name:"纪律",domain:"执行力"},{name:"公平",domain:"执行力"},{name:"行动",domain:"执行力"},
-  {name:"交往",domain:"关系建立"},{name:"和谐",domain:"关系建立"},{name:"个别",domain:"关系建立"},{name:"信念",domain:"关系建立"},
-  {name:"关联",domain:"关系建立"},{name:"发展",domain:"关系建立"},{name:"体谅",domain:"关系建立"},{name:"包容",domain:"关系建立"},
-  {name:"完美",domain:"影响力"},{name:"竞争",domain:"影响力"},{name:"积极",domain:"影响力"},{name:"沟通",domain:"影响力"},
-  {name:"适应",domain:"影响力"},{name:"统率",domain:"影响力"},{name:"自信",domain:"影响力"},{name:"追求",domain:"影响力"},{name:"取悦",domain:"影响力"}
-];
-
-const DOMAIN_COLORS={"战略思维":"var(--purple)","执行力":"var(--pink)","关系建立":"var(--green)","影响力":"var(--cyan)"};
-
-let selected=[]; // [{name, domain, score}]
-
-// ── Render Grid ──
-function renderGrid(){
-  const grid=document.getElementById('talent-grid');
-  grid.innerHTML='';
-  TALENTS.forEach(t=>{
-    const idx=selected.findIndex(s=>s.name===t.name);
-    const el=document.createElement('div');
-    el.className='talent-card domain-'+t.domain+(idx>=0?' selected':'');
-    el.innerHTML=`${idx>=0?'<div class="rank-badge">'+(idx+1)+'</div>':''}<div class="name">${t.name}</div><div class="domain" style="color:${DOMAIN_COLORS[t.domain]}">${t.domain}</div>`;
-    el.onclick=()=>toggleTalent(t,el);
-    grid.appendChild(el);
-  });
-  document.getElementById('sel-count').textContent=selected.length;
-  document.getElementById('analyze-btn').disabled=selected.length<2;
-}
-
-function toggleTalent(t,el){
-  const idx=selected.findIndex(s=>s.name===t.name);
-  if(idx>=0){
-    selected.splice(idx,1);
-    // re-index
-    selected.forEach((s,i)=>{/* keep order */});
-  }else if(selected.length<10){
-    selected.push({...t,score:null});
-  }
-  renderGrid();
-  renderScores();
-}
-
-function clearSelection(){
-  selected=[];
-  renderGrid();
-  renderScores();
-}
-
-// ── Score Sliders ──
-function renderScores(){
-  const sec=document.getElementById('score-section');
-  const con=document.getElementById('score-container');
-  if(selected.length===0){sec.style.display='none';return;}
-  sec.style.display='block';
-  con.innerHTML=selected.map((t,i)=>`
-    <div class="score-section">
-      <div class="score-row">
-        <label>#${i+1} ${t.name} <small style="color:var(--text2)">(${t.domain})</small></label>
-        <input type="range" min="0" max="9" value="${t.score!==null?t.score:5}" oninput="updateScore(${i},this.value)">
-        <div class="score-val" id="sv-${i}">${t.score!==null?t.score:5}</div>
+  <!-- Test Tab -->
+  <div class="step active" id="step-test">
+    <!-- Intro -->
+    <div class="test-card" id="intro-card">
+      <h2 style="font-size:1.4rem;margin-bottom:12px">🎯 盖洛普优势识别测试</h2>
+      <p style="color:var(--text2);font-size:.9rem;line-height:1.7">
+        盖洛普优势识别器（CliftonStrengths）是全球最权威的优势评估工具之一。本测试为简化版，通过60道配对选择题，快速识别你最突出的天赋领域。
+      </p>
+      <div class="test-intro-stats">
+        <div class="test-stat">
+          <div class="num">34</div>
+          <div class="lbl">天赋主题</div>
+        </div>
+        <div class="test-stat">
+          <div class="num">60</div>
+          <div class="lbl">测试题目</div>
+        </div>
+        <div class="test-stat">
+          <div class="num">Top 5</div>
+          <div class="lbl">核心优势</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:20px">
+        <button class="btn btn-primary" onclick="startTest()">开始测试 →</button>
       </div>
     </div>
-  `).join('');
-}
 
-function updateScore(i,v){
-  selected[i].score=parseInt(v);
-  document.getElementById('sv-'+i).textContent=v;
-}
+    <!-- Questions -->
+    <div class="test-card hidden" id="test-card">
+      <div class="progress-text">
+        <span id="progress-label">第 1 题 / 共 60 题</span>
+        <span id="progress-pct">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-bar" style="width:0%"></div>
+      </div>
+      <div class="q-card">
+        <div class="q-num" id="q-num">Q1</div>
+        <div class="q-text" id="q-text"></div>
+        <div id="opts-container"></div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-secondary" id="prev-btn" onclick="prevQ()">← 上一题</button>
+        <button class="btn btn-primary" id="next-btn" onclick="nextQ()" disabled>下一题 →</button>
+      </div>
+    </div>
 
-// ── API Key ──
-function saveApiKey(){
-  const key=document.getElementById('api-key-input').value.trim();
-  if(key){localStorage.setItem('gallup-api-key',key);alert('✅ 密钥已保存');}
-}
-(function(){const k=localStorage.getItem('gallup-api-key');if(k)document.getElementById('api-key-input').value=k;})();
+    <!-- Results -->
+    <div class="test-card hidden" id="results-card">
+      <h2 style="font-size:1.4rem;margin-bottom:8px">🎉 你的盖洛普优势报告</h2>
+      <p style="color:var(--text2);font-size:.9rem;margin-bottom:20px">以下是你最突出的前5大天赋主题</p>
+      <div class="top5-grid" id="top5-grid"></div>
 
-// ── Analysis ──
-async function startAnalysis(){
-  const key=localStorage.getItem('gallup-api-key');
-  if(!key){switchTab('api');alert('请先设置 API 密钥');return;}
+      <div class="radar-container">
+        <h3>📊 优势分布雷达图</h3>
+        <canvas id="radar-canvas" width="400" height="400"></canvas>
+      </div>
 
-  // Fill in default scores for any not set
-  selected.forEach(s=>{if(s.score===null)s.score=5;});
+      <h3 style="margin:20px 0 12px;font-size:1.1rem">📋 34项天赋完整排名</h3>
+      <div class="rank-grid" id="rank-grid"></div>
 
-  switchTab('report');
-  document.getElementById('report-placeholder').style.display='none';
-  document.getElementById('loading-view').style.display='block';
-  document.getElementById('report-view').style.display='none';
-  document.getElementById('report-actions').style.display='none';
+      <div class="actions" style="justify-content:center;margin-top:24px">
+        <button class="btn btn-secondary" onclick="restartTest()">🔄 重新测试</button>
+        <button class="btn btn-primary" onclick="sendToAI()">🚀 发送AI深度分析</button>
+      </div>
+    </div>
+  </div>
 
-  try{
-    const report=await callQwen(key);
-    document.getElementById('loading-view').style.display='none';
-    document.getElementById('report-view').style.display='block';
-    document.getElementById('report-view').innerHTML=report;
-    document.getElementById('report-actions').style.display='flex';
-  }catch(e){
-    document.getElementById('loading-view').style.display='none';
-    document.getElementById('report-view').style.display='block';
-    document.getElementById('report-view').innerHTML=`<div class="rpt-card" style="text-align:center;padding:40px"><h3>❌ 分析失败</h3><p style="color:var(--text2);margin-top:12px">${e.message}</p><p style="color:var(--text2);margin-top:8px;font-size:.85rem">请检查 API 密钥是否正确，或稍后重试</p></div>`;
-    document.getElementById('report-actions').style.display='flex';
-  }
-}
+  <!-- API Tab -->
+  <div class="step" id="step-api">
+    <div class="api-box">
+      <h3 style="margin-bottom:6px">🔑 Qwen API 密钥</h3>
+      <p style="color:var(--text2);font-size:.85rem">分析报告需要调用 Qwen 大模型进行深度解读</p>
+      <input type="password" id="api-key-input" placeholder="sk-xxxxxxxxxxxxxxxx" autocomplete="off">
+      <button class="btn btn-primary" style="width:100%" onclick="saveApiKey()">保存密钥</button>
+      <div class="hint">
+        获取密钥 → <a href="https://bailian.console.aliyun.com/" target="_blank">阿里云百炼控制台</a><br>
+        密钥仅保存在浏览器本地，不会上传到任何服务器
+      </div>
+    </div>
+  </div>
 
-async function callQwen(apiKey){
-  const topN=selected.map((t,i)=>`#${i+1} ${t.name}（${t.score}分 · ${t.domain}）`).join('\n');
-  const allScores=selected.map(t=>`${t.name}: ${t.score}分 [${t.domain}]`).join(', ');
+  <!-- Report Tab -->
+  <div class="step" id="step-report">
+    <div id="report-placeholder" style="text-align:center;padding:60px 20px">
+      <div style="font-size:3rem;margin-bottom:16px">📊</div>
+      <p style="color:var(--text2);font-size:1.1rem">尚未生成分析报告</p>
+      <p style="color:var(--text2);font-size:.85rem;margin-top:8px">请先完成测试，然后点击「发送AI深度分析」</p>
+    </div>
+    <div id="loading-view" class="loading hidden">
+      <div class="spinner"></div>
+      <p>Qwen AI 正在深度分析你的优势模式...</p>
+      <p style="font-size:.8rem;margin-top:6px">通常需要 15-30 秒</p>
+    </div>
+    <div id="report-view" class="hidden"></div>
+    <div class="actions hidden" id="report-actions" style="justify-content:center">
+      <button class="btn btn-secondary" onclick="switchTab('test')">📝 重新测试</button>
+      <button class="btn btn-primary" onclick="downloadReport()">💾 下载HTML报告</button>
+    </div>
+  </div>
 
-  const prompt=`你是一位资深的盖洛普优势分析师。请根据以下数据生成深度分析报告。
+  <footer
+    style="text-align:center;padding:30px;color:var(--text2);font-size:.82rem;border-top:1px solid var(--border);margin-top:40px">
+    © 2026 Personal Bookshelf · <a href="../" style="color:var(--accent);text-decoration:none">返回书架</a>
+  </footer>
+
+  <script>
+    // ── Theme ──
+    function toggleTheme() {
+      var h = document.documentElement, b = document.getElementById('theme-toggle');
+      if (h.getAttribute('data-theme') === 'light') { h.removeAttribute('data-theme'); b.textContent = '🌙'; localStorage.setItem('bookshelf-theme', 'dark'); }
+      else { h.setAttribute('data-theme', 'light'); b.textContent = '☀️'; localStorage.setItem('bookshelf-theme', 'light'); }
+    }
+    (function () { if (localStorage.getItem('bookshelf-theme') === 'light') document.getElementById('theme-toggle').textContent = '☀️'; })();
+
+    // ── Tabs ──
+    function switchTab(n) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === n));
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step-' + n).classList.add('active');
+    }
+
+    // ── Themes Data ──
+    const themes = [
+      { id: "achiever", name: "成就", category: "执行力", desc: "你精力充沛，能长时间保持高效工作。" },
+      { id: "activator", name: "行动", category: "执行力", desc: "你能将想法迅速转化为行动。" },
+      { id: "adaptability", name: "适应", category: "影响力", desc: "你活在当下，能灵活应对变化。" },
+      { id: "analytical", name: "分析", category: "战略思维", desc: "你追求数据和事实，相信客观分析。" },
+      { id: "arranger", name: "统筹", category: "执行力", desc: "你擅长组织和调度，能找到最优配置。" },
+      { id: "belief", name: "信念", category: "关系建立", desc: "你有坚定的核心价值观。" },
+      { id: "command", name: "统率", category: "影响力", desc: "你能掌控局面，敢于发声。" },
+      { id: "communication", name: "沟通", category: "影响力", desc: "你善于表达，能将抽象概念具象化。" },
+      { id: "competition", name: "竞争", category: "影响力", desc: "你以他人为参照，通过比较衡量自己。" },
+      { id: "connection", name: "关联", category: "关系建立", desc: "你相信万事万物皆有联系。" },
+      { id: "consistency", name: "公平", category: "执行力", desc: "你追求公平和一致，相信明确的规则。" },
+      { id: "context", name: "回顾", category: "战略思维", desc: "你喜欢回顾过去，相信历史能帮助你决策。" },
+      { id: "deliberative", name: "审慎", category: "执行力", desc: "你谨慎小心，能预见潜在风险。" },
+      { id: "developer", name: "发展", category: "关系建立", desc: "你能看到他人的潜力，热衷帮助他人成长。" },
+      { id: "discipline", name: "纪律", category: "执行力", desc: "你热爱结构和秩序，善于创建系统。" },
+      { id: "empathy", name: "体谅", category: "关系建立", desc: "你能感知他人情绪，善于换位思考。" },
+      { id: "focus", name: "专注", category: "执行力", desc: "你能保持目标导向，善于优先排序。" },
+      { id: "futuristic", name: "未来", category: "战略思维", desc: "你能描绘未来愿景，并以此激励。" },
+      { id: "harmony", name: "和谐", category: "关系建立", desc: "你寻求共识，避免冲突。" },
+      { id: "ideation", name: "理念", category: "战略思维", desc: "你充满创意，善于发现有趣联系。" },
+      { id: "includer", name: "包容", category: "关系建立", desc: "你乐于接纳他人，营造归属感。" },
+      { id: "individualization", name: "个别", category: "关系建立", desc: "你能看到每个人的独特性。" },
+      { id: "input", name: "搜集", category: "战略思维", desc: "你渴望获取更多信息，相信知识终有用。" },
+      { id: "intellection", name: "思维", category: "战略思维", desc: "你喜欢独立思考，享受深度反思。" },
+      { id: "learner", name: "学习", category: "战略思维", desc: "你热爱学习过程，从无知到精通让你兴奋。" },
+      { id: "maximizer", name: "完美", category: "影响力", desc: "你追求卓越，善于将优秀转化为卓越。" },
+      { id: "positivity", name: "积极", category: "影响力", desc: "你乐观向上，善于传播正能量。" },
+      { id: "relator", name: "交往", category: "关系建立", desc: "你享受与密友的深入关系。" },
+      { id: "responsibility", name: "责任", category: "执行力", desc: "你对承诺负责，说到做到。" },
+      { id: "restorative", name: "排难", category: "执行力", desc: "你善于发现问题并解决它们。" },
+      { id: "selfassurance", name: "自信", category: "影响力", desc: "你对自己有信心，相信内在的罗盘。" },
+      { id: "significance", name: "追求", category: "影响力", desc: "你渴望被认可，希望独立且重要。" },
+      { id: "strategic", name: "战略", category: "战略思维", desc: "你能洞察全局，善于识别最佳路径。" },
+      { id: "woo", name: "取悦", category: "影响力", desc: "你善于结识陌生人，享受建立新联系。" }
+    ];
+
+    // ── Questions ──
+    const questions = [
+      { q: "在一天的工作结束后，你更可能感到：", o: ["A. 满足，因为我完成了很多任务", "B. 充实，因为我学到了新东西"], s: { achiever: 3, learner: 1 } },
+      { q: "面对一个长期项目，你会：", o: ["A. 拆分成每日目标，逐个击破", "B. 先做调研，确保方向正确"], s: { achiever: 3, analytical: 1 } },
+      { q: "当团队有一个新想法时，你会：", o: ["A. 立即开始行动，边做边调整", "B. 先制定详细计划再执行"], s: { activator: 3, discipline: 1 } },
+      { q: "你最认同以下哪种说法：", o: ["A. 行动胜过完美的计划", "B. 好的计划能避免不必要的麻烦"], s: { activator: 3, deliberative: 1 } },
+      { q: "当计划突然被改变时，你会：", o: ["A. 轻松接受，灵活应对新情况", "B. 有点沮丧，但会尽快恢复原计划"], s: { adaptability: 3, consistency: 1 } },
+      { q: "在快节奏的环境中，你会：", o: ["A. 感到兴奋，享受当下", "B. 感到压力，需要时间适应"], s: { adaptability: 3, focus: 1 } },
+      { q: "做重要决定时，你更依赖：", o: ["A. 数据和客观事实", "B. 直觉和个人经验"], s: { analytical: 3, selfassurance: 1 } },
+      { q: "面对一个复杂问题，你会：", o: ["A. 收集所有信息再分析", "B. 先找出关键矛盾点"], s: { analytical: 3, strategic: 1 } },
+      { q: "在组织活动时，你最擅长：", o: ["A. 协调各种资源和人员", "B. 提出创新的活动方案"], s: { arranger: 3, ideation: 1 } },
+      { q: "当多个任务同时进行时，你会：", o: ["A. 灵活调配优先级", "B. 按既定顺序逐一完成"], s: { arranger: 3, discipline: 1 } },
+      { q: "选择一份工作时，你最看重：", o: ["A. 是否符合你的价值观", "B. 是否有良好的发展空间"], s: { belief: 3, developer: 1 } },
+      { q: "你更认同以下哪种说法：", o: ["A. 做正确的事比把事做对更重要", "B. 效率是衡量工作的最佳标准"], s: { belief: 3, achiever: 1 } },
+      { q: "在危机中，你会：", o: ["A. 主动站出来指挥局面", "B. 配合领导者，做好本职工作"], s: { command: 3, responsibility: 1 } },
+      { q: "当团队需要决策时，你通常：", o: ["A. 果断表达自己的观点", "B. 先听取大家的意见"], s: { command: 3, harmony: 1 } },
+      { q: "你最擅长：", o: ["A. 用生动的语言描述想法", "B. 用逻辑和数据分析问题"], s: { communication: 3, analytical: 1 } },
+      { q: "在演讲或汇报中，你会：", o: ["A. 让内容引人入胜", "B. 确保信息准确无误"], s: { communication: 3, consistency: 1 } },
+      { q: "工作的动力主要来自：", o: ["A. 超越他人，成为最好的", "B. 超越自己，不断进步"], s: { competition: 3, learner: 1 } },
+      { q: "你更认同以下哪种说法：", o: ["A. 没有比较就没有进步", "B. 每个人都有自己的节奏"], s: { competition: 3, individualization: 1 } },
+      { q: "你相信：", o: ["A. 万事万物皆有联系", "B. 每个问题都应独立看待"], s: { connection: 3, analytical: 1 } },
+      { q: "当遇到巧合事件时，你会：", o: ["A. 思考背后的深层意义", "B. 认为这只是概率问题"], s: { connection: 3, intellection: 1 } },
+      { q: "你更看重：", o: ["A. 公平和透明的规则", "B. 灵活处理特殊情况"], s: { consistency: 3, individualization: 1 } },
+      { q: "在团队中，你认为最重要的是：", o: ["A. 每个人都遵守相同的标准", "B. 根据每个人的特点分配任务"], s: { consistency: 3, arranger: 1 } },
+      { q: "面对新问题时，你会：", o: ["A. 先了解过去的经验和背景", "B. 直接寻找创新的解决方案"], s: { context: 3, ideation: 1 } },
+      { q: "你更喜欢：", o: ["A. 研究历史和数据", "B. 探索未来的可能性"], s: { context: 3, futuristic: 1 } },
+      { q: "在做决定之前，你会：", o: ["A. 仔细考虑所有可能的风险", "B. 快速判断并做出选择"], s: { deliberative: 3, activator: 1 } },
+      { q: "你更认同：", o: ["A. 小心驶得万年船", "B. 不入虎穴焉得虎子"], s: { deliberative: 3, competition: 1 } },
+      { q: "你从什么事情中获得最大满足感：", o: ["A. 看到他人的成长和进步", "B. 完成有挑战性的任务"], s: { developer: 3, achiever: 1 } },
+      { q: "当同事遇到困难时，你会：", o: ["A. 耐心指导，帮助他成长", "B. 直接帮他解决问题"], s: { developer: 3, restorative: 1 } },
+      { q: "你的工作方式更接近：", o: ["A. 有清晰的结构和计划", "B. 随性而为，灵活应变"], s: { discipline: 3, adaptability: 1 } },
+      { q: "你更喜欢：", o: ["A. 每天按计划行事", "B. 根据情况灵活安排"], s: { discipline: 3, activator: 1 } },
+      { q: "你擅长：", o: ["A. 感知他人的情绪和需求", "B. 理性分析问题的本质"], s: { empathy: 3, analytical: 1 } },
+      { q: "当朋友心情不好时，你会：", o: ["A. 默默陪伴，感受他的情绪", "B. 帮他分析问题并提供建议"], s: { empathy: 3, intellection: 1 } },
+      { q: "面对多个目标时，你会：", o: ["A. 锁定最重要的一个，全力以赴", "B. 同时推进，保持多元发展"], s: { focus: 3, arranger: 1 } },
+      { q: "你更认同：", o: ["A. 专注是成功的关键", "B. 多元化能降低风险"], s: { focus: 3, deliberative: 1 } },
+      { q: "你更喜欢思考：", o: ["A. 未来可能发生的事情", "B. 现在正在发生的事情"], s: { futuristic: 3, context: 1 } },
+      { q: "你擅长：", o: ["A. 描绘令人向往的未来愿景", "B. 制定切实可行的当前计划"], s: { futuristic: 3, discipline: 1 } },
+      { q: "当团队出现分歧时，你会：", o: ["A. 寻求共识，化解矛盾", "B. 坚持己见，用事实说服"], s: { harmony: 3, command: 1 } },
+      { q: "你更看重：", o: ["A. 团队的团结和协作", "B. 个人的独立和创新"], s: { harmony: 3, ideation: 1 } },
+      { q: "你最享受：", o: ["A. 产生全新想法的瞬间", "B. 将已有想法落地实施"], s: { ideation: 3, achiever: 1 } },
+      { q: "你擅长：", o: ["A. 发现事物之间的有趣联系", "B. 将复杂问题分解处理"], s: { ideation: 3, analytical: 1 } },
+      { q: "在新环境中，你会：", o: ["A. 主动接纳和关照每个人", "B. 先和志同道合的人建立联系"], s: { includer: 3, relator: 1 } },
+      { q: "你更认同：", o: ["A. 不让任何人被排除在外", "B. 圈子小一点关系深一点"], s: { includer: 3, relator: 1 } },
+      { q: "你看待他人的方式是：", o: ["A. 看到每个人的独特之处", "B. 找到群体的共同特征"], s: { individualization: 3, harmony: 1 } },
+      { q: "在管理团队时，你会：", o: ["A. 因人制宜，量身定制方案", "B. 建立统一标准，公平对待"], s: { individualization: 3, consistency: 1 } },
+      { q: "你热衷于：", o: ["A. 收集各种信息和知识", "B. 将已有知识深度应用"], s: { input: 3, focus: 1 } },
+      { q: "你的书架或浏览器收藏夹通常是：", o: ["A. 满满的各种资料", "B. 精简的核心内容"], s: { input: 3, maximizer: 1 } },
+      { q: "你享受：", o: ["A. 独自深度思考的时刻", "B. 与他人热烈讨论的瞬间"], s: { intellection: 3, communication: 1 } },
+      { q: "你更认同：", o: ["A. 思考是行动的指南", "B. 行动是思考的验证"], s: { intellection: 3, activator: 1 } },
+      { q: "你最享受的过程是：", o: ["A. 从不会到学会的成长", "B. 从熟练到精通的突破"], s: { learner: 3, maximizer: 1 } },
+      { q: "面对新领域，你会：", o: ["A. 兴奋于学习的机会", "B. 评估是否有必要学习"], s: { learner: 3, focus: 1 } },
+      { q: "你更擅长：", o: ["A. 将优秀提升到卓越", "B. 将不合格提升到合格"], s: { maximizer: 3, restorative: 1 } },
+      { q: "你更认同：", o: ["A. 追求极致，做到最好", "B. 足够好就行，不必过度投入"], s: { maximizer: 3, harmony: 1 } },
+      { q: "你通常：", o: ["A. 充满热情，感染他人", "B. 沉稳冷静，理性应对"], s: { positivity: 3, deliberative: 1 } },
+      { q: "在困难面前，你会：", o: ["A. 看到积极的一面并传递希望", "B. 分析问题并寻找解决方案"], s: { positivity: 3, analytical: 1 } },
+      { q: "你更喜欢：", o: ["A. 与少数知己深度交流", "B. 与各类人群广泛社交"], s: { relator: 3, woo: 1 } },
+      { q: "你的人际关系特点是：", o: ["A. 朋友不多但关系深厚", "B. 交友广泛，认识很多人"], s: { relator: 3, input: 1 } },
+      { q: "当你做出承诺后，你会：", o: ["A. 无论如何都要兑现", "B. 根据情况灵活调整"], s: { responsibility: 3, adaptability: 1 } },
+      { q: "你更认同：", o: ["A. 忠于承诺是基本品质", "B. 过度承诺会带来不必要的压力"], s: { responsibility: 3, harmony: 1 } },
+      { q: "你擅长：", o: ["A. 发现问题并修复它", "B. 预防问题并避免它"], s: { restorative: 3, deliberative: 1 } },
+      { q: "面对故障或混乱，你会：", o: ["A. 兴奋地找出问题所在", "B. 感到压力，希望避免这种情况"], s: { restorative: 3, positivity: 1 } }
+    ];
+
+    // ── State ──
+    let curQ = 0, answers = new Array(questions.length).fill(-1), scores = {};
+    themes.forEach(t => scores[t.id] = 0);
+    let testResults = null;
+
+    function showIntro() {
+      document.getElementById('intro-card').classList.remove('hidden');
+      document.getElementById('test-card').classList.add('hidden');
+      document.getElementById('results-card').classList.add('hidden');
+    }
+    function showTest() {
+      document.getElementById('intro-card').classList.add('hidden');
+      document.getElementById('test-card').classList.remove('hidden');
+      document.getElementById('results-card').classList.add('hidden');
+    }
+    function showResults() {
+      document.getElementById('intro-card').classList.add('hidden');
+      document.getElementById('test-card').classList.add('hidden');
+      document.getElementById('results-card').classList.remove('hidden');
+    }
+
+    // ── Start ──
+    function startTest() { showTest(); showQ(0); }
+
+    // ── Show Question ──
+    function showQ(i) {
+      curQ = i;
+      const q = questions[i];
+      document.getElementById('q-num').textContent = 'Q' + (i + 1);
+      document.getElementById('q-text').textContent = q.q;
+      const pct = (i / questions.length) * 100;
+      document.getElementById('progress-bar').style.width = pct + '%';
+      document.getElementById('progress-pct').textContent = Math.round(pct) + '%';
+      document.getElementById('progress-label').textContent = '第 ' + (i + 1) + ' 题 / 共 ' + questions.length + ' 题';
+      const c = document.getElementById('opts-container');
+      c.innerHTML = '';
+      q.o.forEach((opt, j) => {
+        const d = document.createElement('div');
+        d.className = 'opt' + (answers[i] === j ? ' selected' : '');
+        d.innerHTML = '<div class="opt-icon"></div><div class="opt-text">' + opt + '</div>';
+        d.onclick = () => pickOpt(j);
+        c.appendChild(d);
+      });
+      document.getElementById('prev-btn').disabled = i === 0;
+      document.getElementById('next-btn').disabled = answers[i] === -1;
+      document.getElementById('next-btn').textContent = i === questions.length - 1 ? '查看结果 🎉' : '下一题 →';
+    }
+
+    function pickOpt(j) {
+      answers[curQ] = j;
+      document.querySelectorAll('.opt').forEach((el, i) => el.classList.toggle('selected', i === j));
+      document.getElementById('next-btn').disabled = false;
+      if (curQ < questions.length - 1) setTimeout(() => nextQ(), 250);
+    }
+
+    function nextQ() {
+      if (answers[curQ] === -1) return;
+      if (curQ < questions.length - 1) { curQ++; showQ(curQ); }
+      else calcResults();
+    }
+
+    function prevQ() { if (curQ > 0) { curQ--; showQ(curQ); } }
+
+    // ── Calculate ──
+    function calcResults() {
+      scores = {}; themes.forEach(t => scores[t.id] = 0);
+      answers.forEach((a, i) => {
+        if (a !== -1) {
+          const q = questions[i];
+          const keys = Object.keys(q.s);
+          const pick = a === 0 ? keys[0] : keys[1];
+          if (q.s[pick]) scores[pick] += q.s[pick];
+        }
+      });
+      const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]).map(([id, sc]) => ({ theme: themes.find(t => t.id === id), score: sc }));
+      testResults = sorted;
+      showResults();
+      renderResults(sorted);
+    }
+
+    function renderResults(sorted) {
+      // Top 5
+      document.getElementById('top5-grid').innerHTML = sorted.slice(0, 5).map((it, i) =>
+        '<div class="top5-item"><div class="top5-rank">#' + (i + 1) + '</div><div class="top5-name">' + it.theme.name + '</div><div class="top5-cat">' + it.theme.category + '</div><div class="top5-score">' + it.score + '分</div></div>'
+      ).join('');
+
+      // All 34
+      document.getElementById('rank-grid').innerHTML = sorted.map((it, i) =>
+        '<div class="rank-item"><div class="rn">#' + (i + 1) + '</div><div class="rname">' + it.theme.name + '</div><div class="rscore">' + it.score + '分 · ' + it.theme.category + '</div></div>'
+      ).join('');
+
+      drawRadar(sorted);
+    }
+
+    // ── Radar ──
+    function drawRadar(sorted) {
+      const canvas = document.getElementById('radar-canvas');
+      const ctx = canvas.getContext('2d');
+      const cx = canvas.width / 2, cy = canvas.height / 2, r = 150;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const top8 = sorted.slice(0, 8), n = top8.length;
+      const step = Math.PI * 2 / n;
+
+      // Grid
+      for (let ring = 1; ring <= 5; ring++) {
+        const rr = (r / 5) * ring;
+        ctx.beginPath();
+        for (let i = 0; i <= n; i++) {
+          const a = i * step - Math.PI / 2, x = cx + rr * Math.cos(a), y = cy + rr * Math.sin(a);
+          i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = '#30363d'; ctx.lineWidth = 1; ctx.stroke();
+      }
+      // Axes
+      for (let i = 0; i < n; i++) {
+        const a = i * step - Math.PI / 2;
+        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
+        ctx.strokeStyle = '#30363d'; ctx.stroke();
+      }
+      // Data
+      const mx = top8[0].score;
+      ctx.beginPath();
+      for (let i = 0; i <= n; i++) {
+        const idx = i % n, ang = idx * step - Math.PI / 2, v = (top8[idx].score / mx) * r;
+        const x = cx + v * Math.cos(ang), y = cy + v * Math.sin(ang);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.fillStyle = 'rgba(88,166,255,.2)'; ctx.fill();
+      ctx.strokeStyle = '#58a6ff'; ctx.lineWidth = 2; ctx.stroke();
+      // Dots
+      for (let i = 0; i < n; i++) {
+        const a = i * step - Math.PI / 2, v = (top8[i].score / mx) * r;
+        ctx.beginPath(); ctx.arc(cx + v * Math.cos(a), cy + v * Math.sin(a), 4, 0, Math.PI * 2);
+        ctx.fillStyle = '#58a6ff'; ctx.fill();
+      }
+      // Labels
+      ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
+      for (let i = 0; i < n; i++) {
+        const a = i * step - Math.PI / 2, x = cx + (r + 28) * Math.cos(a), y = cy + (r + 28) * Math.sin(a);
+        ctx.fillText(top8[i].theme.name, x, y);
+      }
+    }
+
+    // ── Restart ──
+    function restartTest() {
+      curQ = 0; answers = new Array(questions.length).fill(-1); scores = {}; themes.forEach(t => scores[t.id] = 0); testResults = null;
+      showIntro();
+    }
+
+    // ── API Key ──
+    function saveApiKey() {
+      const k = document.getElementById('api-key-input').value.trim();
+      if (k) { localStorage.setItem('gallup-api-key', k); alert('✅ 密钥已保存'); }
+    }
+    (function () { const k = localStorage.getItem('gallup-api-key'); if (k) document.getElementById('api-key-input').value = k; })();
+
+    // ── Send to AI ──
+    function sendToAI() {
+      const key = localStorage.getItem('gallup-api-key');
+      if (!key) { switchTab('api'); alert('请先设置 API 密钥'); return; }
+      switchTab('report');
+      document.getElementById('report-placeholder').classList.remove('hidden');
+      document.getElementById('loading-view').classList.remove('hidden');
+      document.getElementById('report-view').classList.add('hidden');
+      document.getElementById('report-actions').classList.add('hidden');
+
+      callQwen(key).catch(e => {
+        document.getElementById('loading-view').classList.add('hidden');
+        document.getElementById('report-view').classList.remove('hidden');
+        document.getElementById('report-view').innerHTML = '<div class="rpt-card" style="text-align:center;padding:40px"><h3>❌ 分析失败</h3><p style="color:var(--text2);margin-top:12px">' + e.message + '</p></div>';
+        document.getElementById('report-actions').classList.remove('hidden');
+      });
+    }
+
+    async function callQwen(apiKey) {
+      if (!testResults) throw new Error('请先完成测试');
+      const topN = testResults.map((t, i) => '#' + (i + 1) + ' ' + t.theme.name + '（' + t.score + '分 · ' + t.theme.category + '）').join('\n');
+
+      const prompt = `你是一位资深的盖洛普优势分析师。请根据以下数据生成深度分析报告。
 
 ## 用户数据
-Top ${selected.length} 天赋排名：
+34项天赋完整排名：
 ${topN}
 
 ## 分析要求
-请按以下JSON格式返回分析结果（仅返回JSON，不要其他文字）：
+请严格按以下JSON格式返回（仅返回JSON，不要其他文字）：
 
 {
-  "top5": [{"rank":1,"name":"分析","score":9,"domain":"战略思维"}, ...],
-  "patterns": [
-    {"title": "\"天赋A + 天赋B\" = 模式名 表情符号", "desc": ["特点1","特点2","特点3"]},
-    ...需要3个模式...
-  ],
-  "domains": [
-    {"name":"执行力","avg":"5.4","stars":"⭐⭐⭐⭐⭐","desc":"你的最强领域！"},
-    ...4个领域...
-  ],
-  "careers_good": [{"role":"职业名","reason":"匹配理由"}, ...至少5个...],
-  "careers_caution": [{"role":"职业名","reason":"谨慎理由"}, ...至少4个...],
+  "top5": [{"rank":1,"name":"天赋名","score":10,"domain":"领域"},...],
+  "patterns": [{"title": "\\"天赋A + 天赋B\\" = 模式名 表情","desc": ["特点1","特点2","特点3"]},...需3个...],
+  "domains": [{"name":"领域名","avg":"5.4","stars":"⭐⭐⭐⭐⭐","desc":"特征描述"},...4个...],
+  "careers_good": [{"role":"职业","reason":"理由"},...至少5个...],
+  "careers_caution": [{"role":"职业","reason":"理由"},...至少4个...],
   "energy_title": "能量来源公式",
   "energy_points": ["✅ 特质1","✅ 特质2","✅ 特质3","✅ 特质4","✅ 特质5"],
-  "blind_spots": [{"name":"天赋名","score":"0分","impact":"可能的影响","advice":"应对建议"}, ...至少4个...],
-  "summary": "一句话总结（诗意、个性化、3-4行）"
-}
+  "blind_spots": [{"name":"天赋","score":"0分","impact":"影响","advice":"建议"},...至少4个...],
+  "summary": "一句话总结（诗意、3-4行）"
+}`;
 
-注意：
-1. patterns 要分析天赋组合的深层含义，不要泛泛而谈
-2. domains 要计算已选天赋在各领域的平均分
-3. careers_good/cautions 要具体、有针对性
-4. blind_spots 针对低分(≤3分)的天赋分析
-5. summary 要有温度，像朋友说话一样`;
+      const resp = await fetch('https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+        body: JSON.stringify({ model: 'qwen-plus', messages: [{ role: 'user', content: prompt }], temperature: 0.7, max_tokens: 4000 })
+      });
 
-  const resp=await fetch('https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',{
-    method:'POST',
-    headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
-    body:JSON.stringify({
-      model:'qwen-plus',
-      messages:[{role:'user',content:prompt}],
-      temperature:0.7,
-      max_tokens:4000
-    })
-  });
+      if (!resp.ok) { const e = await resp.text(); throw new Error('API 请求失败 (' + resp.status + '): ' + e); }
+      const data = await resp.json();
+      let c = data.choices[0].message.content;
+      const m = c.match(/```(?:json)?\s*\n?([\s\S]*?)\n?\s*```/);
+      if (m) c = m[1];
+      const a = JSON.parse(c.trim());
+      document.getElementById('loading-view').classList.add('hidden');
+      document.getElementById('report-view').classList.remove('hidden');
+      document.getElementById('report-view').innerHTML = renderReport(a);
+      document.getElementById('report-actions').classList.remove('hidden');
+    }
 
-  if(!resp.ok){
-    const err=await resp.text();
-    throw new Error(`API 请求失败 (${resp.status}): ${err}`);
-  }
+    function renderReport(a) {
+      const t5 = a.top5 || testResults.slice(0, 5).map((t, i) => ({ rank: i + 1, name: t.theme.name, score: t.score, domain: t.theme.category }));
+      const h = `<div class="rpt-card"><div class="rpt-title"><span>🏆</span> 前${t5.length}大核心优势</div><div class="top5-grid">${t5.map(t => '<div class="top5-item"><div class="top5-rank">#' + t.rank + '</div><div class="top5-name">' + t.name + '</div><div class="top5-cat">' + t.domain + '</div><div class="top5-score">' + t.score + '分</div></div>').join('')}</div></div>` +
+        '<div class="rpt-card"><div class="rpt-title"><span>🔑</span> 你的独特模式</div>' + ((a.patterns || []).map(p => '<div class="pattern-item"><h4>' + p.title + '</h4><ul>' + (p.desc || []).map(d => '<li>' + d + '</li>').join('') + '</ul></div>').join('')) + '</div>' +
+        '<div class="rpt-card"><div class="rpt-title"><span>📊</span> 优势领域分布</div><table class="dom-table"><thead><tr><th>领域</th><th>平均分</th><th>强度</th><th>特征</th></tr></thead><tbody>' + (a.domains || []).map(d => '<tr><td><strong>' + d.name + '</strong></td><td>' + d.avg + '分</td><td><span class="stars">' + d.stars + '</span></td><td>' + d.desc + '</td></tr>').join('') + '</tbody></table></div>' +
+        '<div class="rpt-card"><div class="rpt-title"><span>💡</span> 职业发展建议</div><div class="career-grid"><div class="career-col"><h4>✅ 高度匹配</h4>' + (a.careers_good || []).map(c => '<div class="career-item"><strong>' + c.role + '</strong>' + c.reason + '</div>').join('') + '</div><div class="career-col"><h4>⚠️ 需要谨慎</h4>' + (a.careers_caution || []).map(c => '<div class="career-item"><strong>' + c.role + '</strong>' + c.reason + '</div>').join('') + '</div></div></div>' +
+        '<div class="rpt-card"><div class="rpt-title"><span>🧭</span> 你的能量来源</div><div class="pattern-item" style="border-left-color:var(--green)"><h4 style="text-align:center">' + (a.energy_title || '') + '</h4><ul>' + (a.energy_points || []).map(e => '<li>' + e + '</li>').join('') + '</ul></div></div>' +
+        '<div class="rpt-card"><div class="rpt-title"><span>⚡</span> 盲区提醒</div><table class="blind-table"><thead><tr><th>低分天赋</th><th>分数</th><th>影响</th><th>建议</th></tr></thead><tbody>' + (a.blind_spots || []).map(b => '<tr><td><strong>' + b.name + '</strong></td><td><span class="badge-low">' + b.score + '</span></td><td>' + b.impact + '</td><td>' + b.advice + '</td></tr>').join('') + '</tbody></table></div>' +
+        '<div class="rpt-card"><div class="rpt-title"><span>📋</span> 34项天赋完整排名</div><div class="rank-grid">' + testResults.map((t, i) => '<div class="rank-item"><div class="rn">#' + (i + 1) + '</div><div class="rname">' + t.theme.name + '</div><div class="rscore">' + t.score + '分 · ' + t.theme.category + '</div></div>').join('') + '</div></div>' +
+        '<div class="rpt-summary"><h2 style="margin-bottom:10px;opacity:.7">🎁 一句话总结</h2><p>' + (a.summary || '').replace(/\n/g, '<br>') + '</p></div>';
+      return h;
+    }
 
-  const data=await resp.json();
-  let content=data.choices[0].message.content;
+    function downloadReport() {
+      const html = document.getElementById('report-view').innerHTML;
+      const full = '<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>盖洛普优势分析报告</title><style>*{margin:0;padding:0;box-sizing:border-box}:root{--bg:#f8fafc;--card:#fff;--text:#1e293b;--text2:#64748b;--accent:#667eea;--gold:#f59e0b;--silver:#94a3b8;--bronze:#b45309;--border:#e2e8f0}body{font-family:-apple-system,"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;padding:40px 20px}.c{max-width:900px;margin:0 auto}.rpt-card{background:var(--card);border-radius:14px;padding:24px;margin-bottom:16px;box-shadow:0 8px 24px rgba(0,0,0,.15)}.rpt-title{font-size:1.2rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}.top5-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.top5-item{text-align:center;padding:14px 6px;border-radius:8px;border:2px solid}.top5-item:nth-child(1){border-color:var(--gold);background:linear-gradient(135deg,#fef3c7,#fde68a)}.top5-item:nth-child(2){border-color:var(--silver);background:linear-gradient(135deg,#f1f5f9,#e2e8f0)}.top5-item:nth-child(3){border-color:var(--bronze);background:linear-gradient(135deg,#fed7aa,#fdba74)}.top5-item:nth-child(n+4){border-color:var(--accent);background:linear-gradient(135deg,#eff6ff,#e0e7ff)}.top5-rank{font-size:1rem;font-weight:700;margin-bottom:4px}.top5-name{font-size:.9rem;font-weight:600;margin-bottom:2px}.top5-cat{font-size:.65rem;color:var(--text2)}.top5-score{font-size:1.2rem;font-weight:700;margin-top:4px}.pattern-item{padding:12px;background:var(--bg);border-radius:8px;border-left:3px solid var(--accent);margin-bottom:8px}.pattern-item h4{font-size:.9rem;color:var(--accent);margin-bottom:4px}.pattern-item ul{padding-left:14px;color:var(--text2);font-size:.8rem}.pattern-item li{margin-bottom:2px}.dom-table{width:100%;border-collapse:collapse}.dom-table th,.dom-table td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}.dom-table th{background:var(--bg);color:var(--text2);font-weight:600;font-size:.75rem}.stars{color:var(--gold);letter-spacing:1px}.career-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.career-col h4{font-size:.9rem;margin-bottom:8px}.career-item{padding:8px;background:var(--bg);border-radius:6px;margin-bottom:4px;font-size:.78rem;line-height:1.5}.career-item strong{display:block;margin-bottom:2px;font-size:.85rem}.blind-table{width:100%;border-collapse:collapse}.blind-table th,.blind-table td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);font-size:.8rem}.blind-table th{background:var(--bg);color:var(--text2);font-weight:600}.badge-low{display:inline-block;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:#ef4444;font-weight:600;font-size:.75rem}.rpt-summary{text-align:center;padding:24px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-radius:12px}.rpt-summary p{font-size:1rem;line-height:1.8}.rank-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px}.rank-item{padding:6px;background:var(--bg);border-radius:5px;text-align:center;font-size:.75rem}.rank-item .rn{font-weight:700;color:var(--text2);font-size:.7rem}.rank-item .rname{font-weight:600;margin:2px 0}.rank-item .rscore{color:var(--text2);font-size:.65rem}@media(max-width:600px){.top5-grid{grid-template-columns:repeat(2,1fr)}.career-grid{grid-template-columns:1fr}}</style></head><body><div class="c">' + html + '</div></body></html>';
+      const blob = new Blob([full], { type: 'text/html' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'gallup_analysis_report.html'; a.click();
+    }
 
-  // Extract JSON from possible markdown code block
-  const jsonMatch=content.match(/```(?:json)?\s*\n?([\s\S]*?)\n?\s*```/);
-  if(jsonMatch) content=jsonMatch[1];
+    // ── Keyboard ──
+    document.addEventListener('keydown', e => {
+      if (document.getElementById('test-card').classList.contains('hidden')) return;
+      if (e.key === '1' || e.key === 'ArrowUp') pickOpt(0);
+      else if (e.key === '2' || e.key === 'ArrowDown') pickOpt(1);
+      else if (e.key === 'ArrowLeft') prevQ();
+      else if (e.key === 'ArrowRight' || e.key === 'Enter') nextQ();
+    });
 
-  const analysis=JSON.parse(content.trim());
-  return renderReport(analysis);
-}
-
-// ── Render Report ──
-function renderReport(a){
-  const top5=a.top5||selected.slice(0,5).map((t,i)=>({rank:i+1,name:t.name,score:t.score,domain:t.domain}));
-
-  const top5HTML=`<div class="rpt-card"><div class="rpt-title"><span>🏆</span> 前${top5.length}大核心优势</div>
-    <div class="top5-grid">${top5.map(t=>`<div class="top5-item"><div class="top5-rank">#${t.rank}</div><div class="top5-name">${t.name}</div><div class="top5-cat">${t.domain}</div><div style="font-size:1.3rem;font-weight:700;margin-top:4px">${t.score}分</div></div>`).join('')}</div></div>`;
-
-  const patternsHTML=`<div class="rpt-card"><div class="rpt-title"><span>🔑</span> 你的独特模式</div>
-    <div>${(a.patterns||[]).map(p=>`<div class="pattern-item"><h4>${p.title}</h4><ul>${(p.desc||[]).map(d=>`<li>${d}</li>`).join('')}</ul></div>`).join('')}</div></div>`;
-
-  const domHTML=`<div class="rpt-card"><div class="rpt-title"><span>📊</span> 优势领域分布</div>
-    <table class="dom-table"><thead><tr><th>领域</th><th>平均分</th><th>强度</th><th>特征</th></tr></thead>
-    <tbody>${(a.domains||[]).map(d=>`<tr><td><strong>${d.name}</strong></td><td>${d.avg}分</td><td><span class="stars">${d.stars}</span></td><td>${d.desc}</td></tr>`).join('')}</tbody></table></div>`;
-
-  const careerHTML=`<div class="rpt-card"><div class="rpt-title"><span>💡</span> 职业发展建议</div>
-    <div class="career-grid">
-      <div class="career-col"><h4>✅ 高度匹配</h4>${(a.careers_good||[]).map(c=>`<div class="career-item"><strong>${c.role}</strong>${c.reason}</div>`).join('')}</div>
-      <div class="career-col"><h4>⚠️ 需要谨慎</h4>${(a.careers_caution||[]).map(c=>`<div class="career-item"><strong>${c.role}</strong>${c.reason}</div>`).join('')}</div>
-    </div></div>`;
-
-  const energyHTML=`<div class="rpt-card"><div class="rpt-title"><span>🧭</span> 你的能量来源</div>
-    <div class="pattern-item" style="border-left-color:var(--green)"><h4 style="text-align:center;font-size:1.1rem">${a.energy_title||''}</h4>
-    <ul>${(a.energy_points||[]).map(e=>`<li>${e}</li>`).join('')}</ul></div></div>`;
-
-  const blindHTML=`<div class="rpt-card"><div class="rpt-title"><span>⚡</span> 盲区提醒</div>
-    <table class="blind-table"><thead><tr><th>低分天赋</th><th>分数</th><th>可能的影响</th><th>应对建议</th></tr></thead>
-    <tbody>${(a.blind_spots||[]).map(b=>`<tr><td><strong>${b.name}</strong></td><td><span class="badge-low">${b.score}</span></td><td>${b.impact}</td><td>${b.advice}</td></tr>`).join('')}</tbody></table></div>`;
-
-  const allRankHTML=`<div class="rpt-card"><div class="rpt-title"><span>📋</span> 已选天赋完整排名</div>
-    <div class="rank-grid">${selected.map((t,i)=>`<div class="rank-item"><div class="rn">#${i+1}</div><div class="rname">${t.name}</div><div class="rscore">${t.score}分 · ${t.domain}</div></div>`).join('')}</div></div>`;
-
-  const summaryHTML=`<div class="rpt-summary"><h2 style="margin-bottom:12px;opacity:.8">🎁 一句话总结</h2><p>${(a.summary||'').replace(/\n/g,'<br>')}</p></div>`;
-
-  return top5HTML+patternsHTML+domHTML+careerHTML+energyHTML+blindHTML+allRankHTML+summaryHTML;
-}
-
-function downloadReport(){
-  const html=document.getElementById('report-view').innerHTML;
-  const full=`<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>盖洛普优势分析报告</title><style>*{margin:0;padding:0;box-sizing:border-box}:root{--bg:#f8fafc;--card:#fff;--text:#1e293b;--text2:#64748b;--accent:#667eea;--accent2:#5a67d8;--border:#e2e8f0;--gold:#f59e0b;--silver:#94a3b8;--bronze:#b45309}body{font-family:-apple-system,"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;padding:40px 20px}.container{max-width:900px;margin:0 auto}.rpt-card{background:var(--card);border-radius:14px;padding:28px;margin-bottom:20px;box-shadow:0 8px 24px rgba(0,0,0,.15)}.rpt-title{font-size:1.3rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}.top5-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.top5-item{text-align:center;padding:14px 6px;border-radius:8px;border:2px solid}.top5-item:nth-child(1){border-color:var(--gold);background:linear-gradient(135deg,#fef3c7,#fde68a)}.top5-item:nth-child(2){border-color:var(--silver);background:linear-gradient(135deg,#f1f5f9,#e2e8f0)}.top5-item:nth-child(3){border-color:var(--bronze);background:linear-gradient(135deg,#fed7aa,#fdba74)}.top5-item:nth-child(n+4){border-color:var(--accent);background:linear-gradient(135deg,#eff6ff,#e0e7ff)}.top5-rank{font-size:1rem;font-weight:700;margin-bottom:4px}.top5-name{font-size:.95rem;font-weight:600;margin-bottom:2px}.top5-cat{font-size:.65rem;color:var(--text2)}.pattern-item{padding:14px;background:var(--bg);border-radius:8px;border-left:3px solid var(--accent);margin-bottom:10px}.pattern-item h4{font-size:.95rem;color:var(--accent2);margin-bottom:6px}.pattern-item ul{padding-left:16px;color:var(--text2);font-size:.85rem}.pattern-item li{margin-bottom:2px}.dom-table{width:100%;border-collapse:collapse}.dom-table th,.dom-table td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}.dom-table th{background:var(--bg);color:var(--text2);font-weight:600;font-size:.75rem}.stars{color:var(--gold);letter-spacing:1px}.career-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.career-col h4{font-size:.95rem;margin-bottom:10px}.career-item{padding:10px;background:var(--bg);border-radius:6px;margin-bottom:6px;font-size:.8rem;line-height:1.5}.career-item strong{display:block;margin-bottom:2px;font-size:.85rem}.blind-table{width:100%;border-collapse:collapse}.blind-table th,.blind-table td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);font-size:.8rem}.blind-table th{background:var(--bg);color:var(--text2);font-weight:600}.badge-low{display:inline-block;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:#ef4444;font-weight:600;font-size:.75rem}.rpt-summary{text-align:center;padding:24px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-radius:12px}.rpt-summary p{font-size:1.05rem;line-height:1.8}.rank-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px}.rank-item{padding:6px;background:var(--bg);border-radius:5px;text-align:center;font-size:.75rem}.rank-item .rn{font-weight:700;color:var(--text2);font-size:.7rem}.rank-item .rname{font-weight:600;margin:2px 0}.rank-item .rscore{color:var(--text2);font-size:.65rem}@media(max-width:600px){.top5-grid{grid-template-columns:repeat(2,1fr)}.career-grid{grid-template-columns:1fr}}</style></head><body><div class="container">${html}</div></body></html>`;
-  const blob=new Blob([full],{type:'text/html'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download='gallup_analysis_report.html';a.click();
-  URL.revokeObjectURL(url);
-}
-
-// ── Init ──
-renderGrid();
-</script>
+    // ── Init ──
+    showIntro();
+  </script>
 </body>
+
 </html>
