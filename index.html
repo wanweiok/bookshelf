@@ -1,283 +1,575 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>书架 · Bookshelf</title>
-<meta http-equiv="cache-control" content="no-cache">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#0d1117;--bg2:#161b22;--bg3:#1c2433;
-  --text:#e6edf3;--text2:#8b949e;
-  --accent:#58a6ff;--accent2:#79b8ff;
-  --border:#30363d;--card-shadow:rgba(0,0,0,.4);
-  --green:#3fb950;--purple:#a78bfa;--orange:#d29922;--pink:#f778ba;--cyan:#56d4dd;
-}
-[data-theme="light"]{
-  --bg:#f5f7fa;--bg2:#ffffff;--bg3:#e8ecf1;
-  --text:#1e293b;--text2:#64748b;
-  --accent:#2563eb;--accent2:#3b82f6;
-  --border:#d1d5db;--card-shadow:rgba(0,0,0,.08);
-  --green:#16a34a;--purple:#7c3aed;--orange:#ca8a04;--pink:#db2777;--cyan:#0891b2;
-}
-html{scroll-behavior:smooth}
-body{font-family:-apple-system,"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>书架 · Bookshelf</title>
+  <meta http-equiv="cache-control" content="no-cache">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
 
-/* ── Gate ── */
-#gate{display:flex;justify-content:center;align-items:center;min-height:100vh;background:linear-gradient(135deg,var(--bg) 0%,var(--bg2) 50%,var(--bg3) 100%)}
-body{transition:background .3s,color .3s}
-.gate-btn{transition:opacity .2s,background .3s}
-[data-theme="light"] .gate-btn{background:linear-gradient(135deg,var(--accent),var(--purple));color:#fff}
-[data-theme="light"] header{background:linear-gradient(180deg,var(--bg3) 0%,var(--bg) 100%)}
-[data-theme="light"] .gate-box h1{background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-[data-theme="light"] header h1{background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-#theme-toggle{position:fixed;top:16px;right:16px;z-index:300;background:var(--bg2);border:1px solid var(--border);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem;color:var(--text);transition:all .2s;box-shadow:0 2px 8px var(--card-shadow)}
-#theme-toggle:hover{border-color:var(--accent);color:var(--accent);transform:scale(1.1)}
-.gate-box{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:48px 40px;width:380px;text-align:center;box-shadow:0 8px 32px var(--card-shadow)}
-.gate-box h1{font-size:1.6rem;margin-bottom:6px;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.gate-box p{color:var(--text2);font-size:.9rem;margin-bottom:28px}
-.gate-box .icon{font-size:3rem;margin-bottom:16px}
-.gate-input{width:100%;padding:14px 18px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:1rem;outline:none;transition:border .2s;letter-spacing:4px;text-align:center}
-.gate-input:focus{border-color:var(--accent)}
-.gate-input::placeholder{letter-spacing:0;color:var(--text2)}
-.gate-btn{width:100%;padding:14px;margin-top:16px;background:linear-gradient(135deg,var(--accent),var(--purple));border:none;border-radius:10px;color:#fff;font-size:1rem;font-weight:600;cursor:pointer;transition:opacity .2s}
-.gate-btn:hover{opacity:.88}
-.gate-error{color:#f85149;font-size:.85rem;margin-top:12px;display:none}
+    :root {
+      --bg: #0d1117;
+      --bg2: #161b22;
+      --bg3: #1c2433;
+      --text: #e6edf3;
+      --text2: #8b949e;
+      --accent: #58a6ff;
+      --accent2: #79b8ff;
+      --border: #30363d;
+      --card-shadow: rgba(0, 0, 0, .4);
+      --green: #3fb950;
+      --purple: #a78bfa;
+      --orange: #d29922;
+      --pink: #f778ba;
+      --cyan: #56d4dd;
+    }
 
-/* ── Main ── */
-#main{display:none}
-header{text-align:center;padding:60px 20px 40px;background:linear-gradient(180deg,var(--bg3) 0%,var(--bg) 100%)}
-header h1{font-size:2.2rem;margin-bottom:8px;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-header p{color:var(--text2);font-size:1.05rem}
-.grid{max-width:1100px;margin:0 auto;padding:20px 24px 60px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:transform .22s,box-shadow .22s;display:flex;flex-direction:column}
-.card:hover{transform:translateY(-4px);box-shadow:0 12px 36px var(--card-shadow)}
-.card-banner{height:8px;flex-shrink:0}
-.card-body{padding:28px 24px 20px;flex:1;display:flex;flex-direction:column}
-.card-icon{font-size:2.2rem;margin-bottom:12px}
-.card-title{font-size:1.2rem;font-weight:700;margin-bottom:6px}
-.card-desc{color:var(--text2);font-size:.88rem;line-height:1.6;margin-bottom:16px;flex:1}
-.card-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
-.tag{font-size:.72rem;padding:3px 10px;border-radius:20px;background:var(--bg3);color:var(--text2);border:1px solid var(--border)}
-.card-link{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;background:transparent;border:1px solid var(--accent);border-radius:8px;color:var(--accent);font-size:.9rem;font-weight:500;text-decoration:none;transition:all .2s;align-self:flex-start}
-.card-link:hover{background:var(--accent);color:#fff}
+    [data-theme="light"] {
+      --bg: #f5f7fa;
+      --bg2: #ffffff;
+      --bg3: #e8ecf1;
+      --text: #1e293b;
+      --text2: #64748b;
+      --accent: #2563eb;
+      --accent2: #3b82f6;
+      --border: #d1d5db;
+      --card-shadow: rgba(0, 0, 0, .08);
+      --green: #16a34a;
+      --purple: #7c3aed;
+      --orange: #ca8a04;
+      --pink: #db2777;
+      --cyan: #0891b2;
+    }
 
-footer{text-align:center;padding:30px;color:var(--text2);font-size:.82rem;border-top:1px solid var(--border)}
-footer a{color:var(--accent);text-decoration:none}
+    html {
+      scroll-behavior: smooth
+    }
 
-@media(max-width:680px){
-  .gate-box{width:92%;padding:36px 24px}
-  header h1{font-size:1.6rem}
-  .grid{grid-template-columns:1fr;padding:16px}
-}
-</style>
+    body {
+      font-family: -apple-system, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh
+    }
+
+    /* ── Gate ── */
+    #gate {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 50%, var(--bg3) 100%)
+    }
+
+    body {
+      transition: background .3s, color .3s
+    }
+
+    .gate-btn {
+      transition: opacity .2s, background .3s
+    }
+
+    [data-theme="light"] .gate-btn {
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      color: #fff
+    }
+
+    [data-theme="light"] header {
+      background: linear-gradient(180deg, var(--bg3) 0%, var(--bg) 100%)
+    }
+
+    [data-theme="light"] .gate-box h1 {
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent
+    }
+
+    [data-theme="light"] header h1 {
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent
+    }
+
+    #theme-toggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 300;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+      color: var(--text);
+      transition: all .2s;
+      box-shadow: 0 2px 8px var(--card-shadow)
+    }
+
+    #theme-toggle:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: scale(1.1)
+    }
+
+    .gate-box {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 48px 40px;
+      width: 380px;
+      text-align: center;
+      box-shadow: 0 8px 32px var(--card-shadow)
+    }
+
+    .gate-box h1 {
+      font-size: 1.6rem;
+      margin-bottom: 6px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent
+    }
+
+    .gate-box p {
+      color: var(--text2);
+      font-size: .9rem;
+      margin-bottom: 28px
+    }
+
+    .gate-box .icon {
+      font-size: 3rem;
+      margin-bottom: 16px
+    }
+
+    .gate-input {
+      width: 100%;
+      padding: 14px 18px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      transition: border .2s;
+      letter-spacing: 4px;
+      text-align: center
+    }
+
+    .gate-input:focus {
+      border-color: var(--accent)
+    }
+
+    .gate-input::placeholder {
+      letter-spacing: 0;
+      color: var(--text2)
+    }
+
+    .gate-btn {
+      width: 100%;
+      padding: 14px;
+      margin-top: 16px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s
+    }
+
+    .gate-btn:hover {
+      opacity: .88
+    }
+
+    .gate-error {
+      color: #f85149;
+      font-size: .85rem;
+      margin-top: 12px;
+      display: none
+    }
+
+    /* ── Main ── */
+    #main {
+      display: none
+    }
+
+    header {
+      text-align: center;
+      padding: 60px 20px 40px;
+      background: linear-gradient(180deg, var(--bg3) 0%, var(--bg) 100%)
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent
+    }
+
+    header p {
+      color: var(--text2);
+      font-size: 1.05rem
+    }
+
+    .grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px 24px 60px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px
+    }
+
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: transform .22s, box-shadow .22s;
+      display: flex;
+      flex-direction: column
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 36px var(--card-shadow)
+    }
+
+    .card-banner {
+      height: 8px;
+      flex-shrink: 0
+    }
+
+    .card-body {
+      padding: 28px 24px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column
+    }
+
+    .card-icon {
+      font-size: 2.2rem;
+      margin-bottom: 12px
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 6px
+    }
+
+    .card-desc {
+      color: var(--text2);
+      font-size: .88rem;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      flex: 1
+    }
+
+    .card-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px
+    }
+
+    .tag {
+      font-size: .72rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: var(--bg3);
+      color: var(--text2);
+      border: 1px solid var(--border)
+    }
+
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      background: transparent;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      color: var(--accent);
+      font-size: .9rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all .2s;
+      align-self: flex-start
+    }
+
+    .card-link:hover {
+      background: var(--accent);
+      color: #fff
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: var(--text2);
+      font-size: .82rem;
+      border-top: 1px solid var(--border)
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none
+    }
+
+    @media(max-width:680px) {
+      .gate-box {
+        width: 92%;
+        padding: 36px 24px
+      }
+
+      header h1 {
+        font-size: 1.6rem
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+        padding: 16px
+      }
+    }
+  </style>
 </head>
+
 <body>
-<script>
-(function(){var t=localStorage.getItem('bookshelf-theme')||'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();
-</script>
+  <script>
+    (function () { var t = localStorage.getItem('bookshelf-theme') || 'dark'; if (t === 'light') document.documentElement.setAttribute('data-theme', 'light'); })();
+  </script>
 
-<button id="theme-toggle" onclick="toggleTheme()" title="切换主题">🌙</button>
+  <button id="theme-toggle" onclick="toggleTheme()" title="切换主题">🌙</button>
 
-<!-- Password Gate -->
-<div id="gate">
-  <div class="gate-box">
-    <div class="icon">📚</div>
-    <h1>私人书架</h1>
-    <p>Personal Bookshelf · 请输入访问密码</p>
-    <form id="gate-form">
-      <input class="gate-input" id="pwd" type="password" placeholder="Access Code" autofocus autocomplete="off">
-      <button class="gate-btn" type="submit">进 入</button>
-    </form>
-    <div class="gate-error" id="err">密码错误，请重试</div>
-  </div>
-</div>
-
-<!-- Main Content -->
-<div id="main">
-  <header>
-    <h1>📚 私人书架 · Bookshelf</h1>
-    <p>思考、写作、成长 — 我的电子书合集</p>
-  </header>
-
-  <div class="grid">
-
-    <!-- 1. Building Your Own AI Agent -->
-    <div class="card">
-      <div class="card-banner" style="background:linear-gradient(90deg,#58a6ff,#a78bfa)"></div>
-      <div class="card-body">
-        <div class="card-icon">🤖</div>
-        <div class="card-title">构建你自己的 AI Agent</div>
-        <div class="card-desc">从源码到实战，逐层拆解 AI 智能体架构。覆盖 Runtime、Memory、Channels、Security、Scheduling、Skills 六大核心层。</div>
-        <div class="card-meta">
-          <span class="tag">AI / Agent</span>
-          <span class="tag">中英双语</span>
-          <span class="tag">源码分析</span>
-        </div>
-        <a class="card-link" href="./docs/">阅读 →</a>
-      </div>
+  <!-- Password Gate -->
+  <div id="gate">
+    <div class="gate-box">
+      <div class="icon">📚</div>
+      <h1>私人书架</h1>
+      <p>Personal Bookshelf · 请输入访问密码</p>
+      <form id="gate-form">
+        <input class="gate-input" id="pwd" type="password" placeholder="Access Code" autofocus autocomplete="off">
+        <button class="gate-btn" type="submit">进 入</button>
+      </form>
+      <div class="gate-error" id="err">密码错误，请重试</div>
     </div>
-
-    <!-- 2. Metacognition -->
-    <div class="card">
-      <div class="card-banner" style="background:linear-gradient(90deg,#a78bfa,#f778ba)"></div>
-      <div class="card-body">
-        <div class="card-icon">🧠</div>
-        <div class="card-title">元认知：思考关于思考的思考</div>
-        <div class="card-desc">探索认知的反转、注意力经济、提问的艺术、跨域综合、判断力差距与未来认知趋势。一本关于「如何更好地思考」的书。</div>
-        <div class="card-meta">
-          <span class="tag">认知科学</span>
-          <span class="tag">元思考</span>
-          <span class="tag">10 章</span>
-        </div>
-        <a class="card-link" href="./docs-metacognition/">阅读 →</a>
-      </div>
-    </div>
-
-    <!-- 3. Force Field Prediction -->
-    <div class="card">
-      <div class="card-banner" style="background:linear-gradient(90deg,#56d4dd,#58a6ff)"></div>
-      <div class="card-body">
-        <div class="card-icon">🎯</div>
-        <div class="card-title">合力：预测的底层逻辑</div>
-        <div class="card-desc">从力场理论出发，揭示预测背后的底层逻辑。涵盖贝叶斯推理、信息论、复杂系统、行为经济学与伦理边界。</div>
-        <div class="card-meta">
-          <span class="tag">预测 / 决策</span>
-          <span class="tag">中英双语</span>
-          <span class="tag">14 章</span>
-        </div>
-        <a class="card-link" href="./force-field-prediction/">阅读 →</a>
-      </div>
-    </div>
-
-    <!-- 4. English Essence -->
-    <div class="card">
-      <div class="card-banner" style="background:linear-gradient(90deg,#3fb950,#56d4dd)"></div>
-      <div class="card-body">
-        <div class="card-icon">🌍</div>
-        <div class="card-title">英语本质：超越翻译的语言习得</div>
-        <div class="card-desc">打破翻译墙，建立英语直觉思维。从意义优先、文化骨架到输入吸收与输出表达，重新定义英语学习路径。</div>
-        <div class="card-meta">
-          <span class="tag">英语学习</span>
-          <span class="tag">语言习得</span>
-          <span class="tag">9 章</span>
-        </div>
-        <a class="card-link" href="./docs-english-essence/">阅读 →</a>
-      </div>
-    </div>
-
-    <!-- 5. 养生两千五百年 -->
-    <div class="card">
-      <div class="card-banner" style="background:linear-gradient(90deg,#d29922,#3fb950)"></div>
-      <div class="card-body">
-        <div class="card-icon">☯</div>
-        <div class="card-title">养生两千五百年：黄帝内经的生活智慧</div>
-        <div class="card-desc">把两千五百年前的养生智慧翻译成今天能用的行动方案。覆盖昼夜节律、食养之道、情志调节、柔性运动、治未病与睡眠修复。</div>
-        <div class="card-meta">
-          <span class="tag">中医养生</span>
-          <span class="tag">中英双语</span>
-          <span class="tag">9 章</span>
-          <span class="tag">深浅主题</span>
-        </div>
-        <a class="card-link" href="./docs-yellow-emperor/">阅读 →</a>
-      </div>
-    </div>
-
-    <!-- 6. 愿力 -->
-    <div class="card">
-      <div class="card-banner" style="background:linear-gradient(90deg,#d29922,#f778ba)"></div>
-      <div class="card-body">
-        <div class="card-icon">🔥</div>
-        <div class="card-title">愿力：从恐惧驱动到内在驱动</div>
-        <div class="card-desc">一本关于认知转型的书。拆解恐惧的解剖学、业力的惯性、愿力的本质，探索从被动反应到主动回应的蜕变之路。</div>
-        <div class="card-meta">
-          <span class="tag">心灵成长</span>
-          <span class="tag">认知转型</span>
-          <span class="tag">9 章</span>
-        </div>
-        <a class="card-link" href="./yuanli/">阅读 →</a>
-      </div>
-    </div>
-
-    <!-- 7. 300 Power Verbs -->
-    <div class="card">
-      <div class="card-banner" style="background:linear-gradient(90deg,#f778ba,#58a6ff)"></div>
-      <div class="card-body">
-        <div class="card-icon">✍️</div>
-        <div class="card-title">300 Power Verbs：词根×文学×职场精准表达</div>
-        <div class="card-desc">300 个精选英语高能动词，按 15 个职场主题编排。词根拆解、三层含义、大师引文、同义词辨析，帮你从 get/make/do 升级到精准表达。</div>
-        <div class="card-meta">
-          <span class="tag">英语动词</span>
-          <span class="tag">词根学习</span>
-          <span class="tag">15 章</span>
-          <span class="tag">交互式</span>
-        </div>
-        <a class="card-link" href="https://wanweiok.github.io/300-power-verbs/" target="_blank">阅读 →</a>
-      </div>
-    </div>
-
   </div>
 
-  <footer>
-    © 2026 Personal Bookshelf · Built with ❤️ · <a href="#" onclick="logout();return false;">退出登录</a>
-  </footer>
-</div>
+  <!-- Main Content -->
+  <div id="main">
+    <header>
+      <h1>📚 私人书架 · Bookshelf</h1>
+      <p>思考、写作、成长 — 我的电子书合集</p>
+    </header>
 
-<script>
-function toggleTheme(){
-  var html=document.documentElement;
-  var btn=document.getElementById('theme-toggle');
-  if(html.getAttribute('data-theme')==='light'){
-    html.removeAttribute('data-theme');
-    btn.textContent='🌙';
-    localStorage.setItem('bookshelf-theme','dark');
-  }else{
-    html.setAttribute('data-theme','light');
-    btn.textContent='☀️';
-    localStorage.setItem('bookshelf-theme','light');
-  }
-}
-(function(){
-  if(localStorage.getItem('bookshelf-theme')==='light'){
-    document.getElementById('theme-toggle').textContent='☀️';
-  }
-})();
+    <div class="grid">
 
-const HASH = "8eaeed08b0de0fd5d838182bd08632bd77d15b9170147de3d79a7173bda17f64";
-const STORE_KEY = "bookshelf_auth";
+      <!-- 1. Building Your Own AI Agent -->
+      <div class="card">
+        <div class="card-banner" style="background:linear-gradient(90deg,#58a6ff,#a78bfa)"></div>
+        <div class="card-body">
+          <div class="card-icon">🤖</div>
+          <div class="card-title">构建你自己的 AI Agent</div>
+          <div class="card-desc">从源码到实战，逐层拆解 AI 智能体架构。覆盖 Runtime、Memory、Channels、Security、Scheduling、Skills 六大核心层。</div>
+          <div class="card-meta">
+            <span class="tag">AI / Agent</span>
+            <span class="tag">中英双语</span>
+            <span class="tag">源码分析</span>
+          </div>
+          <a class="card-link" href="./docs/">阅读 →</a>
+        </div>
+      </div>
 
-async function sha256(text) {
-  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
-}
+      <!-- 2. Metacognition -->
+      <div class="card">
+        <div class="card-banner" style="background:linear-gradient(90deg,#a78bfa,#f778ba)"></div>
+        <div class="card-body">
+          <div class="card-icon">🧠</div>
+          <div class="card-title">元认知：思考关于思考的思考</div>
+          <div class="card-desc">探索认知的反转、注意力经济、提问的艺术、跨域综合、判断力差距与未来认知趋势。一本关于「如何更好地思考」的书。</div>
+          <div class="card-meta">
+            <span class="tag">认知科学</span>
+            <span class="tag">元思考</span>
+            <span class="tag">10 章</span>
+          </div>
+          <a class="card-link" href="./docs-metacognition/">阅读 →</a>
+        </div>
+      </div>
 
-function unlock() {
-  document.getElementById("gate").style.display = "none";
-  document.getElementById("main").style.display = "block";
-}
+      <!-- 3. Force Field Prediction -->
+      <div class="card">
+        <div class="card-banner" style="background:linear-gradient(90deg,#56d4dd,#58a6ff)"></div>
+        <div class="card-body">
+          <div class="card-icon">🎯</div>
+          <div class="card-title">合力：预测的底层逻辑</div>
+          <div class="card-desc">从力场理论出发，揭示预测背后的底层逻辑。涵盖贝叶斯推理、信息论、复杂系统、行为经济学与伦理边界。</div>
+          <div class="card-meta">
+            <span class="tag">预测 / 决策</span>
+            <span class="tag">中英双语</span>
+            <span class="tag">14 章</span>
+          </div>
+          <a class="card-link" href="./force-field-prediction/">阅读 →</a>
+        </div>
+      </div>
 
-function logout() {
-  localStorage.removeItem(STORE_KEY);
-  location.reload();
-}
+      <!-- 4. English Essence -->
+      <div class="card">
+        <div class="card-banner" style="background:linear-gradient(90deg,#3fb950,#56d4dd)"></div>
+        <div class="card-body">
+          <div class="card-icon">🌍</div>
+          <div class="card-title">英语本质：超越翻译的语言习得</div>
+          <div class="card-desc">打破翻译墙，建立英语直觉思维。从意义优先、文化骨架到输入吸收与输出表达，重新定义英语学习路径。</div>
+          <div class="card-meta">
+            <span class="tag">英语学习</span>
+            <span class="tag">语言习得</span>
+            <span class="tag">9 章</span>
+          </div>
+          <a class="card-link" href="./docs-english-essence/">阅读 →</a>
+        </div>
+      </div>
 
-(async function checkStored() {
-  if (localStorage.getItem(STORE_KEY) === HASH) unlock();
-})();
+      <!-- 5. 养生两千五百年 -->
+      <div class="card">
+        <div class="card-banner" style="background:linear-gradient(90deg,#d29922,#3fb950)"></div>
+        <div class="card-body">
+          <div class="card-icon">☯</div>
+          <div class="card-title">养生两千五百年：黄帝内经的生活智慧</div>
+          <div class="card-desc">把两千五百年前的养生智慧翻译成今天能用的行动方案。覆盖昼夜节律、食养之道、情志调节、柔性运动、治未病与睡眠修复。</div>
+          <div class="card-meta">
+            <span class="tag">中医养生</span>
+            <span class="tag">中英双语</span>
+            <span class="tag">9 章</span>
+            <span class="tag">深浅主题</span>
+          </div>
+          <a class="card-link" href="./docs-yellow-emperor/">阅读 →</a>
+        </div>
+      </div>
 
-document.getElementById("gate-form").addEventListener("submit", async function(e) {
-  e.preventDefault();
-  const h = await sha256(document.getElementById("pwd").value);
-  if (h === HASH) {
-    localStorage.setItem(STORE_KEY, HASH);
-    unlock();
-  } else {
-    document.getElementById("err").style.display = "block";
-    document.getElementById("pwd").value = "";
-    document.getElementById("pwd").focus();
-  }
-});
-</script>
+      <!-- 6. 愿力 -->
+      <div class="card">
+        <div class="card-banner" style="background:linear-gradient(90deg,#d29922,#f778ba)"></div>
+        <div class="card-body">
+          <div class="card-icon">🔥</div>
+          <div class="card-title">愿力：从恐惧驱动到内在驱动</div>
+          <div class="card-desc">一本关于认知转型的书。拆解恐惧的解剖学、业力的惯性、愿力的本质，探索从被动反应到主动回应的蜕变之路。</div>
+          <div class="card-meta">
+            <span class="tag">心灵成长</span>
+            <span class="tag">认知转型</span>
+            <span class="tag">9 章</span>
+          </div>
+          <a class="card-link" href="./yuanli/">阅读 →</a>
+        </div>
+      </div>
+
+      <!-- 7. 300 Power Verbs -->
+      <div class="card">
+        <div class="card-banner" style="background:linear-gradient(90deg,#f778ba,#58a6ff)"></div>
+        <div class="card-body">
+          <div class="card-icon">✍️</div>
+          <div class="card-title">300 Power Verbs：词根×文学×职场精准表达</div>
+          <div class="card-desc">300 个精选英语高能动词，按 15 个职场主题编排。词根拆解、三层含义、大师引文、同义词辨析，帮你从 get/make/do 升级到精准表达。</div>
+          <div class="card-meta">
+            <span class="tag">英语动词</span>
+            <span class="tag">词根学习</span>
+            <span class="tag">15 章</span>
+            <span class="tag">交互式</span>
+          </div>
+          <a class="card-link" href="https://wanweiok.github.io/300-power-verbs/" target="_blank">阅读 →</a>
+        </div>
+      </div>
+
+      <!-- 8. Gallup Strengths -->
+      <div class="card">
+        <div class="card-banner" style="background:linear-gradient(90deg,#58a6ff,#3fb950)"></div>
+        <div class="card-body">
+          <div class="card-icon">🎯</div>
+          <div class="card-title">盖洛普优势测试 · Gallup Strengths</div>
+          <div class="card-desc">交互式 34 项天赋排名测试 + Qwen AI 深度分析。生成个性化优势报告，含职业匹配、盲区提醒与发展建议。</div>
+          <div class="card-meta">
+            <span class="tag">盖洛普</span>
+            <span class="tag">AI 分析</span>
+            <span class="tag">34 天赋</span>
+            <span class="tag">交互式</span>
+          </div>
+          <a class="card-link" href="./docs-gallup/">测试 →</a>
+        </div>
+      </div>
+
+    </div>
+
+    <footer>
+      © 2026 Personal Bookshelf · Built with ❤️ · <a href="#" onclick="logout();return false;">退出登录</a>
+    </footer>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      var html = document.documentElement;
+      var btn = document.getElementById('theme-toggle');
+      if (html.getAttribute('data-theme') === 'light') {
+        html.removeAttribute('data-theme');
+        btn.textContent = '🌙';
+        localStorage.setItem('bookshelf-theme', 'dark');
+      } else {
+        html.setAttribute('data-theme', 'light');
+        btn.textContent = '☀️';
+        localStorage.setItem('bookshelf-theme', 'light');
+      }
+    }
+    (function () {
+      if (localStorage.getItem('bookshelf-theme') === 'light') {
+        document.getElementById('theme-toggle').textContent = '☀️';
+      }
+    })();
+
+    const HASH = "8eaeed08b0de0fd5d838182bd08632bd77d15b9170147de3d79a7173bda17f64";
+    const STORE_KEY = "bookshelf_auth";
+
+    async function sha256(text) {
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    function unlock() {
+      document.getElementById("gate").style.display = "none";
+      document.getElementById("main").style.display = "block";
+    }
+
+    function logout() {
+      localStorage.removeItem(STORE_KEY);
+      location.reload();
+    }
+
+    (async function checkStored() {
+      if (localStorage.getItem(STORE_KEY) === HASH) unlock();
+    })();
+
+    document.getElementById("gate-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const h = await sha256(document.getElementById("pwd").value);
+      if (h === HASH) {
+        localStorage.setItem(STORE_KEY, HASH);
+        unlock();
+      } else {
+        document.getElementById("err").style.display = "block";
+        document.getElementById("pwd").value = "";
+        document.getElementById("pwd").focus();
+      }
+    });
+  </script>
 </body>
+
 </html>

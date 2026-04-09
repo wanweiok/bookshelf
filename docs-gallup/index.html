@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>盖洛普优势测试 · Gallup Strengths</title>
+<meta http-equiv="cache-control" content="no-cache">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0d1117;--bg2:#161b22;--bg3:#1c2433;
+  --text:#e6edf3;--text2:#8b949e;
+  --accent:#58a6ff;--accent2:#79b8ff;
+  --border:#30363d;--card-shadow:rgba(0,0,0,.4);
+  --green:#3fb950;--purple:#a78bfa;--orange:#d29922;--pink:#f778ba;--cyan:#56d4dd;
+  --gold:#f59e0b;--silver:#94a3b8;--bronze:#b45309;
+}
+[data-theme="light"]{
+  --bg:#f5f7fa;--bg2:#ffffff;--bg3:#e8ecf1;
+  --text:#1e293b;--text2:#64748b;
+  --accent:#2563eb;--accent2:#3b82f6;
+  --border:#d1d5db;--card-shadow:rgba(0,0,0,.08);
+  --green:#16a34a;--purple:#7c3aed;--orange:#ca8a04;--pink:#db2777;--cyan:#0891b2;
+}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;transition:background .3s,color .3s}
+
+/* ── Header ── */
+#theme-toggle{position:fixed;top:16px;right:16px;z-index:300;background:var(--bg2);border:1px solid var(--border);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem;color:var(--text);transition:all .2s;box-shadow:0 2px 8px var(--card-shadow)}
+#theme-toggle:hover{border-color:var(--accent);color:var(--accent);transform:scale(1.1)}
+header{text-align:center;padding:60px 20px 30px;background:linear-gradient(180deg,var(--bg3) 0%,var(--bg) 100%)}
+header h1{font-size:2.2rem;margin-bottom:8px;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+header p{color:var(--text2);font-size:1.05rem;max-width:600px;margin:0 auto}
+
+/* ── Tabs ── */
+.tabs{display:flex;justify-content:center;gap:12px;margin:24px 0;flex-wrap:wrap;padding:0 20px}
+.tab-btn{padding:10px 24px;border:1px solid var(--border);border-radius:10px;background:var(--bg2);color:var(--text2);cursor:pointer;font-size:.95rem;font-weight:500;transition:all .2s}
+.tab-btn:hover{border-color:var(--accent);color:var(--accent)}
+.tab-btn.active{background:linear-gradient(135deg,var(--accent),var(--purple));color:#fff;border-color:transparent}
+
+/* ── Steps ── */
+.step{display:none;max-width:900px;margin:0 auto;padding:20px 24px 60px}
+.step.active{display:block}
+.step-title{font-size:1.4rem;font-weight:700;margin-bottom:8px;text-align:center}
+.step-desc{color:var(--text2);text-align:center;margin-bottom:24px;font-size:.95rem}
+
+/* ── Talent Cards (Input) ── */
+.talent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:24px}
+.talent-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 10px;text-align:center;cursor:pointer;transition:all .2s;user-select:none;position:relative}
+.talent-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.talent-card.selected{border-color:var(--accent);background:linear-gradient(135deg,rgba(88,166,255,.1),rgba(167,139,250,.1))}
+.talent-card .rank-badge{position:absolute;top:-6px;right:-6px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+.talent-card .name{font-size:.9rem;font-weight:600;margin-bottom:2px}
+.talent-card .domain{font-size:.7rem;color:var(--text2)}
+
+/* Domain colors */
+.domain-战略思维{--dc:var(--purple)}
+.domain-执行力{--dc:var(--pink)}
+.domain-关系建立{--dc:var(--green)}
+.domain-影响力{--dc:var(--cyan)}
+.talent-card.selected{border-color:var(--dc,var(--accent))}
+.talent-card.selected .rank-badge{background:var(--dc,var(--accent))}
+
+/* ── Score Slider ── */
+.score-section{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:16px}
+.score-section h3{margin-bottom:16px;font-size:1.1rem}
+.score-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.score-row label{min-width:80px;font-size:.9rem;font-weight:500}
+.score-row input[type=range]{flex:1;height:6px;-webkit-appearance:none;appearance:none;background:var(--bg3);border-radius:3px;outline:none}
+.score-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg2)}
+.score-val{min-width:36px;text-align:center;font-weight:700;color:var(--accent);font-size:1.1rem}
+
+/* ── Buttons ── */
+.btn-row{display:flex;justify-content:center;gap:12px;margin-top:24px;flex-wrap:wrap}
+.btn{padding:12px 32px;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--purple));color:#fff}
+.btn-primary:hover{opacity:.88;transform:translateY(-1px)}
+.btn-secondary{background:var(--bg3);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* ── API Key ── */
+.api-box{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:32px;max-width:500px;margin:0 auto;text-align:center}
+.api-box input{width:100%;padding:12px 16px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.9rem;outline:none;margin:12px 0}
+.api-box input:focus{border-color:var(--accent)}
+.api-box .hint{font-size:.8rem;color:var(--text2);margin-top:8px}
+.api-box .hint a{color:var(--accent)}
+
+/* ── Report (inline, same style as gallup_analysis_report.html) ── */
+#report-view{display:none;max-width:900px;margin:0 auto;padding:20px 24px 60px}
+.rpt-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:28px;margin-bottom:20px}
+.rpt-title{font-size:1.4rem;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+
+/* Top 5 */
+.top5-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.top5-item{text-align:center;padding:16px 8px;border-radius:10px;border:2px solid}
+.top5-item:nth-child(1){border-color:var(--gold);background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(253,230,138,.08))}
+.top5-item:nth-child(2){border-color:var(--silver);background:linear-gradient(135deg,rgba(148,163,184,.12),rgba(226,232,240,.08))}
+.top5-item:nth-child(3){border-color:var(--bronze);background:linear-gradient(135deg,rgba(180,83,9,.12),rgba(253,186,116,.08))}
+.top5-item:nth-child(n+4){border-color:var(--accent);background:linear-gradient(135deg,rgba(88,166,255,.08),rgba(167,139,250,.08))}
+.top5-rank{font-size:1.1rem;font-weight:700;margin-bottom:4px}
+.top5-name{font-size:1rem;font-weight:600;margin-bottom:2px}
+.top5-cat{font-size:.7rem;color:var(--text2)}
+
+/* Pattern */
+.pattern-item{padding:16px;background:var(--bg3);border-radius:10px;border-left:3px solid var(--accent);margin-bottom:12px}
+.pattern-item h4{font-size:1rem;color:var(--accent2);margin-bottom:8px}
+.pattern-item ul{padding-left:18px;color:var(--text2);font-size:.9rem}
+.pattern-item li{margin-bottom:3px}
+
+/* Domain table */
+.dom-table{width:100%;border-collapse:collapse}
+.dom-table th,.dom-table td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);font-size:.9rem}
+.dom-table th{background:var(--bg3);color:var(--text2);font-weight:600;font-size:.8rem}
+.stars{color:var(--gold);letter-spacing:1px}
+
+/* Career */
+.career-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.career-col h4{font-size:1rem;margin-bottom:12px}
+.career-item{padding:12px;background:var(--bg3);border-radius:8px;margin-bottom:8px;font-size:.85rem;line-height:1.5}
+.career-item strong{display:block;margin-bottom:3px;font-size:.9rem}
+
+/* Blind */
+.blind-table{width:100%;border-collapse:collapse}
+.blind-table th,.blind-table td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}
+.blind-table th{background:var(--bg3);color:var(--text2);font-weight:600}
+.badge-low{display:inline-block;padding:2px 10px;border-radius:99px;background:rgba(239,68,68,.1);color:#f85149;font-weight:600;font-size:.8rem}
+
+/* Summary */
+.rpt-summary{text-align:center;padding:28px;background:linear-gradient(135deg,rgba(88,166,255,.15),rgba(167,139,250,.15));border-radius:14px}
+.rpt-summary p{font-size:1.1rem;line-height:1.8;color:var(--text)}
+
+/* Full rankings */
+.rank-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.rank-item{padding:8px;background:var(--bg3);border-radius:6px;text-align:center;font-size:.8rem}
+.rank-item .rn{font-weight:700;color:var(--text2);font-size:.75rem}
+.rank-item .rname{font-weight:600;margin:2px 0}
+.rank-item .rscore{color:var(--text2);font-size:.7rem}
+
+/* Loading */
+.loading{text-align:center;padding:60px 20px}
+.spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading p{color:var(--text2)}
+
+@media(max-width:768px){
+  header h1{font-size:1.6rem}
+  .top5-grid{grid-template-columns:repeat(2,1fr)}
+  .career-grid{grid-template-columns:1fr}
+  .talent-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
+}
+</style>
+</head>
+<body>
+<script>
+(function(){var t=localStorage.getItem('bookshelf-theme')||'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();
+</script>
+
+<button id="theme-toggle" onclick="toggleTheme()" title="切换主题">🌙</button>
+
+<header>
+  <h1>🎯 盖洛普优势测试</h1>
+  <p>CliftonStrengths 34 Talents Assessment · 输入你的天赋排名，AI 深度分析</p>
+</header>
+
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab-btn active" data-tab="input" onclick="switchTab('input')">📝 输入数据</button>
+  <button class="tab-btn" data-tab="api" onclick="switchTab('api')">🔑 API 设置</button>
+  <button class="tab-btn" data-tab="report" onclick="switchTab('report')">📊 分析报告</button>
+</div>
+
+<!-- Step 1: Input -->
+<div class="step active" id="step-input">
+  <div class="step-title">选择你的 Top 10 天赋</div>
+  <div class="step-desc">点击天赋卡片，按排名顺序选择（先点第1名，再点第2名，以此类推）</div>
+
+  <div class="talent-grid" id="talent-grid"></div>
+
+  <div style="text-align:center;margin-top:16px">
+    <span style="color:var(--text2);font-size:.9rem">已选: <strong id="sel-count">0</strong> / 10</span>
+    <button class="btn btn-secondary" style="margin-left:16px;padding:6px 16px;font-size:.85rem" onclick="clearSelection()">清空重选</button>
+  </div>
+
+  <!-- Score inputs for selected talents -->
+  <div id="score-section" style="display:none">
+    <div class="step-title" style="margin-top:32px">为每个天赋打分 (0-9)</div>
+    <div class="step-desc">分数反映该天赋在你身上的强度</div>
+    <div id="score-container"></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" id="analyze-btn" onclick="startAnalysis()" disabled>🚀 开始分析</button>
+  </div>
+</div>
+
+<!-- Step 2: API -->
+<div class="step" id="step-api">
+  <div class="api-box">
+    <h3 style="margin-bottom:8px">🔑 Qwen API 密钥</h3>
+    <p style="color:var(--text2);font-size:.9rem">分析报告需要调用 Qwen 大模型进行深度解读</p>
+    <input type="password" id="api-key-input" placeholder="sk-xxxxxxxxxxxxxxxx" autocomplete="off">
+    <button class="btn btn-primary" style="width:100%" onclick="saveApiKey()">保存密钥</button>
+    <div class="hint">
+      获取密钥 → <a href="https://bailian.console.aliyun.com/" target="_blank">阿里云百炼控制台</a><br>
+      密钥仅保存在浏览器本地，不会上传到任何服务器
+    </div>
+  </div>
+</div>
+
+<!-- Step 3: Report -->
+<div class="step" id="step-report">
+  <div id="report-placeholder" style="text-align:center;padding:60px 20px">
+    <div style="font-size:3rem;margin-bottom:16px">📊</div>
+    <p style="color:var(--text2);font-size:1.1rem">尚未生成分析报告</p>
+    <p style="color:var(--text2);font-size:.9rem;margin-top:8px">请先在「输入数据」页完成天赋选择</p>
+  </div>
+
+  <div id="loading-view" class="loading" style="display:none">
+    <div class="spinner"></div>
+    <p>Qwen AI 正在深度分析你的优势模式...</p>
+    <p style="font-size:.8rem;margin-top:8px">通常需要 15-30 秒</p>
+  </div>
+
+  <div id="report-view"></div>
+
+  <div class="btn-row" id="report-actions" style="display:none">
+    <button class="btn btn-secondary" onclick="switchTab('input')">📝 重新测试</button>
+    <button class="btn btn-primary" onclick="downloadReport()">💾 下载HTML报告</button>
+  </div>
+</div>
+
+<footer style="text-align:center;padding:30px;color:var(--text2);font-size:.82rem;border-top:1px solid var(--border);margin-top:40px">
+  © 2026 Personal Bookshelf · <a href="../" style="color:var(--accent);text-decoration:none">返回书架</a>
+</footer>
+
+<script>
+// ── Theme ──
+function toggleTheme(){
+  var html=document.documentElement;
+  var btn=document.getElementById('theme-toggle');
+  if(html.getAttribute('data-theme')==='light'){
+    html.removeAttribute('data-theme');btn.textContent='🌙';
+    localStorage.setItem('bookshelf-theme','dark');
+  }else{
+    html.setAttribute('data-theme','light');btn.textContent='☀️';
+    localStorage.setItem('bookshelf-theme','light');
+  }
+}
+(function(){if(localStorage.getItem('bookshelf-theme')==='light')document.getElementById('theme-toggle').textContent='☀️';})();
+
+// ── Tabs ──
+function switchTab(name){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('step-'+name).classList.add('active');
+}
+
+// ── Talent Data ──
+const TALENTS=[
+  {name:"分析",domain:"战略思维"},{name:"回顾",domain:"战略思维"},{name:"思维",domain:"战略思维"},{name:"学习",domain:"战略思维"},
+  {name:"未来",domain:"战略思维"},{name:"理念",domain:"战略思维"},{name:"搜集",domain:"战略思维"},{name:"战略",domain:"战略思维"},
+  {name:"专注",domain:"执行力"},{name:"审慎",domain:"执行力"},{name:"统筹",domain:"执行力"},{name:"责任",domain:"执行力"},
+  {name:"成就",domain:"执行力"},{name:"排难",domain:"执行力"},{name:"纪律",domain:"执行力"},{name:"公平",domain:"执行力"},{name:"行动",domain:"执行力"},
+  {name:"交往",domain:"关系建立"},{name:"和谐",domain:"关系建立"},{name:"个别",domain:"关系建立"},{name:"信念",domain:"关系建立"},
+  {name:"关联",domain:"关系建立"},{name:"发展",domain:"关系建立"},{name:"体谅",domain:"关系建立"},{name:"包容",domain:"关系建立"},
+  {name:"完美",domain:"影响力"},{name:"竞争",domain:"影响力"},{name:"积极",domain:"影响力"},{name:"沟通",domain:"影响力"},
+  {name:"适应",domain:"影响力"},{name:"统率",domain:"影响力"},{name:"自信",domain:"影响力"},{name:"追求",domain:"影响力"},{name:"取悦",domain:"影响力"}
+];
+
+const DOMAIN_COLORS={"战略思维":"var(--purple)","执行力":"var(--pink)","关系建立":"var(--green)","影响力":"var(--cyan)"};
+
+let selected=[]; // [{name, domain, score}]
+
+// ── Render Grid ──
+function renderGrid(){
+  const grid=document.getElementById('talent-grid');
+  grid.innerHTML='';
+  TALENTS.forEach(t=>{
+    const idx=selected.findIndex(s=>s.name===t.name);
+    const el=document.createElement('div');
+    el.className='talent-card domain-'+t.domain+(idx>=0?' selected':'');
+    el.innerHTML=`${idx>=0?'<div class="rank-badge">'+(idx+1)+'</div>':''}<div class="name">${t.name}</div><div class="domain" style="color:${DOMAIN_COLORS[t.domain]}">${t.domain}</div>`;
+    el.onclick=()=>toggleTalent(t,el);
+    grid.appendChild(el);
+  });
+  document.getElementById('sel-count').textContent=selected.length;
+  document.getElementById('analyze-btn').disabled=selected.length<2;
+}
+
+function toggleTalent(t,el){
+  const idx=selected.findIndex(s=>s.name===t.name);
+  if(idx>=0){
+    selected.splice(idx,1);
+    // re-index
+    selected.forEach((s,i)=>{/* keep order */});
+  }else if(selected.length<10){
+    selected.push({...t,score:null});
+  }
+  renderGrid();
+  renderScores();
+}
+
+function clearSelection(){
+  selected=[];
+  renderGrid();
+  renderScores();
+}
+
+// ── Score Sliders ──
+function renderScores(){
+  const sec=document.getElementById('score-section');
+  const con=document.getElementById('score-container');
+  if(selected.length===0){sec.style.display='none';return;}
+  sec.style.display='block';
+  con.innerHTML=selected.map((t,i)=>`
+    <div class="score-section">
+      <div class="score-row">
+        <label>#${i+1} ${t.name} <small style="color:var(--text2)">(${t.domain})</small></label>
+        <input type="range" min="0" max="9" value="${t.score!==null?t.score:5}" oninput="updateScore(${i},this.value)">
+        <div class="score-val" id="sv-${i}">${t.score!==null?t.score:5}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateScore(i,v){
+  selected[i].score=parseInt(v);
+  document.getElementById('sv-'+i).textContent=v;
+}
+
+// ── API Key ──
+function saveApiKey(){
+  const key=document.getElementById('api-key-input').value.trim();
+  if(key){localStorage.setItem('gallup-api-key',key);alert('✅ 密钥已保存');}
+}
+(function(){const k=localStorage.getItem('gallup-api-key');if(k)document.getElementById('api-key-input').value=k;})();
+
+// ── Analysis ──
+async function startAnalysis(){
+  const key=localStorage.getItem('gallup-api-key');
+  if(!key){switchTab('api');alert('请先设置 API 密钥');return;}
+
+  // Fill in default scores for any not set
+  selected.forEach(s=>{if(s.score===null)s.score=5;});
+
+  switchTab('report');
+  document.getElementById('report-placeholder').style.display='none';
+  document.getElementById('loading-view').style.display='block';
+  document.getElementById('report-view').style.display='none';
+  document.getElementById('report-actions').style.display='none';
+
+  try{
+    const report=await callQwen(key);
+    document.getElementById('loading-view').style.display='none';
+    document.getElementById('report-view').style.display='block';
+    document.getElementById('report-view').innerHTML=report;
+    document.getElementById('report-actions').style.display='flex';
+  }catch(e){
+    document.getElementById('loading-view').style.display='none';
+    document.getElementById('report-view').style.display='block';
+    document.getElementById('report-view').innerHTML=`<div class="rpt-card" style="text-align:center;padding:40px"><h3>❌ 分析失败</h3><p style="color:var(--text2);margin-top:12px">${e.message}</p><p style="color:var(--text2);margin-top:8px;font-size:.85rem">请检查 API 密钥是否正确，或稍后重试</p></div>`;
+    document.getElementById('report-actions').style.display='flex';
+  }
+}
+
+async function callQwen(apiKey){
+  const topN=selected.map((t,i)=>`#${i+1} ${t.name}（${t.score}分 · ${t.domain}）`).join('\n');
+  const allScores=selected.map(t=>`${t.name}: ${t.score}分 [${t.domain}]`).join(', ');
+
+  const prompt=`你是一位资深的盖洛普优势分析师。请根据以下数据生成深度分析报告。
+
+## 用户数据
+Top ${selected.length} 天赋排名：
+${topN}
+
+## 分析要求
+请按以下JSON格式返回分析结果（仅返回JSON，不要其他文字）：
+
+{
+  "top5": [{"rank":1,"name":"分析","score":9,"domain":"战略思维"}, ...],
+  "patterns": [
+    {"title": "\"天赋A + 天赋B\" = 模式名 表情符号", "desc": ["特点1","特点2","特点3"]},
+    ...需要3个模式...
+  ],
+  "domains": [
+    {"name":"执行力","avg":"5.4","stars":"⭐⭐⭐⭐⭐","desc":"你的最强领域！"},
+    ...4个领域...
+  ],
+  "careers_good": [{"role":"职业名","reason":"匹配理由"}, ...至少5个...],
+  "careers_caution": [{"role":"职业名","reason":"谨慎理由"}, ...至少4个...],
+  "energy_title": "能量来源公式",
+  "energy_points": ["✅ 特质1","✅ 特质2","✅ 特质3","✅ 特质4","✅ 特质5"],
+  "blind_spots": [{"name":"天赋名","score":"0分","impact":"可能的影响","advice":"应对建议"}, ...至少4个...],
+  "summary": "一句话总结（诗意、个性化、3-4行）"
+}
+
+注意：
+1. patterns 要分析天赋组合的深层含义，不要泛泛而谈
+2. domains 要计算已选天赋在各领域的平均分
+3. careers_good/cautions 要具体、有针对性
+4. blind_spots 针对低分(≤3分)的天赋分析
+5. summary 要有温度，像朋友说话一样`;
+
+  const resp=await fetch('https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
+    body:JSON.stringify({
+      model:'qwen-plus',
+      messages:[{role:'user',content:prompt}],
+      temperature:0.7,
+      max_tokens:4000
+    })
+  });
+
+  if(!resp.ok){
+    const err=await resp.text();
+    throw new Error(`API 请求失败 (${resp.status}): ${err}`);
+  }
+
+  const data=await resp.json();
+  let content=data.choices[0].message.content;
+
+  // Extract JSON from possible markdown code block
+  const jsonMatch=content.match(/```(?:json)?\s*\n?([\s\S]*?)\n?\s*```/);
+  if(jsonMatch) content=jsonMatch[1];
+
+  const analysis=JSON.parse(content.trim());
+  return renderReport(analysis);
+}
+
+// ── Render Report ──
+function renderReport(a){
+  const top5=a.top5||selected.slice(0,5).map((t,i)=>({rank:i+1,name:t.name,score:t.score,domain:t.domain}));
+
+  const top5HTML=`<div class="rpt-card"><div class="rpt-title"><span>🏆</span> 前${top5.length}大核心优势</div>
+    <div class="top5-grid">${top5.map(t=>`<div class="top5-item"><div class="top5-rank">#${t.rank}</div><div class="top5-name">${t.name}</div><div class="top5-cat">${t.domain}</div><div style="font-size:1.3rem;font-weight:700;margin-top:4px">${t.score}分</div></div>`).join('')}</div></div>`;
+
+  const patternsHTML=`<div class="rpt-card"><div class="rpt-title"><span>🔑</span> 你的独特模式</div>
+    <div>${(a.patterns||[]).map(p=>`<div class="pattern-item"><h4>${p.title}</h4><ul>${(p.desc||[]).map(d=>`<li>${d}</li>`).join('')}</ul></div>`).join('')}</div></div>`;
+
+  const domHTML=`<div class="rpt-card"><div class="rpt-title"><span>📊</span> 优势领域分布</div>
+    <table class="dom-table"><thead><tr><th>领域</th><th>平均分</th><th>强度</th><th>特征</th></tr></thead>
+    <tbody>${(a.domains||[]).map(d=>`<tr><td><strong>${d.name}</strong></td><td>${d.avg}分</td><td><span class="stars">${d.stars}</span></td><td>${d.desc}</td></tr>`).join('')}</tbody></table></div>`;
+
+  const careerHTML=`<div class="rpt-card"><div class="rpt-title"><span>💡</span> 职业发展建议</div>
+    <div class="career-grid">
+      <div class="career-col"><h4>✅ 高度匹配</h4>${(a.careers_good||[]).map(c=>`<div class="career-item"><strong>${c.role}</strong>${c.reason}</div>`).join('')}</div>
+      <div class="career-col"><h4>⚠️ 需要谨慎</h4>${(a.careers_caution||[]).map(c=>`<div class="career-item"><strong>${c.role}</strong>${c.reason}</div>`).join('')}</div>
+    </div></div>`;
+
+  const energyHTML=`<div class="rpt-card"><div class="rpt-title"><span>🧭</span> 你的能量来源</div>
+    <div class="pattern-item" style="border-left-color:var(--green)"><h4 style="text-align:center;font-size:1.1rem">${a.energy_title||''}</h4>
+    <ul>${(a.energy_points||[]).map(e=>`<li>${e}</li>`).join('')}</ul></div></div>`;
+
+  const blindHTML=`<div class="rpt-card"><div class="rpt-title"><span>⚡</span> 盲区提醒</div>
+    <table class="blind-table"><thead><tr><th>低分天赋</th><th>分数</th><th>可能的影响</th><th>应对建议</th></tr></thead>
+    <tbody>${(a.blind_spots||[]).map(b=>`<tr><td><strong>${b.name}</strong></td><td><span class="badge-low">${b.score}</span></td><td>${b.impact}</td><td>${b.advice}</td></tr>`).join('')}</tbody></table></div>`;
+
+  const allRankHTML=`<div class="rpt-card"><div class="rpt-title"><span>📋</span> 已选天赋完整排名</div>
+    <div class="rank-grid">${selected.map((t,i)=>`<div class="rank-item"><div class="rn">#${i+1}</div><div class="rname">${t.name}</div><div class="rscore">${t.score}分 · ${t.domain}</div></div>`).join('')}</div></div>`;
+
+  const summaryHTML=`<div class="rpt-summary"><h2 style="margin-bottom:12px;opacity:.8">🎁 一句话总结</h2><p>${(a.summary||'').replace(/\n/g,'<br>')}</p></div>`;
+
+  return top5HTML+patternsHTML+domHTML+careerHTML+energyHTML+blindHTML+allRankHTML+summaryHTML;
+}
+
+function downloadReport(){
+  const html=document.getElementById('report-view').innerHTML;
+  const full=`<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>盖洛普优势分析报告</title><style>*{margin:0;padding:0;box-sizing:border-box}:root{--bg:#f8fafc;--card:#fff;--text:#1e293b;--text2:#64748b;--accent:#667eea;--accent2:#5a67d8;--border:#e2e8f0;--gold:#f59e0b;--silver:#94a3b8;--bronze:#b45309}body{font-family:-apple-system,"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;padding:40px 20px}.container{max-width:900px;margin:0 auto}.rpt-card{background:var(--card);border-radius:14px;padding:28px;margin-bottom:20px;box-shadow:0 8px 24px rgba(0,0,0,.15)}.rpt-title{font-size:1.3rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}.top5-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.top5-item{text-align:center;padding:14px 6px;border-radius:8px;border:2px solid}.top5-item:nth-child(1){border-color:var(--gold);background:linear-gradient(135deg,#fef3c7,#fde68a)}.top5-item:nth-child(2){border-color:var(--silver);background:linear-gradient(135deg,#f1f5f9,#e2e8f0)}.top5-item:nth-child(3){border-color:var(--bronze);background:linear-gradient(135deg,#fed7aa,#fdba74)}.top5-item:nth-child(n+4){border-color:var(--accent);background:linear-gradient(135deg,#eff6ff,#e0e7ff)}.top5-rank{font-size:1rem;font-weight:700;margin-bottom:4px}.top5-name{font-size:.95rem;font-weight:600;margin-bottom:2px}.top5-cat{font-size:.65rem;color:var(--text2)}.pattern-item{padding:14px;background:var(--bg);border-radius:8px;border-left:3px solid var(--accent);margin-bottom:10px}.pattern-item h4{font-size:.95rem;color:var(--accent2);margin-bottom:6px}.pattern-item ul{padding-left:16px;color:var(--text2);font-size:.85rem}.pattern-item li{margin-bottom:2px}.dom-table{width:100%;border-collapse:collapse}.dom-table th,.dom-table td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem}.dom-table th{background:var(--bg);color:var(--text2);font-weight:600;font-size:.75rem}.stars{color:var(--gold);letter-spacing:1px}.career-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.career-col h4{font-size:.95rem;margin-bottom:10px}.career-item{padding:10px;background:var(--bg);border-radius:6px;margin-bottom:6px;font-size:.8rem;line-height:1.5}.career-item strong{display:block;margin-bottom:2px;font-size:.85rem}.blind-table{width:100%;border-collapse:collapse}.blind-table th,.blind-table td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);font-size:.8rem}.blind-table th{background:var(--bg);color:var(--text2);font-weight:600}.badge-low{display:inline-block;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:#ef4444;font-weight:600;font-size:.75rem}.rpt-summary{text-align:center;padding:24px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-radius:12px}.rpt-summary p{font-size:1.05rem;line-height:1.8}.rank-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px}.rank-item{padding:6px;background:var(--bg);border-radius:5px;text-align:center;font-size:.75rem}.rank-item .rn{font-weight:700;color:var(--text2);font-size:.7rem}.rank-item .rname{font-weight:600;margin:2px 0}.rank-item .rscore{color:var(--text2);font-size:.65rem}@media(max-width:600px){.top5-grid{grid-template-columns:repeat(2,1fr)}.career-grid{grid-template-columns:1fr}}</style></head><body><div class="container">${html}</div></body></html>`;
+  const blob=new Blob([full],{type:'text/html'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='gallup_analysis_report.html';a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── Init ──
+renderGrid();
+</script>
+</body>
+</html>
