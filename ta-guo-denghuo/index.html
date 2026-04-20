@@ -7,8 +7,24 @@
 <meta name="description" content="二十一个当代心理困境，以寓言照见自我，以哲思与可践行的微小行动，踏上内在的觉醒之路。">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown.min.css" crossorigin="anonymous">
 <style>
-:root { --page-bg: #0d1117; --page-text: #e6edf3; }
-[data-theme="light"] { --page-bg: #f6f8fa; --page-text: #1f2328; }
+:root {
+  --page-bg: #0d1117;
+  --page-text: #e6edf3;
+  --nav-bg: #161b22;
+  --nav-border: #30363d;
+  --nav-link: #8b949e;
+  --nav-link-hover: #58a6ff;
+  --nav-active-bg: #21262d;
+}
+[data-theme="light"] {
+  --page-bg: #f6f8fa;
+  --page-text: #1f2328;
+  --nav-bg: #ffffff;
+  --nav-border: #d0d7de;
+  --nav-link: #24292f;
+  --nav-link-hover: #0969da;
+  --nav-active-bg: #eaeef2;
+}
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
@@ -18,26 +34,31 @@ body {
   transition: background .25s, color .25s;
 }
 #toolbar {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 50;
+  left: 0;
+  right: 0;
+  z-index: 200;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   padding: 10px 16px;
-  background: rgba(13, 17, 23, 0.92);
+  background: rgba(13, 17, 23, 0.95);
   border-bottom: 1px solid #30363d;
   backdrop-filter: blur(8px);
 }
 [data-theme="light"] #toolbar {
-  background: rgba(246, 248, 250, 0.95);
+  background: rgba(255, 255, 255, 0.96);
   border-bottom-color: #d0d7de;
 }
 #toolbar a {
   color: #58a6ff;
   text-decoration: none;
   font-size: 0.9rem;
+}
+[data-theme="light"] #toolbar a {
+  color: #0969da;
 }
 #toolbar a:hover { text-decoration: underline; }
 #theme-btn {
@@ -51,22 +72,77 @@ body {
 }
 [data-theme="light"] #theme-btn {
   border-color: #d0d7de;
-  background: #fff;
+  background: #f6f8fa;
+  color: #1f2328;
+}
+#layout {
+  display: flex;
+  max-width: 1280px;
+  margin: 56px auto 0;
+  min-height: calc(100vh - 56px);
+  align-items: flex-start;
+}
+#nav-wrap {
+  position: sticky;
+  top: 56px;
+  width: 280px;
+  min-width: 280px;
+  max-height: calc(100vh - 56px);
+  overflow-y: auto;
+  padding: 16px 12px 24px 20px;
+  border-right: 1px solid var(--nav-border);
+  background: var(--nav-bg);
+  box-sizing: border-box;
+}
+#nav-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--nav-link);
+  margin-bottom: 10px;
+  padding: 0 8px;
+}
+[data-theme="light"] #nav-title {
+  color: #57606a;
+}
+#nav a {
+  display: block;
+  padding: 8px 10px;
+  margin: 2px 0;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--nav-link);
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+[data-theme="light"] #nav a {
   color: #24292f;
 }
-#loading { padding: 48px 24px; text-align: center; color: #8b949e; }
-#error { display: none; padding: 24px; color: #f85149; }
-.wrap {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 24px 20px 80px;
+#nav a:hover {
+  background: var(--nav-active-bg);
+  color: var(--nav-link-hover);
 }
+#nav a.is-active {
+  background: var(--nav-active-bg);
+  color: var(--nav-link-hover);
+  border-color: var(--nav-border);
+}
+#main-col {
+  flex: 1;
+  min-width: 0;
+  padding: 16px 24px 80px 20px;
+}
+#loading { padding: 80px 24px; text-align: center; color: #8b949e; }
+[data-theme="light"] #loading { color: #57606a; }
+#error { display: none; padding: 24px; color: #f85149; }
 .markdown-body {
   box-sizing: border-box;
   min-width: 200px;
   max-width: 100%;
-  padding: 24px 8px;
+  padding: 8px 4px 32px;
 }
+/* 深色正文（github-markdown 默认偏浅色底，这里强制暗色阅读） */
 body:not([data-theme="light"]) .markdown-body {
   color: #e6edf3;
   background: transparent;
@@ -81,10 +157,80 @@ body:not([data-theme="light"]) .markdown-body a { color: #58a6ff; }
 body:not([data-theme="light"]) .markdown-body code,
 body:not([data-theme="light"]) .markdown-body tt {
   background: #161b22;
+  color: #e6edf3;
 }
 body:not([data-theme="light"]) .markdown-body blockquote {
   color: #8b949e;
   border-left-color: #30363d;
+}
+body:not([data-theme="light"]) .markdown-body li,
+body:not([data-theme="light"]) .markdown-body p {
+  color: #e6edf3;
+}
+/* 浅色：全文深色字，避免灰字发漂 */
+[data-theme="light"] .markdown-body {
+  color: #1f2328 !important;
+  background: transparent !important;
+}
+[data-theme="light"] .markdown-body h1,
+[data-theme="light"] .markdown-body h2,
+[data-theme="light"] .markdown-body h3,
+[data-theme="light"] .markdown-body h4 {
+  color: #0d1117 !important;
+  border-bottom-color: #d0d7de !important;
+}
+[data-theme="light"] .markdown-body p,
+[data-theme="light"] .markdown-body li,
+[data-theme="light"] .markdown-body td,
+[data-theme="light"] .markdown-body th {
+  color: #1f2328 !important;
+}
+[data-theme="light"] .markdown-body blockquote {
+  color: #424a53 !important;
+  border-left-color: #d0d7de !important;
+}
+[data-theme="light"] .markdown-body a {
+  color: #0969da !important;
+}
+[data-theme="light"] .markdown-body code,
+[data-theme="light"] .markdown-body tt {
+  background: #eaeef2 !important;
+  color: #1f2328 !important;
+}
+[data-theme="light"] .markdown-body hr {
+  border-bottom-color: #d8dee4 !important;
+}
+[data-theme="light"] .markdown-body strong {
+  color: #0d1117 !important;
+}
+.markdown-body h1 {
+  scroll-margin-top: 72px;
+}
+#nav-toggle {
+  display: none;
+  margin: 8px 16px 0;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--nav-border);
+  background: var(--nav-bg);
+  color: var(--page-text);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+@media (max-width: 900px) {
+  #nav-toggle { display: inline-block; }
+  #layout { flex-direction: column; margin-top: 52px; }
+  #nav-wrap {
+    position: relative;
+    top: 0;
+    width: 100%;
+    max-height: none;
+    border-right: none;
+    border-bottom: 1px solid var(--nav-border);
+    display: none;
+  }
+  #nav-wrap.is-open { display: block; }
+  #main-col { padding: 12px 16px 60px; }
 }
 </style>
 <script>
@@ -99,15 +245,25 @@ body:not([data-theme="light"]) .markdown-body blockquote {
   <a href="../">← 返回书架</a>
   <button type="button" id="theme-btn" title="切换主题">主题</button>
 </div>
+<button type="button" id="nav-toggle" aria-expanded="false">章节目录</button>
 <div id="loading">正在加载书稿…</div>
 <div id="error"></div>
-<div class="wrap">
-  <article id="content" class="markdown-body" style="display:none"></article>
+<div id="layout" style="display:none">
+  <aside id="nav-wrap">
+    <div id="nav-title">章节目录</div>
+    <nav id="nav" aria-label="章节目录"></nav>
+  </aside>
+  <div id="main-col">
+    <article id="content" class="markdown-body"></article>
+  </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js" crossorigin="anonymous"></script>
 <script>
 (function () {
   var btn = document.getElementById("theme-btn");
+  var navToggle = document.getElementById("nav-toggle");
+  var navWrap = document.getElementById("nav-wrap");
+
   function syncBtn() {
     btn.textContent = document.documentElement.getAttribute("data-theme") === "light" ? "深色" : "浅色";
   }
@@ -123,6 +279,78 @@ body:not([data-theme="light"]) .markdown-body blockquote {
   });
   syncBtn();
 
+  if (navToggle && navWrap) {
+    navToggle.addEventListener("click", function () {
+      var open = navWrap.classList.toggle("is-open");
+      navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  }
+
+  function stripBookToc(article) {
+    var h2s = article.querySelectorAll("h2");
+    for (var i = 0; i < h2s.length; i++) {
+      var h = h2s[i];
+      if (h.textContent.trim().indexOf("目录") === -1) continue;
+      var ul = h.nextElementSibling;
+      if (ul && ul.tagName === "UL") ul.remove();
+      var hr = h.nextElementSibling;
+      if (hr && hr.tagName === "HR") hr.remove();
+      h.remove();
+      break;
+    }
+  }
+
+  function enhanceNavigation(article) {
+    stripBookToc(article);
+    var h1s = article.querySelectorAll("h1");
+    var nav = document.getElementById("nav");
+    nav.innerHTML = "";
+    var list = [];
+    for (var j = 0; j < h1s.length; j++) {
+      list.push(h1s[j]);
+    }
+    for (var k = 0; k < list.length; k++) {
+      var node = list[k];
+      var id = "sec-" + k;
+      node.id = id;
+      var label = node.textContent.trim() || id;
+      var a = document.createElement("a");
+      a.href = "#" + id;
+      a.textContent = label;
+      a.addEventListener("click", function (ev) {
+        ev.preventDefault();
+        var target = document.getElementById(this.getAttribute("href").slice(1));
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (navWrap && window.innerWidth <= 900) navWrap.classList.remove("is-open");
+        setActiveNav();
+      });
+      nav.appendChild(a);
+    }
+    setActiveNav();
+    window.addEventListener("scroll", onScrollNav, { passive: true });
+  }
+
+  function setActiveNav() {
+    var links = document.querySelectorAll("#nav a");
+    var h1s = document.querySelectorAll("#content h1");
+    var scrollY = window.scrollY + 80;
+    var current = -1;
+    for (var i = h1s.length - 1; i >= 0; i--) {
+      if (h1s[i].offsetTop <= scrollY) {
+        current = i;
+        break;
+      }
+    }
+    for (var j = 0; j < links.length; j++) {
+      links[j].classList.toggle("is-active", j === current);
+    }
+  }
+  var scrollTimer;
+  function onScrollNav() {
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(setActiveNav, 80);
+  }
+
   fetch("book.md", { cache: "no-cache" })
     .then(function (r) {
       if (!r.ok) throw new Error("无法加载书稿 (" + r.status + ")");
@@ -132,7 +360,8 @@ body:not([data-theme="light"]) .markdown-body blockquote {
       document.getElementById("loading").style.display = "none";
       var el = document.getElementById("content");
       el.innerHTML = marked.parse(md);
-      el.style.display = "block";
+      enhanceNavigation(el);
+      document.getElementById("layout").style.display = "flex";
     })
     .catch(function (e) {
       document.getElementById("loading").style.display = "none";
