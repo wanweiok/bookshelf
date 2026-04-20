@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>他国的灯火：哲思、寓言与内在的觉醒之路</title>
+<meta name="description" content="二十一个当代心理困境，以寓言照见自我，以哲思与可践行的微小行动，踏上内在的觉醒之路。">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown.min.css" crossorigin="anonymous">
+<style>
+:root { --page-bg: #0d1117; --page-text: #e6edf3; }
+[data-theme="light"] { --page-bg: #f6f8fa; --page-text: #1f2328; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: -apple-system, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--page-bg);
+  color: var(--page-text);
+  transition: background .25s, color .25s;
+}
+#toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  background: rgba(13, 17, 23, 0.92);
+  border-bottom: 1px solid #30363d;
+  backdrop-filter: blur(8px);
+}
+[data-theme="light"] #toolbar {
+  background: rgba(246, 248, 250, 0.95);
+  border-bottom-color: #d0d7de;
+}
+#toolbar a {
+  color: #58a6ff;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+#toolbar a:hover { text-decoration: underline; }
+#theme-btn {
+  border: 1px solid #30363d;
+  background: #161b22;
+  color: #e6edf3;
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+[data-theme="light"] #theme-btn {
+  border-color: #d0d7de;
+  background: #fff;
+  color: #24292f;
+}
+#loading { padding: 48px 24px; text-align: center; color: #8b949e; }
+#error { display: none; padding: 24px; color: #f85149; }
+.wrap {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 24px 20px 80px;
+}
+.markdown-body {
+  box-sizing: border-box;
+  min-width: 200px;
+  max-width: 100%;
+  padding: 24px 8px;
+}
+body:not([data-theme="light"]) .markdown-body {
+  color: #e6edf3;
+  background: transparent;
+}
+body:not([data-theme="light"]) .markdown-body h1,
+body:not([data-theme="light"]) .markdown-body h2,
+body:not([data-theme="light"]) .markdown-body h3 {
+  color: #f0f6fc;
+  border-bottom-color: #30363d;
+}
+body:not([data-theme="light"]) .markdown-body a { color: #58a6ff; }
+body:not([data-theme="light"]) .markdown-body code,
+body:not([data-theme="light"]) .markdown-body tt {
+  background: #161b22;
+}
+body:not([data-theme="light"]) .markdown-body blockquote {
+  color: #8b949e;
+  border-left-color: #30363d;
+}
+</style>
+<script>
+(function () {
+  var t = localStorage.getItem("bookshelf-theme") || "dark";
+  if (t === "light") document.documentElement.setAttribute("data-theme", "light");
+})();
+</script>
+</head>
+<body>
+<div id="toolbar">
+  <a href="../">← 返回书架</a>
+  <button type="button" id="theme-btn" title="切换主题">主题</button>
+</div>
+<div id="loading">正在加载书稿…</div>
+<div id="error"></div>
+<div class="wrap">
+  <article id="content" class="markdown-body" style="display:none"></article>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js" crossorigin="anonymous"></script>
+<script>
+(function () {
+  var btn = document.getElementById("theme-btn");
+  function syncBtn() {
+    btn.textContent = document.documentElement.getAttribute("data-theme") === "light" ? "深色" : "浅色";
+  }
+  btn.addEventListener("click", function () {
+    if (document.documentElement.getAttribute("data-theme") === "light") {
+      document.documentElement.removeAttribute("data-theme");
+      localStorage.setItem("bookshelf-theme", "dark");
+    } else {
+      document.documentElement.setAttribute("data-theme", "light");
+      localStorage.setItem("bookshelf-theme", "light");
+    }
+    syncBtn();
+  });
+  syncBtn();
+
+  fetch("book.md", { cache: "no-cache" })
+    .then(function (r) {
+      if (!r.ok) throw new Error("无法加载书稿 (" + r.status + ")");
+      return r.text();
+    })
+    .then(function (md) {
+      document.getElementById("loading").style.display = "none";
+      var el = document.getElementById("content");
+      el.innerHTML = marked.parse(md);
+      el.style.display = "block";
+    })
+    .catch(function (e) {
+      document.getElementById("loading").style.display = "none";
+      var err = document.getElementById("error");
+      err.style.display = "block";
+      err.textContent = e.message || String(e);
+    });
+})();
+</script>
+</body>
+</html>
