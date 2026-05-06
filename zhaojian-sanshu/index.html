@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="照见三书 HTML 阅读书架">
+  <title>照见三书 | Bookshelf</title>
+  <link rel="stylesheet" href="assets/bookshelf.css">
+</head>
+<body>
+  <script>document.documentElement.dataset.theme = localStorage.getItem('bookshelf-theme') || 'light';</script>
+
+<header class="site-header">
+  <a class="brand" href="index.html">照见三书</a>
+  <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换明暗模式">明暗模式</button>
+</header>
+<main class="shelf-wrap">
+  <section class="intro">
+    <p class="eyebrow">Bookshelf</p>
+    <h1>照见三书</h1>
+    <p>三本书放在同一个安静的阅读书架里。你可以从自我、职场或关系进入，也可以按自己的节奏慢慢读。</p>
+  </section>
+  <section class="shelf-grid" aria-label="书籍列表">
+    
+      <article class="shelf-card">
+        <a class="cover-link" href="zhijizhe-ming.html"><img class="book-cover " src="assets/cover-zhijizhe-ming.png" alt="知己者明封面"></a>
+        <div class="card-copy">
+          <span class="eyebrow">自我篇</span>
+          <h2><a href="zhijizhe-ming.html">知己者明</a></h2>
+          <p class="subtitle">二十一个困境里的自我照见</p>
+          <p>从评价、比较、内耗和旧模式里，把注意力慢慢收回自己身上。</p>
+          <a class="read-link" href="zhijizhe-ming.html">开始阅读</a>
+        </div>
+      </article>
+
+      <article class="shelf-card">
+        <a class="cover-link" href="zhirenzhe-zhi.html"><img class="book-cover " src="assets/cover-zhirenzhe-zhi.jpg" alt="知人者智封面"></a>
+        <div class="card-copy">
+          <span class="eyebrow">事业篇</span>
+          <h2><a href="zhirenzhe-zhi.html">知人者智</a></h2>
+          <p class="subtitle">二十一个职场困境里的识人与回应</p>
+          <p>看懂话外之意、角色位置、组织规则和利益流动，也保留自己的温度。</p>
+          <a class="read-link" href="zhirenzhe-zhi.html">开始阅读</a>
+        </div>
+      </article>
+
+      <article class="shelf-card">
+        <a class="cover-link" href="heguang-tongchen.html"><div class="book-cover cover-fallback " aria-label="和光同尘封面"><span>关系篇</span><strong>和光同尘</strong><small>在二十一种重要关系里，找回生命的意义感</small></div></a>
+        <div class="card-copy">
+          <span class="eyebrow">关系篇</span>
+          <h2><a href="heguang-tongchen.html">和光同尘</a></h2>
+          <p class="subtitle">在二十一种重要关系里，找回生命的意义感</p>
+          <p>在伴侣、家人、朋友、陌生人与万物的连接里，重新长出生命的实感。</p>
+          <a class="read-link" href="heguang-tongchen.html">开始阅读</a>
+        </div>
+      </article>
+
+  </section>
+</main>
+<script src="assets/bookshelf.js"></script>
+</body>
+</html>
