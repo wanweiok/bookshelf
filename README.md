@@ -1,31 +1,20 @@
-# Building Your Own AI Agent | 构建你自己的 AI Agent
+# 私人书架 | Bookshelf
 
-> 从源码到实战，逐层拆解个人 AI 智能体架构
-> A Layer-by-Layer Architecture Deep Dive from Source Code to Practice
+这个仓库发布个人电子书与交互式阅读页面。
 
-## About
+## 当前保留内容
 
-This is a bilingual (Chinese/English) technical book that dissects a real-world AI Agent system layer by layer:
+- 元认知：思考关于思考的思考
+- 养生两千五百年：黄帝内经的生活智慧
+- 愿力：从恐惧驱动到内在驱动
+- 照见三书
+- 盖洛普专业版 · Gallup Pro
 
-- **Runtime** — How agents execute actions
-- **Memory** — How agents remember context
-- **Channels** — How agents communicate
-- **Security** — How agents stay safe
-- **Scheduling** — How agents act autonomously
-- **Skills** — How agents learn new abilities
+## 线上地址
 
-Based on OpenClaw (500K+ LoC) and NanoClaw (2K LoC), with hands-on Vibe Coding Labs.
+- 书架首页：https://wanweiok.github.io/bookshelf/
+- 照见三书：https://wanweiok.github.io/bookshelf/zhaojian-sanshu/
 
-## Read Online
+## 发布方式
 
-Visit the [GitHub Pages site](https://wanweiok.github.io/building-ai-agent/) to read the book.
-
-## Tech Stack
-
-- Static HTML site with Mermaid diagram rendering
-- Dark/Light theme with bilingual (中文/English) toggle
-- Built from Markdown sources using Python
-
-## License
-
-Content © 2026. All rights reserved.
+静态 HTML 直接由 GitHub Pages 发布。根目录 `index.html` 是书架入口，各子目录是独立阅读站点。
